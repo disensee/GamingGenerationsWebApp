@@ -1,36 +1,54 @@
 #header>*{
     /* Select level 1 children */
     display: inline-block;
+} 
+
+#header img{
+    max-width: 100%;
+    max-height: 100%;
+    padding-left: 5px;
+    /* display: block; */
 }
 
 #header{
     height: 100px;
+    width: 98%;
     margin: 10px;
-    padding: 10px;
+    padding-bottom: 10px;
     border-style: solid;
     border-width: 1px;
     border-color: gray;
+    border-radius: 5px;
+    background-color:#1881c5;
 }
 
-#header h3{
-    font-size: 35px;
-    font-weight: bold;
-    padding: 5px;
-    font-family: 'Open Sans',Helvetica,Arial,Lucida,sans-serif;
-}
+#header p{
+    color:white;
+    font-size: 2em;
+    padding-bottom: 10px;
+    font-family: 'Hind Siliguri', sans-serif;;
+    float: right;
+    padding-top: 50px;
+    padding-right: 20px;
 
+}
 .column{
     float: left;
     display: block;
     overflow: auto;
+    background-color: lightgray;
+    z-index: 999999;
+    font-family: 'Open Sans',Helvetica,Arial,Lucida,sans-serif;
 }
 
 .left{
     width: 33%;
+    margin-left: 10px;
 }
 
 .right{
-    width: 33%;
+    width: 63%;
+    margin-right: 10px;
 }
 
 #search-container{
@@ -48,18 +66,70 @@
     padding: 10px;
 }
 
+#list-container li a:link{
+    color: black;
+    line-height: 20px;
+    text-decoration: none;
+}
+
+#list-container li a:visited{
+    color: slategray;
+    line-height: 20px;
+    text-decoration: none;
+}
+
+#list-container li a:hover{
+    color: inherit;
+    line-height: 20px;
+    text-decoration: underline;
+}
+
 #main-container{
     border-style: solid;
     border-width: 1px;
-    border-left: 0px;
     border-color: gray;
     padding: 10px;
 }
 
 .info{
     line-height: 30px;
+    /* height: 80%; */
 }
 
 input{
-    padding:5px;
+    padding: 5px;
+    margin:5px;
+}
+
+.info select{
+    margin: 5px;
+}
+
+textarea{
+    
+}
+
+#footer{
+    display: inline-block;
+    border-style: solid;
+    border-width: 1px;
+    border-color: gray;
+    border-radius: 5px;
+    width: 98%;
+    height: 20px;
+    background-color: #1881c5;
+    position: relative;
+    bottom: 0;
+    left:0;
+    font-family: 'Hind Siliguri', sans-serif;
+    font-size: 0.75em;
+    margin: 5px;
+    padding-top: 20px;
+    padding-left: 5px;
+    color: white;
+}
+
+#content-pane{
+    z-index: 9999999;
+    min-height: 100%;
 }

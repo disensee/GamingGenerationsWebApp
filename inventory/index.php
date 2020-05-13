@@ -23,8 +23,10 @@ function generateConsoleSelectBox($arr){
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <link rel="stylesheet" type="text/css" href="styles/reset.css">
-    <link rel="stylesheet" type="text/css" href="styles/main.css">
+    
+    <link rel="stylesheet" type="text/css" href="styles/reset.css">
+    <link rel="stylesheet" type="text/css" href="styles/main.css"> 
+    
     <title>Gaming Generations : Inventory</title>
 </head>
 <div id="header">
@@ -37,7 +39,7 @@ function generateConsoleSelectBox($arr){
             <p>Search for title:</p>
             <?php echo(generateConsoleSelectBox($consoleArr)); ?>
             <input type="text" placeholder="Enter UPC">
-            <input type="submit" value="Submit">
+            <input type="submit" value="Search">
         </div>
         <div id="list-container">
             <p>Filter</p>
@@ -72,6 +74,27 @@ function generateConsoleSelectBox($arr){
                     <tr>
                         <td><label for="value">Gamestop Value:</label></td>
                         <td><input type="text" name="value" id="value" placeholder="Enter value"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="quantity">Quantity in stock:</label></td>
+                        <td><input type="text" name="quantity" readonly="true"></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td><input type="button" value="Add" id="btnAdd"></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <textarea name="item-list" style="width:600px; height:200px;">A list of games that are for trade or sale populates here</textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>
+                        <input type="button" value="Trade-In" id="btnTradeIn">
+                        <input type="button" value="Sale" id="btnSale">
+                        </td>
                     </tr>
                 </form>
             </table>
