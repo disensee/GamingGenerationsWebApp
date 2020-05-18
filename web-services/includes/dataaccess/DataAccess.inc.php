@@ -77,6 +77,7 @@ abstract class DataAccess{
 	* @return {object}	Returns an instance of a model object (for example, a Contact object)
 	*/
 	abstract function getById($id);
+	
 
 	/**
 	* Gets all rows from a table in the database
