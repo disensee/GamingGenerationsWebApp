@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Product Web Service Tests</title>
+	<script type="text/javascript">
+		
+
+
+window.addEventListener("load", ()=>{
+
+	// DON'T FORGET TO UPDATE THE BASE URL FOR YOUR WEB SERVICE 
+	// (THE LIVE URL MAY BE DIFFERENT THAT THE URL ON DEV)
+	var baseURL = "http://localhost/GG/web-services/products/";  
+
+	if(location.hostname != "localhost"){ 
+        baseURL = ""; 
+	}
+
+	// this will be the default error handler function
+	function errorCallback(statusCode, statusText){
+		alert(statusCode + "\n" + statusText);
+	}
+
+		
+	document.getElementById("btnGetAllByConsole").addEventListener("click", ()=>{
+		
+        var inputConsole = prompt("Enter a console");
+		var http = new XMLHttpRequest();
+		http.open("GET", baseURL + encodeURI(inputConsole));
+		
+		http.addEventListener("readystatechange", ()=>{
+			if(http.readyState == 4 && http.status == 200){
+				console.log(http.responseText);
+			}else if(http.readyState == 4){
+				errorCallback(http.status, http.statusText);
+			}
+		});
+		http.setRequestHeader("Content-Type","application/json");
+		http.send();
+	});
+
+
+	document.getElementById("btnGetByProduct").addEventListener("click", ()=>{
+		
+		var prodName = prompt("Enter a product name");
+        var consoleName = prompt("Enter a console name");
+
+		var url = encodeURI(baseURL + consoleName) + "/" + encodeURI(prodName);
+
+		var http = new XMLHttpRequest();
+		http.open("GET", url);
+		
+		http.addEventListener("readystatechange", ()=>{
+			if(http.readyState == 4 && http.status == 200){
+				console.log(http.responseText);
+			}else if(http.readyState == 4){
+				errorCallback(http.status, http.statusText);
+			}
+		});
+		
+		http.send();
+	});
+
+
+	document.getElementById("btnPost").addEventListener("click", ()=>{
+		
+		var http = new XMLHttpRequest();
+		http.open("POST", baseURL);
+		
+		http.addEventListener("readystatechange", ()=>{
+			if(http.readyState == 4 && http.status == 200){
+				console.log(http.responseText);
+			}else if(http.readyState == 4){
+				errorCallback(http.status, http.statusText);
+			}
+		});
+
+        //create a new product to insert
+		var product = {consoleName: "PC", productName:"Deep Rock Galactica", loosePrice: 47.88, cibPrice: 59.99, gamestopPrice: 54.99, gamestopTradePrice: 25.33, upc: "001234567800", quantity: 5};
+		var json = JSON.stringify(product);
+		
+		http.send(json);
+	});
+
+	// document.getElementById("btnPut").addEventListener("click", ()=>{
+		
+	// 	var cId = prompt("Enter the id of the customer you'd like to update");
+
+	// 	var http = new XMLHttpRequest();
+		
+	// 	http.open("PUT", baseURL + cId);
+		
+	// 	http.addEventListener("readystatechange", ()=>{
+	// 		if(http.readyState == 4 && http.status == 200){
+	// 			console.log(http.responseText);
+	// 		}else if(http.readyState == 4){
+	// 			errorCallback(http.status, http.statusText);
+	// 		}
+	// 	});
+	// 	//updated customer data
+	// 	var customer = {customerId: cId, firstName: "Pete", lastName:"Jackson", address: "321 Street Rd", city: "Madison", state: "Wisconsin", zip: "54321",email:"pj@gmail.com"};
+	// 	var json = JSON.stringify(customer);
+	// 	http.send(json);
+	// });
+
+	// document.getElementById("btnDelete").addEventListener("click", ()=>{
+		
+	// 	var id = prompt("Enter a customer id to delete");
+
+	// 	var url = baseURL + id;
+
+	// 	var http = new XMLHttpRequest();
+	// 	http.open("DELETE", url);
+	// 	//alert(url);
+		
+	// 	http.addEventListener("readystatechange", ()=>{
+	// 		if(http.readyState == 4 && http.status == 200){
+	// 			console.log(http.responseText);
+	// 		}else if(http.readyState == 4){
+	// 			errorCallback(http.status, http.statusText);
+	// 		}
+	// 	});
+
+	// 	http.setRequestHeader("Content-Type","application/json");
+	// 	http.send();
+	// });
+
+});
+	</script>
+</head>
+<body>
+	<h1>Product Web Service Tests</h1>
+	<p>Make sure to have the Network tab open in developer tools so that you can watch the HTTP request.</p>
+	<input type="button" id="btnGetAllByConsole" value="Get All By Console">
+	<br>
+	<input type="button" id="btnGetByProduct" value="Get Product By Product Name">
+	<br>
+	<input type="button" id="btnPost" value="Post Product">
+	<br>
+	<input type="button" id="btnPut" value="Put/Update Product">
+	<br>
+	<input type="button" id="btnDelete" value="Delete Product">
+</body>
+</html>

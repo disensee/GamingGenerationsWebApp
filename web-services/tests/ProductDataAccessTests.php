@@ -10,6 +10,7 @@ testSanitizeHtml();
 testCleanDataGoingIntoDB();
 testCleanDataComingFromDB();
 testGetById();
+testGetAllConsoles();
 //testGetByProductName();
 //testGetByConsoleName();
 testGetByUpc();
@@ -180,6 +181,16 @@ function testGetAll(){
 	$da = new ProductDataAccess(get_link());
 	$products = $da->getAll();
 	//var_dump($products);
+}
+
+function testGetAllConsoles(){
+	global $testResults;
+	$testResults[] = "<h3>TESTING getAllConsoles()...</h3>";
+
+	// We need an instance of a ProductDataAccess object so that we can call the method we want to test
+	$da = new ProductDataAccess(get_link());
+	$consoles = $da->getAllConsoles();
+	var_dump($consoles);
 }
 
 function testInsert(){

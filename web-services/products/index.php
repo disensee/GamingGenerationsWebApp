@@ -2,18 +2,18 @@
 include_once("../includes/config.inc.php");
 include_once("../includes/dataaccess/ProductDataAccess.inc.php");
 
-$da = new CustomerDataAccess(get_link());
+$da = new ProductDataAccess(get_link());
 
 $method = $_SERVER['REQUEST_METHOD'];
-$url_path = $_GET['url_path'] ?? ""; 
 
-/*
-header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
-header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1
-header("Cache-Control: post-check=0, pre-check=0", false);
-header("Pragma: no-cache"); // HTTP/1.0
-header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
-*/
+if(empty($_GET['url_path'])){
+  $url_path = null;
+}else{
+  $url_path = rawurlencode($_GET['url_path']);
+}
+
+$consoles = $da->getAllConsoles();
+$selectedConsole;
 
 ///////////////////////////////////
 // Handle the Request /////////////
@@ -23,21 +23,27 @@ header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
 
 switch($method){
   case "GET":
-    
-    if(empty($url_path)){
-      $customers = $da->getAll();
-      $json = json_encode($customers);
+    if(in_array(strtolower(rawurldecode($url_path)), $consoles)){
+      $selectedConsole = rawurldecode($url_path);
+    }else{
+      $split = explode("/", rawurldecode($url_path));
+      $selectedConsole = $split[0];
+      $selectedProduct = $split[1];
+    }
+
+    if(rawurldecode($url_path) == $selectedConsole){
+      $products = $da->getByConsoleName($selectedConsole);
+      $json = json_encode($products);
       header("Content-Type: application/json");
       echo($json);
       die();
-    }else if(preg_match('/^([0-9]*\/?)$/', $url_path, $matches)){ 
-      $customer_id = $matches[1];
-      $customer = $da->getById($customer_id);
-      if($customer == false){
+    }else if(strcasecmp($url_path, rawurlencode($selectedConsole) . '/' . rawurlencode($selectedProduct))){ 
+      $product = $da->getByProductName($selectedProduct, $selectedConsole);
+      if($product == false){
         header('HTTP/1.1 404 Not Found', true, 404);
         die();
       }else{
-        $json = json_encode($customer);
+        $json = json_encode($product);
         header("Content-Type: application/json");
         echo($json);
         die();
@@ -54,16 +60,16 @@ switch($method){
     if(empty($url_path)){
       $requestBody = file_get_contents("php://input");
       $assoc = json_decode($requestBody, TRUE);
-      $customer = new Customer($assoc);
+      $product = new Product($assoc);
       
-      if($customer->isValid() == false){
-        header('HTTP/1.1 400 - INVALID REQUEST - INVALID customer DATA', true, 400);
+      if($product->isValid() == false){
+        header('HTTP/1.1 400 - INVALID REQUEST - INVALID product DATA', true, 400);
         die();
       }
       
-      $customer = $da->insert($customer);
+      $product = $da->insert($product);
       
-      $json = json_encode($customer);
+      $json = json_encode($product);
       header("Content-Type: application/json");
       echo($json);
       die();
@@ -73,49 +79,49 @@ switch($method){
 
     break;
 
-  case "PUT":
+  // case "PUT":
 
-    if(preg_match('/^([0-9]*\/?)$/', $url_path, $matches)){
+  //   if(preg_match('/^([0-9]*\/?)$/', $url_path, $matches)){
         
-      $customer_id = $matches[1];
-      $requestBody = file_get_contents("php://input");
-      $assoc = json_decode($requestBody, TRUE);
-      $customer = new Customer($assoc);
+  //     $customer_id = $matches[1];
+  //     $requestBody = file_get_contents("php://input");
+  //     $assoc = json_decode($requestBody, TRUE);
+  //     $customer = new Customer($assoc);
       
-      if($customer->isValid() == false){
-        header('HTTP/1.1 400 - INVALID REQUEST - INVALID customer DATA', true, 400);
-        die();
-      }
+  //     if($customer->isValid() == false){
+  //       header('HTTP/1.1 400 - INVALID REQUEST - INVALID customer DATA', true, 400);
+  //       die();
+  //     }
 
-      $customer = $da->update($customer);
+  //     $customer = $da->update($customer);
       
-      $json = json_encode($customer);
-      header("Content-Type: application/json");
-      echo($json);
-      die();
-    }else{
-      die("INVALID PUT REQUEST TO " . $url_path);
-    }
+  //     $json = json_encode($customer);
+  //     header("Content-Type: application/json");
+  //     echo($json);
+  //     die();
+  //   }else{
+  //     die("INVALID PUT REQUEST TO " . $url_path);
+  //   }
 
-    break;
+  //   break;
 
-  case "DELETE":
+  // case "DELETE":
     
-    if(preg_match('/^([0-9]*\/?)$/', $url_path, $matches)){
-      $customer_id = $matches[1];
-      $result = $da->delete($customer_id);
-      if($result){
-        header('HTTP/1.1 200', true, 200);
-        die();
-      }else{
-        header('HTTP/1.1 500 - UNABLE TO DELETE customer', true, 500);
-        die();
-      }
-    }else{
-      die("INVALID DELETE REQUEST TO " . $url_path);
-    }
+  //   if(preg_match('/^([0-9]*\/?)$/', $url_path, $matches)){
+  //     $customer_id = $matches[1];
+  //     $result = $da->delete($customer_id);
+  //     if($result){
+  //       header('HTTP/1.1 200', true, 200);
+  //       die();
+  //     }else{
+  //       header('HTTP/1.1 500 - UNABLE TO DELETE customer', true, 500);
+  //       die();
+  //     }
+  //   }else{
+  //     die("INVALID DELETE REQUEST TO " . $url_path);
+  //   }
 
-    break;
+  //   break;
 
 case "OPTIONS":
 

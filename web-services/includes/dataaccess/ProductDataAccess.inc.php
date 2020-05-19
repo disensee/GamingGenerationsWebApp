@@ -84,7 +84,24 @@ class productDataAccess extends DataAccess{
 			}
 		}
 		return $allproducts;
-    }
+	}
+	
+	function getAllConsoles(){
+		$qStr = "SELECT DISTINCT consoleName FROM products";
+
+		$result = mysqli_query($this->link, $qStr) or $this->handleError(mysqli_error($this->link));
+
+		$allConsoles = [];
+		if(mysqli_num_rows($result)){
+			while($row = mysqli_fetch_array($result)){
+				$console = $row['consoleName'];
+				$allConsoles[] = strtolower($console);
+			}
+		}
+
+		return $allConsoles;
+	}
+
     
     /**
 	* Gets a product from the database by its id
@@ -150,8 +167,8 @@ class productDataAccess extends DataAccess{
 			}
 		}
 		return $allproducts;
-    }
-
+	}
+	
     /**
 	* Gets a product from the database by its product name
 	* @param {string} 	 The name of the product to get from a row in the database
