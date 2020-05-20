@@ -25,20 +25,16 @@ switch($method){
   case "GET":
     if(in_array(strtolower(rawurldecode($url_path)), $consoles)){
       $selectedConsole = rawurldecode($url_path);
-    }else{
+    }else if(strpos(strtolower(rawurldecode($url_path)), "/") !== false){
       $split = explode("/", rawurldecode($url_path));
       $selectedConsole = $split[0];
       $selectedProduct = $split[1];
     }
-
-    if(rawurldecode($url_path) == $selectedConsole){
-      $products = $da->getByConsoleName($selectedConsole);
-      $json = json_encode($products);
-      header("Content-Type: application/json");
-      echo($json);
-      die();
-    }else if(strcasecmp($url_path, rawurlencode($selectedConsole) . '/' . rawurlencode($selectedProduct))){ 
-      $product = $da->getByProductName($selectedProduct, $selectedConsole);
+   
+    if(preg_match('/^[0-9]{12}$/', $url_path, $matches)){
+      $productUpc = $matches[0];
+      $product = $da->getByUpc($productUpc);
+    
       if($product == false){
         header('HTTP/1.1 404 Not Found', true, 404);
         die();
@@ -48,12 +44,29 @@ switch($method){
         echo($json);
         die();
       }
+    }else if(rawurldecode($url_path) == $selectedConsole){
+      $products = $da->getByConsoleName($selectedConsole);
+      $json = json_encode($products);
+      header("Content-Type: application/json");
+      echo($json);
+      die();
+    }else if($url_path == rawurlencode($selectedConsole . '/' . $selectedProduct)){ 
+        $product = $da->getByProductName($selectedProduct, $selectedConsole);
+        if($product == false){
+          header('HTTP/1.1 404 Not Found', true, 404);
+          die();
+        }else{
+          $json = json_encode($product);
+          header("Content-Type: application/json");
+          echo($json);
+          die();
+        }
     }else{
       header('HTTP/1.1 400 - Invalid Request', true, 400);
       die();
     }
     
-    break;
+  break;
 
   case "POST":
 
@@ -77,51 +90,51 @@ switch($method){
       die("INVALID POST REQUEST TO: $url_path");
     }
 
-    break;
+  break;
 
-  // case "PUT":
+  case "PUT":
 
-  //   if(preg_match('/^([0-9]*\/?)$/', $url_path, $matches)){
+    if(preg_match('/^([0-9]*\/?)$/', $url_path, $matches)){
         
-  //     $customer_id = $matches[1];
-  //     $requestBody = file_get_contents("php://input");
-  //     $assoc = json_decode($requestBody, TRUE);
-  //     $customer = new Customer($assoc);
+      $productId = $matches[1];
+      $requestBody = file_get_contents("php://input");
+      $assoc = json_decode($requestBody, TRUE);
+      $product = new Product($assoc);
       
-  //     if($customer->isValid() == false){
-  //       header('HTTP/1.1 400 - INVALID REQUEST - INVALID customer DATA', true, 400);
-  //       die();
-  //     }
+      if($product->isValid() == false){
+        header('HTTP/1.1 400 - INVALID REQUEST - INVALID customer DATA', true, 400);
+        die();
+      }
 
-  //     $customer = $da->update($customer);
+      $product = $da->update($product);
       
-  //     $json = json_encode($customer);
-  //     header("Content-Type: application/json");
-  //     echo($json);
-  //     die();
-  //   }else{
-  //     die("INVALID PUT REQUEST TO " . $url_path);
-  //   }
+      $json = json_encode($product);
+      header("Content-Type: application/json");
+      echo($json);
+      die();
+    }else{
+      die("INVALID PUT REQUEST TO " . $url_path);
+    }
 
-  //   break;
+  break;
 
-  // case "DELETE":
+  case "DELETE":
     
-  //   if(preg_match('/^([0-9]*\/?)$/', $url_path, $matches)){
-  //     $customer_id = $matches[1];
-  //     $result = $da->delete($customer_id);
-  //     if($result){
-  //       header('HTTP/1.1 200', true, 200);
-  //       die();
-  //     }else{
-  //       header('HTTP/1.1 500 - UNABLE TO DELETE customer', true, 500);
-  //       die();
-  //     }
-  //   }else{
-  //     die("INVALID DELETE REQUEST TO " . $url_path);
-  //   }
+    if(preg_match('/^([0-9]*\/?)$/', $url_path, $matches)){
+      $productId = $matches[1];
+      $result = $da->delete($productId);
+      if($result){
+        header('HTTP/1.1 200', true, 200);
+        die();
+      }else{
+        header('HTTP/1.1 500 - UNABLE TO DELETE product', true, 500);
+        die();
+      }
+    }else{
+      die("INVALID DELETE REQUEST TO " . $url_path);
+    }
 
-  //   break;
+    break;
 
 case "OPTIONS":
 
