@@ -2,7 +2,8 @@ var namespace = namespace || {};
 
 namespace.InventoryModule = function(options){
     var leftColumnContainer = options.leftColumnContainer || null;
-    var mainContainer = options.mainContainer || null;
+    var midColumnContainer = options.midColumnContainer || null
+    var rightColumnContainer = options.rightColumnContainer || null;
     var callback = options.callback;
     var webServiceAddress = options.webServiceAddress || null; //THIS IS REQUIRED! DEFAULT TO AJAX URL TO BE MADE AT A LATER DATE!
 
@@ -21,13 +22,17 @@ namespace.InventoryModule = function(options){
         //TO DO: AUTHENTICATE USER
 
         leftColumnContainer.innerHTML = "";
-        mainContainer.innerHTML = "";
+        rightColumnContainer.innerHTML = "";
 
         var leftColumnContainerTemplate = `
             <div id="search-container">
-                <p>Search for item:</p>` + 
+                <p>Search for item:</p><br>
+                <p>Search by name:</p>` + 
                 createConsoleSelectBox(consoleArr) + 
-               `<input type="text" placeholder="Enter UPC">
+               `<input type="text" placeholder="Enter product name"><br>
+                <input type="submit" value="Search"><br>
+                <p>Searby by UPC:</p>
+                <input type="text" placeholder="Enter UPC">
                 <input type="submit" value="Search">
             </div>
             <div id="list-container">
@@ -35,7 +40,7 @@ namespace.InventoryModule = function(options){
                 createConsoleList(consoleArr) +
             `</div>`;
 
-        var mainContainerTemplate = `
+        var rightColumnContainerTemplate = `
             <div class="info">
                 <table class="info-pane">
                     <form>
@@ -83,7 +88,7 @@ namespace.InventoryModule = function(options){
         header = document.querySelector("#header");
         header.innerHTML = `<img src=images/gg-logo.jpg><p>Gaming Generations Inventory<p>`;
         leftColumnContainer.innerHTML = leftColumnContainerTemplate;
-        mainContainer.innerHTML = mainContainerTemplate;
+        rightColumnContainer.innerHTML = rightColumnContainerTemplate;
         footer = document.querySelector("#footer");
         footer.innerHTML=`Gaming Generations &copy;2020`;
     }

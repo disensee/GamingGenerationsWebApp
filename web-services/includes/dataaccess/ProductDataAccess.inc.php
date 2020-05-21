@@ -2,7 +2,7 @@
 include_once('DataAccess.inc.php');
 include_once(__DIR__ . "/../models/Product.inc.php");
 
-class productDataAccess extends DataAccess{
+class ProductDataAccess extends DataAccess{
 
 
 	// Constructor
