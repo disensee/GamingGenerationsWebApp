@@ -21,7 +21,22 @@ window.addEventListener("load", ()=>{
 		alert(statusCode + "\n" + statusText);
 	}
 
+	document.getElementById("btnGetAll").addEventListener("click", ()=>{
 		
+		var http = new XMLHttpRequest();
+		http.open("GET", baseURL);
+		
+		http.addEventListener("readystatechange", ()=>{
+			if(http.readyState == 4 && http.status == 200){
+				console.log(http.responseText);
+			}else if(http.readyState == 4){
+				errorCallback(http.status, http.statusText);
+			}
+		});
+		http.setRequestHeader("Content-Type","application/json");
+		http.send();
+	});
+
 	document.getElementById("btnGetAllByConsole").addEventListener("click", ()=>{
 		
         var inputConsole = prompt("Enter a console");
@@ -39,6 +54,25 @@ window.addEventListener("load", ()=>{
 		http.send();
 	});
 
+	document.getElementById("btnGetById").addEventListener("click", ()=>{
+		
+		var pId = prompt("Enter a product ID");
+
+		var url = baseURL + pId;
+
+		var http = new XMLHttpRequest();
+		http.open("GET", url);
+		
+		http.addEventListener("readystatechange", ()=>{
+			if(http.readyState == 4 && http.status == 200){
+				console.log(http.responseText);
+			}else if(http.readyState == 4){
+				errorCallback(http.status, http.statusText);
+			}
+		});
+		
+		http.send();
+	});
 
 	document.getElementById("btnGetByProduct").addEventListener("click", ()=>{
 		
@@ -151,7 +185,11 @@ window.addEventListener("load", ()=>{
 <body>
 	<h1>Product Web Service Tests</h1>
 	<p>Make sure to have the Network tab open in developer tools so that you can watch the HTTP request.</p>
+	<input type="button" id="btnGetAll" value="Get All Products">
+	<br>
 	<input type="button" id="btnGetAllByConsole" value="Get All By Console">
+	<br>
+	<input type="button" id="btnGetById" value="Get Product By ID">
 	<br>
 	<input type="button" id="btnGetByProduct" value="Get Product By Product Name">
 	<br>

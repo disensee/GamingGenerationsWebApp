@@ -31,10 +31,28 @@ switch($method){
       $selectedProduct = $split[1];
     }
    
-    if(preg_match('/^[0-9]{12}$/', $url_path, $matches)){
+    if(empty($url_path)){
+      $products = $da->getAll();
+      $json = json_encode($products);
+      header("Content-Type: application/json");
+      echo($json);
+      die();
+    }else if(preg_match('/^[0-9]{12}$/', $url_path, $matches)){
       $productUpc = $matches[0];
       $product = $da->getByUpc($productUpc);
     
+      if($product == false){
+        header('HTTP/1.1 404 Not Found', true, 404);
+        die();
+      }else{
+        $json = json_encode($product);
+        header("Content-Type: application/json");
+        echo($json);
+        die();
+      }
+    }else if(preg_match('/^([0-9]*\/?)$/', $url_path, $matches)){ 
+      $productId = $matches[1];
+      $product = $da->getById($productId);
       if($product == false){
         header('HTTP/1.1 404 Not Found', true, 404);
         die();
@@ -102,7 +120,7 @@ switch($method){
       $product = new Product($assoc);
       
       if($product->isValid() == false){
-        header('HTTP/1.1 400 - INVALID REQUEST - INVALID customer DATA', true, 400);
+        header('HTTP/1.1 400 - INVALID REQUEST - INVALID product DATA', true, 400);
         die();
       }
 
