@@ -5,7 +5,7 @@ namespace.InventoryModule = function(options){
     var midColumnContainer = options.midColumnContainer || null
     var rightColumnContainer = options.rightColumnContainer || null;
     var callback = options.callback;
-    var webServiceAddress = options.webServiceAddress || null; //THIS IS REQUIRED! DEFAULT TO AJAX URL TO BE MADE AT A LATER DATE!
+    var webServiceAddress = options.webServiceAddress || "http://localhost/GG/web-services/products/"; //THIS IS REQUIRED!
 
 
     var consoleArr = ["NES", "SNES", "Nintendo 64", "Gamecube", "Wii", "Wii U", "Switch", "Gameboy", "Gameboy Color", "Gameboy Advance", 
@@ -15,13 +15,14 @@ namespace.InventoryModule = function(options){
     var header;
     var footer;
 
-
+    var productTableList;
     initialize();
 
     function initialize(){
         //TO DO: AUTHENTICATE USER
 
         leftColumnContainer.innerHTML = "";
+        midColumnContainer.innerHTML = "";
         rightColumnContainer.innerHTML = "";
 
         var leftColumnContainerTemplate = `
@@ -40,6 +41,8 @@ namespace.InventoryModule = function(options){
                 createConsoleList(consoleArr) +
             `</div>`;
 
+        var midColumnContainerTemplate = `<div id="product-table-list">`;
+        
         var rightColumnContainerTemplate = `
             <div class="info">
                 <table class="info-pane">
@@ -88,9 +91,47 @@ namespace.InventoryModule = function(options){
         header = document.querySelector("#header");
         header.innerHTML = `<img src=images/gg-logo.jpg><p>Gaming Generations Inventory<p>`;
         leftColumnContainer.innerHTML = leftColumnContainerTemplate;
+        midColumnContainer.innerHTML = midColumnContainerTemplate;
         rightColumnContainer.innerHTML = rightColumnContainerTemplate;
         footer = document.querySelector("#footer");
         footer.innerHTML=`Gaming Generations &copy;2020`;
+
+        prodTableList = document.getElementById("product-table-list");
+
+        getAllProducts();
+    }
+
+    function generateProductList(products){
+        midColumnContainer.innerHTML = "";
+
+        var html = `<h4>Products</h4>`;
+        
+        for(var x = 0; x < products.length; x++){
+            html += `<tr productId="${products[x].productId}">
+                        <td>
+                        ${products[x].consoleName}
+                        </td>
+                        <td>
+                        ${products[x].productName}
+                        </td>`
+        }
+        var prodTable = document.createElement("table");
+        prodTable.id = "product-table";
+
+        prodTable.innerHTML = html;
+        productTableList.appendChild(table);
+        return table;
+    }
+
+    function getAllProducts(){
+        namespace.ajax.send({
+            url: webServiceAddress,
+            method: "GET",
+            callback: function(response){
+                products = JSON.parse(response);
+                generateProductList(products);
+            }
+        });
     }
 
     function createConsoleSelectBox(arr){
