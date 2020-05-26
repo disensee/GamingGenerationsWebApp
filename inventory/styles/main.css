@@ -62,6 +62,7 @@
     border-style: solid;
     border-width: 1px;
     border-color: gray;
+    border-radius: 5px;
     padding: 10px;
 }
 
@@ -69,6 +70,7 @@
     border-style: solid;
     border-width: 1px;
     border-top: 0px;
+    border-radius: 5px;
     border-color: gray;
     padding: 10px;
 }
@@ -95,6 +97,7 @@
     border-style: solid;
     border-width: 1px;
     border-color: gray;
+    border-radius: 5px;
     padding: 10px;
 }
 
@@ -102,6 +105,7 @@
     border-style: solid;
     border-width: 1px;
     border-color: gray;
+    border-radius: 5px;
     padding: 10px;
 }
 
@@ -151,4 +155,21 @@ textarea{
 table th{
     font-size: 15px;
 
+}
+
+#product-table-list h4{
+    text-align: right;
+    font-weight: bold;
+}
+
+#product-table-list table{
+    width: 100%;
+    border-collapse: collapse;
+    color: darkslategray;
+}
+
+#product-table-list th, #product-table-list td{
+    height: 50px;
+    border: 1px gray solid;
+    padding-left: 6px;
 }

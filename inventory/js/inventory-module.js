@@ -14,8 +14,8 @@ namespace.InventoryModule = function(options){
     
     var header;
     var footer;
+    var productTableListContainer;
 
-    var productTableList;
     initialize();
 
     function initialize(){
@@ -41,7 +41,10 @@ namespace.InventoryModule = function(options){
                 createConsoleList(consoleArr) +
             `</div>`;
 
-        var midColumnContainerTemplate = `<div id="product-table-list">`;
+        var midColumnContainerTemplate = `
+            <div id="product-table-list">
+
+            </div>`;
         
         var rightColumnContainerTemplate = `
             <div class="info">
@@ -72,9 +75,8 @@ namespace.InventoryModule = function(options){
                             <td><input type="button" value="Add" id="btnAdd"></td>
                         </tr>
                         <tr>
-                            <td></td>
-                            <td>
-                                <textarea name="item-list" style="width:600px; height:200px;">A list of games that are for trade or sale populates here</textarea>
+                            <td colspan="2">
+                                <textarea name="item-list" style="width:500px; height:200px;">A list of games that are for trade or sale populates here</textarea>
                             </td>
                         </tr>
                         <tr>
@@ -96,31 +98,33 @@ namespace.InventoryModule = function(options){
         footer = document.querySelector("#footer");
         footer.innerHTML=`Gaming Generations &copy;2020`;
 
-        prodTableList = document.getElementById("product-table-list");
+        productTableListContainer = document.getElementById("product-table-list");
 
         getAllProducts();
     }
 
     function generateProductList(products){
-        midColumnContainer.innerHTML = "";
-
-        var html = `<h4>Products</h4>`;
+        productTableListContainer.innerHTML =`<h4>PRODUCTS</h4>`;
+        var html = `<tr>
+                        <th>Console</th>
+                        <th>Product</th>`;
         
         for(var x = 0; x < products.length; x++){
             html += `<tr productId="${products[x].productId}">
                         <td>
-                        ${products[x].consoleName}
+                            ${products[x].consoleName}
                         </td>
                         <td>
-                        ${products[x].productName}
-                        </td>`
+                            ${products[x].productName}
+                        </td>
+                    </tr>`;
         }
         var prodTable = document.createElement("table");
-        prodTable.id = "product-table";
+        //prodTable.id = "product-table";
 
         prodTable.innerHTML = html;
-        productTableList.appendChild(table);
-        return table;
+        productTableListContainer.appendChild(prodTable);
+        return prodTable;
     }
 
     function getAllProducts(){
@@ -128,7 +132,20 @@ namespace.InventoryModule = function(options){
             url: webServiceAddress,
             method: "GET",
             callback: function(response){
-                products = JSON.parse(response);
+                console.log(response);
+                var products = JSON.parse(response);
+                generateProductList(products);
+            }
+        });
+    }
+
+    function getProductsByConsoleName(){
+        namespace.ajax.send({
+            url: webServiceAddress + "NES",
+            method: "GET",
+            callback: function(response){
+                console.log(response);
+                var products = JSON.parse(response);
                 generateProductList(products);
             }
         });
