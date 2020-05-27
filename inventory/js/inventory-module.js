@@ -8,14 +8,23 @@ namespace.InventoryModule = function(options){
     var webServiceAddress = options.webServiceAddress || "http://localhost/GG/web-services/products/"; //THIS IS REQUIRED!
 
 
-    var consoleArr = ["NES", "SNES", "Nintendo 64", "Gamecube", "Wii", "Wii U", "Switch", "Gameboy", "Gameboy Color", "Gameboy Advance", 
-    "Nintendo DS", "Nintendo 3DS", "Playstaion", "Playstaion 2", "Playstation 3", "Playstaion 4", "PSP", "PS Vita", 
-    "Xbox", "Xbox 360", "Xbox One", "Sega Genesis", "Sega Saturn", "Sega Dreamcast", "Atari"];
+    var consoleArr = ["NES", "Super Nintendo", "Nintendo 64", "Gamecube", "Wii", "Wii U", "Nintendo Switch", "GameBoy", "GameBoy Color", "GameBoy Advance", 
+    "Nintendo DS", "Nintendo 3DS", "Playstation", "Playstation 2", "Playstation 3", "Playstation 4", "PSP", "Playstation Vita", 
+    "Xbox", "Xbox 360", "Xbox One", "Sega Genesis", "Sega Saturn", "Sega Dreamcast", "Atari 2600", "Atari 400", "Atari 5200", "Atari 7800", "Atari Lynx", "Atari ST" ];
     
     var header;
     var footer;
     var productTableListContainer;
+    
+    //left column search vars
+    var consoleSelectBox;
+    var txtSearchProduct;
+    var btnSearchByProdName;
+    var txtSearchUpc;
+    var btnSearchByUpc;
 
+    //left column link list
+    var consoleList;
     initialize();
 
     function initialize(){
@@ -30,11 +39,11 @@ namespace.InventoryModule = function(options){
                 <p>Search for item:</p><br>
                 <p>Search by name:</p>` + 
                 createConsoleSelectBox(consoleArr) + 
-               `<input type="text" placeholder="Enter product name"><br>
-                <input type="submit" value="Search"><br>
+               `<input type="text" id="txtSearchProduct" placeholder="Enter product name"><br>
+                <input id="btnSearchByProdName" type="button" value="Search"><br>
                 <p>Searby by UPC:</p>
-                <input type="text" placeholder="Enter UPC">
-                <input type="submit" value="Search">
+                <input type="text" id="txtSearchUpc" placeholder="Enter UPC">
+                <input id="btnSearchByUpc" type="button" value="Search">
             </div>
             <div id="list-container">
                 <p>Filter:</p>` +
@@ -52,23 +61,27 @@ namespace.InventoryModule = function(options){
                     <form>
                         <tr>
                             <td><label for="upc">UPC:</label></td>
-                            <td><input type="text" name="upc" id="upc" placeholder="Enter UPC"></td>
+                            <td><input type="text" name="upc" id="txtUpc" placeholder="Enter UPC" readonly="true"></td>
                         </tr>
                         <tr>
-                            <td><label>Console:</label></td>
-                            <td>` + createConsoleSelectBox(consoleArr) + `</td>
+                            <td><label for="upc">UPC:</label></td>
+                            <td><input type="text" name="upc" id="txtUpc" placeholder="Enter UPC" readonly="true"></td>
+                        </tr>
+                        <tr>
+                            <td><label for="console">Console:</label></td>
+                            <td><input type="text" name="console" id="txtConsole" placeholder="Console" readonly="true"></td>
                         </tr>
                         <tr>
                             <td><label for="item">Item:</label></td>
-                            <td><input type="text" name="item" id="item" placeholder="Scan UPC for item" readonly="true"></td>
+                            <td><input type="text" name="item" id="txtItem" placeholder="Item" readonly="true"></td>
                         </tr>
                         <tr>
                             <td><label for="value">Gamestop Value:</label></td>
-                            <td><input type="text" name="value" id="value" placeholder="Scan UPC for value"  readonly="true"></td>
+                            <td><input type="text" name="value" id="txtValue" placeholder="GamestopValue" readonly="true"></td>
                         </tr>
                         <tr>
                             <td><label for="quantity">Quantity in stock:</label></td>
-                            <td><input type="text" name="quantity" readonly="true"></td>
+                            <td><input type="text" name="quantity" id="txtQuantity" readonly="true"></td>
                         </tr>
                         <tr>
                             <td></td>
@@ -90,6 +103,7 @@ namespace.InventoryModule = function(options){
                 </table>
             </div>`;
 
+        //inject HTML
         header = document.querySelector("#header");
         header.innerHTML = `<img src=images/gg-logo.jpg><p>Gaming Generations Inventory<p>`;
         leftColumnContainer.innerHTML = leftColumnContainerTemplate;
@@ -100,27 +114,57 @@ namespace.InventoryModule = function(options){
 
         productTableListContainer = document.getElementById("product-table-list");
 
-        getAllProducts();
+        //search by product name
+        consoleSelectBox = leftColumnContainer.querySelector("#consoleSelectBox");
+        txtSearchProduct = leftColumnContainer.querySelector("#txtSearchProduct");
+        btnSearchByProdName = leftColumnContainer.querySelector("#btnSearchByProdName");
+
+        //search by upc
+        txtSearchUpc = leftColumnContainer.querySelector("#txtSearchUpc");
+        btnSearchByUpc = leftColumnContainer.querySelector("#btnSearchByUpc");
+
+        //console link list
+        consoleList = leftColumnContainer.querySelector("#consoleList");
+        
+        //event handlers
+        btnSearchByProdName.addEventListener("click", searchByProductName);
+        btnSearchByUpc.addEventListener("click", searchByUpc);
+
+        consoleList.addEventListener("click", getProductsByConsoleName);
+        
+        //getProductsByConsoleName("NES");
     }
 
     function generateProductList(products){
         productTableListContainer.innerHTML =`<h4>PRODUCTS</h4>`;
         var html = `<tr>
                         <th>Console</th>
-                        <th>Product</th>`;
-        
-        for(var x = 0; x < products.length; x++){
-            html += `<tr productId="${products[x].productId}">
-                        <td>
-                            ${products[x].consoleName}
-                        </td>
-                        <td>
-                            ${products[x].productName}
-                        </td>
+                        <th>Product</th>
                     </tr>`;
+        
+        if(Array.isArray(products)){
+            for(var x = 0; x < products.length; x++){
+                html += `<tr productId="${products[x].productId}">
+                            <td>
+                                ${products[x].consoleName}
+                            </td>
+                            <td>
+                                ${products[x].productName}
+                            </td>
+                        </tr>`;
+            }
+        }else{
+            html += `<tr productId="${products.productId}">
+                            <td>
+                                ${products.consoleName}
+                            </td>
+                            <td>
+                                ${products.productName}
+                            </td>
+                        </tr>`;
         }
         var prodTable = document.createElement("table");
-        //prodTable.id = "product-table";
+        prodTable.setAttribute("id", "product-table");
 
         prodTable.innerHTML = html;
         productTableListContainer.appendChild(prodTable);
@@ -132,27 +176,71 @@ namespace.InventoryModule = function(options){
             url: webServiceAddress,
             method: "GET",
             callback: function(response){
-                console.log(response);
+                //console.log(response);
                 var products = JSON.parse(response);
                 generateProductList(products);
             }
         });
     }
 
-    function getProductsByConsoleName(){
+    function getProductsByConsoleName(evt){
+        var target = evt.target
+        if(target.classList.contains("list-anchor")){
+            var vgConsole = target.closest("a").getAttribute("selectedConsole");
+        }
+
         namespace.ajax.send({
-            url: webServiceAddress + "NES",
+            url: webServiceAddress + vgConsole,
             method: "GET",
             callback: function(response){
-                console.log(response);
+                //console.log(response);
                 var products = JSON.parse(response);
                 generateProductList(products);
             }
         });
+    }
+
+    function getProductsByProductName(product, vgConsole){
+        namespace.ajax.send({
+            url: webServiceAddress + vgConsole + "/" + product,
+            method: "GET",
+            callback: function(response){
+                var products = JSON.parse(response);
+                generateProductList(products);
+            }
+        });
+    }
+
+    function getProductByUpc(upc){
+        namespace.ajax.send({
+            url: webServiceAddress + upc,
+            method: "GET",
+            callback: function(response){
+                console.log(response);
+                var product = JSON.parse(response);
+                generateProductList(product);
+            }
+        });
+    }
+
+    function searchByProductName(){
+        var consoleName = consoleSelectBox.value;
+        var productName = txtSearchProduct.value;
+
+        getProductsByProductName(productName, consoleName);
+        clearSearchTextBoxes();
+    }
+
+    function searchByUpc(){
+        var upc = txtSearchUpc.value;
+        
+        getProductByUpc(upc);
+        clearSearchTextBoxes();
     }
 
     function createConsoleSelectBox(arr){
         var selectBox = document.createElement("select");
+        selectBox.setAttribute("id", "consoleSelectBox");
         var opt0 = document.createElement("option");
         
         opt0.value = "0";
@@ -176,10 +264,17 @@ namespace.InventoryModule = function(options){
         var ul = document.createElement("ul");
         arr.forEach((c)=>{
             var li = document.createElement("li");
-            li.innerHTML=`<a class='list-anchor' href='#'>` + c + `</a>`;
+            li.innerHTML=`<a class='list-anchor' selectedConsole="${c}">` + c + `</a>`;
             ul.appendChild(li);
         });
-
+        
+        ul.setAttribute("id", "consoleList");
         return ul.outerHTML;
+    }
+
+    function clearSearchTextBoxes(){
+        consoleSelectBox.selectedIndex = 0;
+        txtSearchProduct.value = "";
+        txtSearchUpc.value = "";
     }
 };

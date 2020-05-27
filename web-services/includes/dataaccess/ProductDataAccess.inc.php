@@ -154,7 +154,7 @@ class ProductDataAccess extends DataAccess{
 	*/
 	function getByConsoleName($consoleName){
 		$cleanConsoleName = $this->cleanDataGoingIntoDB($consoleName);
-		$qStr = "SELECT productId, consoleName, productName, loosePrice, cibPrice, gamestopPrice, gamestopTradePrice, upc, quantity FROM products WHERE consoleName = '$cleanConsoleName'";
+		$qStr = "SELECT productId, consoleName, productName, loosePrice, cibPrice, gamestopPrice, gamestopTradePrice, upc, quantity FROM products WHERE consoleName = '$cleanConsoleName' ORDER BY productName";
 
 		$result = mysqli_query($this->link, $qStr) or $this->handleError(mysqli_error($this->link));
 		$allproducts = [];
