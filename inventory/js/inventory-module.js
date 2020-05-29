@@ -25,6 +25,28 @@ namespace.InventoryModule = function(options){
 
     //left column link list
     var consoleList;
+
+    //mid column table/list
+    var productTable;
+
+    //right column text fields
+    var txtProductId;
+    var txtUpc;
+    var txtConsole;
+    var txtItem;
+    var txtLoosePrice;
+    var txtCibPrice;
+    var txtGsTradeValue;
+    var txtGsPrice;
+    var txtQuantity;
+
+    var taProductList;
+
+    //right column buttons
+    var btnAddToList;
+    var btnTradeIn;
+    var btnSale;
+
     initialize();
 
     function initialize(){
@@ -52,7 +74,8 @@ namespace.InventoryModule = function(options){
 
         var midColumnContainerTemplate = `
             <div id="product-table-list">
-
+                <table id="product-table">
+                </table>
             </div>`;
         
         var rightColumnContainerTemplate = `
@@ -60,12 +83,12 @@ namespace.InventoryModule = function(options){
                 <table class="info-pane">
                     <form>
                         <tr>
-                            <td><label for="upc">UPC:</label></td>
-                            <td><input type="text" name="upc" id="txtUpc" placeholder="Enter UPC" readonly="true"></td>
+                            <td><label for="productId">Product ID:</label></td>
+                            <td><input type="text" name="productId" id="txtProductId" placeholder="Product ID" readonly="true"></td>
                         </tr>
                         <tr>
                             <td><label for="upc">UPC:</label></td>
-                            <td><input type="text" name="upc" id="txtUpc" placeholder="Enter UPC" readonly="true"></td>
+                            <td><input type="text" name="upc" id="txtUpc" placeholder="UPC" readonly="true"></td>
                         </tr>
                         <tr>
                             <td><label for="console">Console:</label></td>
@@ -76,8 +99,20 @@ namespace.InventoryModule = function(options){
                             <td><input type="text" name="item" id="txtItem" placeholder="Item" readonly="true"></td>
                         </tr>
                         <tr>
-                            <td><label for="value">Gamestop Value:</label></td>
-                            <td><input type="text" name="value" id="txtValue" placeholder="GamestopValue" readonly="true"></td>
+                            <td><label for="loosePrice">Loose Price:</label></td>
+                            <td><input type="text" name="loosePrice" id="txtLoosePrice" placeholder="Loose Price" readonly="true"></td>
+                        </tr>
+                        <tr>
+                            <td><label for="cibPrice">CIB Price:</label></td>
+                            <td><input type="text" name="citPrice" id="txtCibPrice" placeholder="CIB Price" readonly="true"></td>
+                        </tr>
+                        <tr>
+                            <td><label for="gsTradeValue">Gamestop Trade Value:</label></td>
+                            <td><input type="text" name="gsTradeValue" id="txtGsTradeValue" placeholder="Gamestop Value" readonly="true"></td>
+                        </tr>
+                        <tr>
+                            <td><label for="gsPrice">Gamestop Price:</label></td>
+                            <td><input type="text" name="gsPrice" id="txtGsPrice" placeholder="Gamestop Price" readonly="true"></td>
                         </tr>
                         <tr>
                             <td><label for="quantity">Quantity in stock:</label></td>
@@ -89,7 +124,7 @@ namespace.InventoryModule = function(options){
                         </tr>
                         <tr>
                             <td colspan="2">
-                                <textarea name="item-list" style="width:500px; height:200px;">A list of games that are for trade or sale populates here</textarea>
+                                <textarea id="taProductList" name="item-list" style="width:500px; height:200px;">A list of games that are for trade or sale populates here</textarea>
                             </td>
                         </tr>
                         <tr>
@@ -125,13 +160,28 @@ namespace.InventoryModule = function(options){
 
         //console link list
         consoleList = leftColumnContainer.querySelector("#consoleList");
+
+        //mid column product table
+        productTable = midColumnContainer.querySelector("#product-table");
+
+        //right column text fields
+        txtProductId = rightColumnContainer.querySelector("#txtProductId");
+        txtUpc = rightColumnContainer.querySelector("#txtUpc");
+        txtConsole = rightColumnContainer.querySelector("#txtConsole");
+        txtItem = rightColumnContainer.querySelector("#txtItem");
+        txtLoosePrice = rightColumnContainer.querySelector("#txtLoosePrice");
+        txtCibPrice = rightColumnContainer.querySelector("#txtCibPrice");
+        txtGsTradeValue = rightColumnContainer.querySelector("#txtGsTradeValue");
+        txtGsPrice = rightColumnContainer.querySelector("#txtGsPrice");
+        txtQuantity = rightColumnContainer.querySelector("#txtQuantity");
+        taProductList = rightColumnContainer.querySelector("#taProductList");
         
         //event handlers
         btnSearchByProdName.addEventListener("click", searchByProductName);
         btnSearchByUpc.addEventListener("click", searchByUpc);
 
         consoleList.addEventListener("click", getProductsByConsoleName);
-        
+        productTable.addEventListener("click", selectProductInList);
         //getProductsByConsoleName("NES");
     }
 
@@ -144,31 +194,74 @@ namespace.InventoryModule = function(options){
         
         if(Array.isArray(products)){
             for(var x = 0; x < products.length; x++){
-                html += `<tr productId="${products[x].productId}">
-                            <td>
+                html += `<tr class="product-table-row" productId="${products[x].productId}">
+                            <td class="product-table-cell">
                                 ${products[x].consoleName}
                             </td>
-                            <td>
+                            <td class="product-table-cell">
                                 ${products[x].productName}
                             </td>
                         </tr>`;
             }
         }else{
-            html += `<tr productId="${products.productId}">
-                            <td>
+            html += `<tr class="product-table-row" productId="${products.productId}">
+                            <td class="product-table-cell">
                                 ${products.consoleName}
                             </td>
-                            <td>
+                            <td class="product-table-cell">
                                 ${products.productName}
                             </td>
                         </tr>`;
         }
-        var prodTable = document.createElement("table");
-        prodTable.setAttribute("id", "product-table");
+        
+        productTable.innerHTML = html;
+        productTableListContainer.appendChild(productTable);
+        return productTable;
+    }
 
-        prodTable.innerHTML = html;
-        productTableListContainer.appendChild(prodTable);
-        return prodTable;
+    function selectProductInList(evt){
+        var target = evt.target
+        if(target.classList.contains("product-table-cell")){
+            var selectedProductId = target.closest("tr").getAttribute("productId");
+        }
+
+        namespace.ajax.send({
+            url: webServiceAddress + selectedProductId,
+            method: "GET",
+            callback: function(response){
+                //console.log(response);
+                var product = JSON.parse(response);
+                populateProductForm(product);
+            }
+        });
+    }
+
+    function populateProductForm(product){
+        txtProductId.value = product.productId;
+        txtUpc.value = product.upc;
+        txtConsole.value = product.consoleName;
+        txtItem.value = product.productName;
+        txtLoosePrice.value = product.loosePrice;
+        txtCibPrice.value = product.cibPrice;
+        txtGsTradeValue.value = product.gamestopTradePrice;
+        txtGsPrice.value = product.gamestopPrice;
+        txtQuantity.value = product.quantity;
+    }
+
+    function createProductFromForm(){
+        var product = {
+            productId: txtProductId.value,
+            productName: txtItem.value,
+            consoleName: txtConsole.value,
+            loosePrice: txtLoosePrice.value,
+            cibPrice: txtCibPrice.value,
+            gamestopTradePrice: txtGsTradeValue.value,
+            gamestopPrice: txtGsPrice.value,
+            upc: txtUpc.value,
+            quantity: txtQuantity.value
+        };
+
+        return product;
     }
 
     function getAllProducts(){
@@ -276,5 +369,17 @@ namespace.InventoryModule = function(options){
         consoleSelectBox.selectedIndex = 0;
         txtSearchProduct.value = "";
         txtSearchUpc.value = "";
+    }
+
+    function clearProductInfoTextBoxes(){
+        txtProductId.value="";
+        txtUpc.value="";
+        txtConsole.value="";
+        txtItem.value="";
+        txtLoosePrice.value="";
+        txtCibPrice.value="";
+        txtGsTradeValue.value="";
+        txtGsPrice.value="";
+        txtQuantity.value="";
     }
 };
