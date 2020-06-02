@@ -57,17 +57,17 @@ class Product extends Model{
         if(empty($this->gamestopTradePrice) || !is_numeric($this->gamestopTradePrice)){
             return false;
         }
-        //upc must not be empty
-        if(empty($this->upc)){
-            return false;
-        }
+        if(!empty($this->upc)){
         //upc must be 12 digits
-        if(!preg_match('/^[0-9]{12}$/', $this->upc)){
-            return false;
+            if(!preg_match('/^[0-9]{12}$/', $this->upc)){
+                return false;
+            }
         }
         //quantity must not be empty and must be a number
-        if(empty($this->quantity) || !is_numeric($this->quantity)){
-            return false;
+        if($this->quantity != 0){
+            if(!(is_numeric($this->quantity)) || empty($this->quantity)){
+                return false;
+            }
         }
         return true;
     }

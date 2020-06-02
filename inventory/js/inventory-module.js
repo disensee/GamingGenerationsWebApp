@@ -40,10 +40,15 @@ namespace.InventoryModule = function(options){
     var txtGsPrice;
     var txtQuantity;
 
-    var taProductList;
+    var selProductList;
+    var selectedProducts = [];
 
     //right column buttons
     var btnAddToList;
+    var btnClearForm;
+
+    var btnRemoveSelected;
+    var btnClearAll;
     var btnTradeIn;
     var btnSale;
 
@@ -120,18 +125,25 @@ namespace.InventoryModule = function(options){
                         </tr>
                         <tr>
                             <td></td>
-                            <td><input type="button" value="Add" id="btnAdd"></td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">
-                                <textarea id="taProductList" name="item-list" style="width:500px; height:200px;">A list of games that are for trade or sale populates here</textarea>
+                            <td>
+                                <input type="button" value="Add" id="btnAddToList">
+                                <input type="button" value="Clear" id="btnClearForm">
                             </td>
                         </tr>
                         <tr>
-                            <td></td>
+                            <td colspan="2">
+                                <select id="selProductList" size=15 name="item-list" style="width:500px; height:200px;">
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
                             <td>
-                            <input type="button" value="Trade-In" id="btnTradeIn">
-                            <input type="button" value="Sale" id="btnSale">
+                                <input type="button" value="Remove Selected" id="btnRemoveSelected">
+                                <input type="button" value="Clear All" id="btnClearAll">
+                            </td>
+                            <td>
+                                <input type="button" value="Trade-In" id="btnTradeIn">
+                                <input type="button" value="Sale" id="btnSale">
                             </td>
                         </tr>
                     </form>
@@ -152,14 +164,14 @@ namespace.InventoryModule = function(options){
         //search by product name
         consoleSelectBox = leftColumnContainer.querySelector("#consoleSelectBox");
         txtSearchProduct = leftColumnContainer.querySelector("#txtSearchProduct");
-        btnSearchByProdName = leftColumnContainer.querySelector("#btnSearchByProdName");
+        btnSearchByProdName = leftColumnContainer.querySelector("#btnSearchByProdName").onclick = searchByProductName;
 
         //search by upc
         txtSearchUpc = leftColumnContainer.querySelector("#txtSearchUpc");
-        btnSearchByUpc = leftColumnContainer.querySelector("#btnSearchByUpc");
+        btnSearchByUpc = leftColumnContainer.querySelector("#btnSearchByUpc").onclick = searchByUpc;
 
         //console link list
-        consoleList = leftColumnContainer.querySelector("#consoleList");
+        consoleList = leftColumnContainer.querySelector("#consoleList").onclick = getProductsByConsoleName;
 
         //mid column product table
         productTable = midColumnContainer.querySelector("#product-table");
@@ -174,14 +186,29 @@ namespace.InventoryModule = function(options){
         txtGsTradeValue = rightColumnContainer.querySelector("#txtGsTradeValue");
         txtGsPrice = rightColumnContainer.querySelector("#txtGsPrice");
         txtQuantity = rightColumnContainer.querySelector("#txtQuantity");
-        taProductList = rightColumnContainer.querySelector("#taProductList");
+        selProductList = rightColumnContainer.querySelector("#selProductList");
+
+        //right column buttons
+        btnAddToList = rightColumnContainer.querySelector("#btnAddToList").onclick = addProductForTransaction;
+        btnClearForm = rightColumnContainer.querySelector("#btnClearForm").onclick = clearProductInfoTextBoxes;
+
+        btnRemoveSelected = rightColumnContainer.querySelector("#btnRemoveSelected").onclick = removeSelectedClick;
+        btnClearAll = rightColumnContainer.querySelector("#btnClearAll").onclick = function(){
+            selectedProducts.length = 0;
+            refreshSelectedProducts();
+        };
+
+        btnTradeIn = rightColumnContainer.querySelector("#btnTradeIn").onclick = tradeInQuantityUpdate;
+        btnSale = rightColumnContainer.querySelector("#btnSale").onclick = saleQuantityUpdate;
         
         //event handlers
-        btnSearchByProdName.addEventListener("click", searchByProductName);
-        btnSearchByUpc.addEventListener("click", searchByUpc);
 
-        consoleList.addEventListener("click", getProductsByConsoleName);
         productTable.addEventListener("click", selectProductInList);
+
+        //btnAddToList.addEventListener("click", addProductForTransaction);
+        //btnClearForm.addEventListener("click", clearProductInfoTextBoxes);
+
+        //btnRemoveSelected.addEventListener("click", removeSelectedClick);
         //getProductsByConsoleName("NES");
     }
 
@@ -274,6 +301,48 @@ namespace.InventoryModule = function(options){
                 generateProductList(products);
             }
         });
+    }
+
+    function tradeInQuantityUpdate(){
+        if(selectedProducts.length > 0){
+            selectedProducts.forEach((p)=>{
+                p.quantity++;
+                namespace.ajax.send({
+                    url: webServiceAddress + p.productId,
+                    method: "PUT",
+                    headers: {"Content-Type": "application/json", "Accept": "application/json"},
+				    requestBody: JSON.stringify(p),
+                    callback: function(response){
+                        console.log(response);
+                    }
+                });
+                selectedProducts.length = 0;
+                refreshSelectedProducts();
+            });
+        }else{
+            alert("Please add products to the transaction list")
+        }
+    }
+
+    function saleQuantityUpdate(){
+        if(selectedProducts.length > 0){
+            selectedProducts.forEach((p)=>{
+                p.quantity = p.quantity - 1;
+                namespace.ajax.send({
+                    url: webServiceAddress + p.productId,
+                    method: "PUT",
+                    headers: {"Content-Type": "application/json", "Accept": "application/json"},
+				    requestBody: JSON.stringify(p),
+                    callback: function(response){
+                        console.log(response);
+                    }
+                });
+                selectedProducts.length = 0;
+                refreshSelectedProducts();
+            });
+        }else{
+            alert("Please add products to the transaction list")
+        }
     }
 
     function getProductsByConsoleName(evt){
@@ -381,5 +450,41 @@ namespace.InventoryModule = function(options){
         txtGsTradeValue.value="";
         txtGsPrice.value="";
         txtQuantity.value="";
+    }
+
+    function refreshSelectedProducts(){
+        selProductList.innerHTML = "";
+
+        selectedProducts.forEach((p)=>{
+            selProductList.innerHTML += `<option value="${p.productId}">${p.productName} - ${p.consoleName}</option>`
+        });
+    }
+
+    function addProductForTransaction(){
+        //validate function - stil needs to be written(?)
+        var product = createProductFromForm();
+        selectedProducts.push(product);
+        
+        clearProductInfoTextBoxes();
+        refreshSelectedProducts();
+    }
+
+    function removeSelectedProduct(productId){
+        for(var i = 0; i < selectedProducts.length; i++){
+            if(productId == selectedProducts[i].productId){
+                selectedProducts.splice(i, 1);
+            }
+        }
+
+        refreshSelectedProducts();
+    }
+
+    function removeSelectedClick(){
+        if(selProductList.selectedIndex != -1){
+            var id = selProductList.value;
+            removeSelectedProduct(id);
+        }else{
+            alert("Please select a product from the pending transaction list")
+        }
     }
 };
