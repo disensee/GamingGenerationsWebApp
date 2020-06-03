@@ -1,3 +1,7 @@
+<?php
+require("authentication-check.inc.php");
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>

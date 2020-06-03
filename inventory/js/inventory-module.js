@@ -79,6 +79,7 @@ namespace.InventoryModule = function(options){
 
         var midColumnContainerTemplate = `
             <div id="product-table-list">
+                <p style="text-align:right;">Search for a product to see results</p>
                 <table id="product-table">
                 </table>
             </div>`;
@@ -88,8 +89,8 @@ namespace.InventoryModule = function(options){
                 <table class="info-pane">
                     <form>
                         <tr>
-                            <td><label for="productId">Product ID:</label></td>
-                            <td><input type="text" name="productId" id="txtProductId" placeholder="Product ID" readonly="true"></td>
+                            <td><label for="productId" hidden="true">Product ID:</label></td>
+                            <td><input type="text" name="productId" id="txtProductId" placeholder="Product ID" readonly="true" hidden="true"></td>
                         </tr>
                         <tr>
                             <td><label for="upc">UPC:</label></td>
@@ -145,6 +146,14 @@ namespace.InventoryModule = function(options){
                                 <input type="button" value="Trade-In" id="btnTradeIn">
                                 <input type="button" value="Sale" id="btnSale">
                             </td>
+                        </tr>
+                        <tr>
+                            <td><label for"trade-in-credit-value">Trade-In Credit Value:</label></td>
+                            <td><input type="text" name="trade-in-credit-value" id="txtTradeInCreditValue" readonly="true"></td>
+                        </tr>
+                        <tr>
+                            <td><label for"trade-in-cash-value">Trade-In Cash Value:</label></td>
+                            <td><input type="text" name="trade-in-cash-value" id="txtTradeInCashValue" readonly="true"></td>
                         </tr>
                     </form>
                 </table>
@@ -202,14 +211,21 @@ namespace.InventoryModule = function(options){
         btnSale = rightColumnContainer.querySelector("#btnSale").onclick = saleQuantityUpdate;
         
         //event handlers
-
         productTable.addEventListener("click", selectProductInList);
+        selProductList.addEventListener("change", populateProductFormFromSelectBox);
+        txtSearchProduct.addEventListener("keyup", function(event){
+            if(event.keyCode == 13){
+                event.preventDefault();
+                leftColumnContainer.querySelector("#btnSearchByProdName").click();
+            }
+        });
 
-        //btnAddToList.addEventListener("click", addProductForTransaction);
-        //btnClearForm.addEventListener("click", clearProductInfoTextBoxes);
-
-        //btnRemoveSelected.addEventListener("click", removeSelectedClick);
-        //getProductsByConsoleName("NES");
+        txtSearchUpc.addEventListener("keyup", function(event){
+            if(event.keyCode == 13){
+                event.preventDefault();
+                leftColumnContainer.querySelector("#btnSearchByUpc").click();
+            }
+        });
     }
 
     function generateProductList(products){
@@ -320,7 +336,7 @@ namespace.InventoryModule = function(options){
                 refreshSelectedProducts();
             });
         }else{
-            alert("Please add products to the transaction list")
+            alert("Please add product(s) to the transaction list.")
         }
     }
 
@@ -341,7 +357,7 @@ namespace.InventoryModule = function(options){
                 refreshSelectedProducts();
             });
         }else{
-            alert("Please add products to the transaction list")
+            alert("Please add product(s) to the transaction list.")
         }
     }
 
@@ -386,18 +402,22 @@ namespace.InventoryModule = function(options){
     }
 
     function searchByProductName(){
-        var consoleName = consoleSelectBox.value;
-        var productName = txtSearchProduct.value;
+        if(validateSearchProductName()){
+            var consoleName = consoleSelectBox.value;
+            var productName = txtSearchProduct.value;
 
-        getProductsByProductName(productName, consoleName);
-        clearSearchTextBoxes();
+            getProductsByProductName(productName, consoleName);
+            clearSearchTextBoxes();
+        }
     }
 
     function searchByUpc(){
-        var upc = txtSearchUpc.value;
-        
-        getProductByUpc(upc);
-        clearSearchTextBoxes();
+        if(validateSearchUpc()){
+            var upc = txtSearchUpc.value;
+            
+            getProductByUpc(upc);
+            clearSearchTextBoxes();
+        }
     }
 
     function createConsoleSelectBox(arr){
@@ -405,7 +425,7 @@ namespace.InventoryModule = function(options){
         selectBox.setAttribute("id", "consoleSelectBox");
         var opt0 = document.createElement("option");
         
-        opt0.value = "0";
+        opt0.value = "-1";
         opt0.text = "Select console:"
         selectBox.add(opt0, null);
         
@@ -461,12 +481,15 @@ namespace.InventoryModule = function(options){
     }
 
     function addProductForTransaction(){
-        //validate function - stil needs to be written(?)
-        var product = createProductFromForm();
-        selectedProducts.push(product);
-        
-        clearProductInfoTextBoxes();
-        refreshSelectedProducts();
+        if(txtProductId.value == ""){
+            alert("Please select a product to add to the pending transaction list.")
+        }else{
+            var product = createProductFromForm();
+            selectedProducts.push(product);
+            
+            clearProductInfoTextBoxes();
+            refreshSelectedProducts();
+        }
     }
 
     function removeSelectedProduct(productId){
@@ -484,7 +507,51 @@ namespace.InventoryModule = function(options){
             var id = selProductList.value;
             removeSelectedProduct(id);
         }else{
-            alert("Please select a product from the pending transaction list")
+            alert("Please select a product from the pending transaction list.")
         }
+    }
+
+    function validateSearchProductName(){
+        if(consoleSelectBox.value == -1){
+            alert("Please select a console.");
+            return false;
+        }
+
+        if(txtSearchProduct.value == ""){
+            alert("Please enter a product.");
+            return false;
+        }
+        return true;
+    }
+
+    function validateSearchUpc(){
+        var regExp = /^[0-9]{12}$/;
+        if(txtSearchUpc.value == ""){
+            alert("Please enter a UPC.");
+            return false;
+        }
+
+        if(!regExp.test(txtSearchUpc.value)){
+            alert("Please enter a valid UPC (12 numerical digits).");
+            return false;
+        }
+
+        return true;
+    }
+
+    function populateProductFormFromSelectBox(){
+        for(var i = 0; i < selectedProducts.length; i++){
+            if(selectedProducts[i].productId == selProductList.value){
+                populateProductForm(selectedProducts[i]);
+            }
+        }
+    }
+
+    function calculateTradeInCreditValue(){
+
+    }
+
+    function calculateTradeInCashValue(){
+
     }
 };
