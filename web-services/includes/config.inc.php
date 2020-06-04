@@ -25,9 +25,9 @@ if($_SERVER['SERVER_NAME'] == "localhost"){
 	// are first setting up your live site, but once you get
 	// everything working you'd want it off.
 	define("DB_HOST", "localhost");
-	define("DB_USER", "");
-	define("DB_PASSWORD", "");
-	define("DB_NAME", "");
+	define("DB_USER", "dylanise_gg_dev");
+	define("DB_PASSWORD", "FjGgPHOyx38i");
+	define("DB_NAME", "dylanise_gg_dev0");
 	define("SITE_ADMIN_EMAIL", "PUT EMAIL ADDRESS HERE");
 	define("SITE_DOMAIN", $_SERVER['SERVER_NAME']);
 }
