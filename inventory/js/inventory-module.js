@@ -10,7 +10,7 @@ namespace.InventoryModule = function(options){
 
     var consoleArr = ["NES", "Super Nintendo", "Nintendo 64", "Gamecube", "Wii", "Wii U", "Nintendo Switch", "GameBoy", "GameBoy Color", "GameBoy Advance", 
     "Nintendo DS", "Nintendo 3DS", "Playstation", "Playstation 2", "Playstation 3", "Playstation 4", "PSP", "Playstation Vita", 
-    "Xbox", "Xbox 360", "Xbox One", "Sega Genesis", "Sega Saturn", "Sega Dreamcast", "Atari 2600", "Atari 400", "Atari 5200", "Atari 7800", "Atari Lynx", "Atari ST" ];
+    "Xbox", "Xbox 360", "Xbox One", "Sega Genesis", "Sega Saturn", "Sega Dreamcast", "Sega Game Gear", "Atari 2600", "Atari 400", "Atari 5200", "Atari 7800", "Atari Lynx", "Atari ST" ];
     
     var header;
     var footer;
@@ -41,6 +41,9 @@ namespace.InventoryModule = function(options){
     var txtQuantity;
 
     var selProductList;
+    var txtTradeInCreditValue;
+    var txtTradeInCashValue;
+
     var selectedProducts = [];
 
     //right column buttons
@@ -52,11 +55,13 @@ namespace.InventoryModule = function(options){
     var btnTradeIn;
     var btnSale;
 
+    //running total variables
+    var totalTradeInCreditValue = 0;
+    var totalTradeInCashValue = 0;
+
     initialize();
 
     function initialize(){
-        //TO DO: AUTHENTICATE USER
-
         leftColumnContainer.innerHTML = "";
         midColumnContainer.innerHTML = "";
         rightColumnContainer.innerHTML = "";
@@ -197,6 +202,9 @@ namespace.InventoryModule = function(options){
         txtQuantity = rightColumnContainer.querySelector("#txtQuantity");
         selProductList = rightColumnContainer.querySelector("#selProductList");
 
+        txtTradeInCreditValue = rightColumnContainer.querySelector("#txtTradeInCreditValue");
+        txtTradeInCashValue = rightColumnContainer.querySelector("#txtTradeInCashValue");
+
         //right column buttons
         btnAddToList = rightColumnContainer.querySelector("#btnAddToList").onclick = addProductForTransaction;
         btnClearForm = rightColumnContainer.querySelector("#btnClearForm").onclick = clearProductInfoTextBoxes;
@@ -205,6 +213,8 @@ namespace.InventoryModule = function(options){
         btnClearAll = rightColumnContainer.querySelector("#btnClearAll").onclick = function(){
             selectedProducts.length = 0;
             refreshSelectedProducts();
+
+            calculateTradeInValue();
         };
 
         btnTradeIn = rightColumnContainer.querySelector("#btnTradeIn").onclick = tradeInQuantityUpdate;
@@ -385,6 +395,11 @@ namespace.InventoryModule = function(options){
             callback: function(response){
                 var products = JSON.parse(response);
                 generateProductList(products);
+            },
+            errorCallback: function(response){
+                if(response.status == 404){
+                    alert("Search yielded zero results.");
+                }
             }
         });
     }
@@ -489,6 +504,7 @@ namespace.InventoryModule = function(options){
             
             clearProductInfoTextBoxes();
             refreshSelectedProducts();
+            calculateTradeInValue();
         }
     }
 
@@ -500,6 +516,7 @@ namespace.InventoryModule = function(options){
         }
 
         refreshSelectedProducts();
+        calculateTradeInValue();
     }
 
     function removeSelectedClick(){
@@ -547,11 +564,62 @@ namespace.InventoryModule = function(options){
         }
     }
 
-    function calculateTradeInCreditValue(){
+    //TODO: Talk to jake and find out how we want to do this.
+    function calculateTradeInValue(){
+        totalTradeInCreditValue = 0;
+        totalTradeInCashValue = 0;
+        selectedProducts.forEach((p)=>{
+            var consoleInName = p.productName.toLowerCase().includes("console");
+            var systemInName = p.productName.toLowerCase().includes("system");
+            if(!consoleInName && !systemInName){ 
+                //GAME PRICING
+                if(p.consoleName.toLowerCase() == "nes" || p.consoleName.toLowerCase() == "super nintendo" || p.consoleName.toLowerCase() == "nintendo 64"
+                  || p.consoleName.toLowerCase() == "sega saturn" || p.consoleName.toLowerCase().includes("atari")){
+                    totalTradeInCreditValue += p.loosePrice * 0.4;
+                    totalTradeInCashValue += p.loosePrice * 0.3;
+                }
+                
+                if(p.consoleName.toLowerCase() == "gamecube" || p.consoleName.toLowerCase() == "playstation" || p.consoleName.toLowerCase() == "playstation 2" 
+                || p.consoleName.toLowerCase() == "playstation 3" || p.consoleName.toLowerCase() == "psp" || p.consoleName.toLowerCase() == "playstation vita"
+                || p.consoleName.toLowerCase() == "gameboy" || p.consoleName.toLowerCase() == "gameboy advance" || p.consoleName.toLowerCase() == "gameboy color"
+                || p.consoleName.toLowerCase() == "sega game gear" || p.consoleName.toLowerCase() == "sega genesis" || p.consoleName.toLowerCase() == "xbox"
+                || p.consoleName.toLowerCase() == "xbox 360" || p.consoleName.toLowerCase() == "nintendo ds" || p.consoleName.toLowerCase() == "sega dreamcast"
+                || p.consoleName.toLowerCase() == "wii"){
+                    totalTradeInCreditValue += p.loosePrice * 0.25;
+                    totalTradeInCashValue += p.loosePrice * 0.1;
+                }
+                
+                if(p.consoleName.toLowerCase() == "xbox one" || p.consoleName.toLowerCase() == "playstation 4" || p.consoleName.toLowerCase() == "wii u"
+                || p.consoleName.toLowerCase() == "nintendo switch" || p.consoleName.toLowerCase() == "nintendo 3ds"){
+                    totalTradeInCreditValue += p.loosePrice * 0.5;
+                    totalTradeInCashValue += p.loosePrice * 0.3;
+                }
+            }else if(p.productName.toLowerCase().includes("console") || p.productName.toLowerCase().includes("system")){
+                //SYSTEM PRICING
+                if(p.consoleName.toLowerCase() == "nes" || p.consoleName.toLowerCase() == "super nintendo" || p.consoleName.toLowerCase() == "nintendo 64"
+                  || p.consoleName.toLowerCase() == "sega saturn" || p.consoleName.toLowerCase().includes("atari") || p.consoleName.toLowerCase() == "xbox one"
+                  || p.consoleName.toLowerCase() == "playstation 4" || p.consoleName.toLowerCase() == "wii u" || p.consoleName.toLowerCase() == "nintendo switch"
+                  || p.consoleName.toLowerCase() == "nintendo 3ds" ){
+                    totalTradeInCreditValue += p.loosePrice * 0.5;
+                    totalTradeInCashValue += p.loosePrice * 0.4;
+                }
 
-    }
+                if(p.consoleName.toLowerCase() == "gamecube" || p.consoleName.toLowerCase() == "playstation" || p.consoleName.toLowerCase() == "playstation 2" 
+                || p.consoleName.toLowerCase() == "playstation 3" || p.consoleName.toLowerCase() == "psp" || p.consoleName.toLowerCase() == "playstation vita"
+                || p.consoleName.toLowerCase() == "gameboy" || p.consoleName.toLowerCase() == "gameboy advance" || p.consoleName.toLowerCase() == "gameboy color"
+                || p.consoleName.toLowerCase() == "sega game gear" || p.consoleName.toLowerCase() == "sega genesis" || p.consoleName.toLowerCase() == "xbox"
+                || p.consoleName.toLowerCase() == "xbox 360" || p.consoleName.toLowerCase() == "nintendo ds" || p.consoleName.toLowerCase() == "sega dreamcast"
+                || p.consoleName.toLowerCase() == "wii"){
+                    totalTradeInCreditValue += p.loosePrice * 0.3;
+                    totalTradeInCashValue += p.loosePrice * 0.2;
+                }
+            }else{
+                totalTradeInCreditValue += p.loosePrice * 0.4;
+                totalTradeInCashValue += p.loosePrice * 0.3;
+            }
+        });
 
-    function calculateTradeInCashValue(){
-
+        txtTradeInCreditValue.value = totalTradeInCreditValue.toFixed(2);
+        txtTradeInCashValue.value = totalTradeInCashValue.toFixed(2);
     }
 };

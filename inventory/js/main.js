@@ -4,7 +4,8 @@ window.addEventListener("load", function(){
 		leftColumnContainer: document.getElementById("left-column"),
 		midColumnContainer : document.getElementById("mid-column"),
 		rightColumnContainer: document.getElementById("right-column"),
-		webServiceAddress: "http://localhost/GG/web-services/products/"
+		webServiceAddress: "https://localhost/GG/web-services/products/"
+		//webServiceAddress: "https://www.dylanisensee.com/gg/web-services/products/"
 	});
 
 
