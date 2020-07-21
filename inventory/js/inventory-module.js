@@ -59,6 +59,10 @@ namespace.InventoryModule = function(options){
     var totalTradeInCreditValue = 0;
     var totalTradeInCashValue = 0;
 
+    //item value variables
+    var itemTradeInCreditValue = 0;
+    var itemTradeInCashValue = 0;
+
     initialize();
 
     function initialize(){
@@ -153,11 +157,19 @@ namespace.InventoryModule = function(options){
                             </td>
                         </tr>
                         <tr>
-                            <td><label for"trade-in-credit-value">Trade-In Credit Value:</label></td>
+                            <td><label for="item-trade-in-credit-value">Item Trade-In Credit Value:</label></td>
+                            <td><input type="text" name="item-trade-in-credit-value" id="txtItemTradeInCreditValue" readonly="true"></td>
+                        </tr>
+                        <tr>
+                            <td><label for="item-trade-in-cash-value">Item Trade-In Cash Value:</label></td>
+                            <td><input type="text" name="item-trade-in-cash-value" id="txtItemTradeInCashValue" readonly="true"></td>
+                        </tr>
+                        <tr>
+                            <td><label for="trade-in-credit-value">Total Trade-In Credit Value:</label></td>
                             <td><input type="text" name="trade-in-credit-value" id="txtTradeInCreditValue" readonly="true"></td>
                         </tr>
                         <tr>
-                            <td><label for"trade-in-cash-value">Trade-In Cash Value:</label></td>
+                            <td><label for="trade-in-cash-value">Total Trade-In Cash Value:</label></td>
                             <td><input type="text" name="trade-in-cash-value" id="txtTradeInCashValue" readonly="true"></td>
                         </tr>
                     </form>
@@ -204,6 +216,8 @@ namespace.InventoryModule = function(options){
 
         txtTradeInCreditValue = rightColumnContainer.querySelector("#txtTradeInCreditValue");
         txtTradeInCashValue = rightColumnContainer.querySelector("#txtTradeInCashValue");
+        txtItemTradeInCreditValue = rightColumnContainer.querySelector("#txtItemTradeInCreditValue");
+        txtItemTradeInCashValue = rightColumnContainer.querySelector("#txtItemTradeInCashValue");
 
         //right column buttons
         btnAddToList = rightColumnContainer.querySelector("#btnAddToList").onclick = addProductForTransaction;
@@ -214,7 +228,7 @@ namespace.InventoryModule = function(options){
             selectedProducts.length = 0;
             refreshSelectedProducts();
 
-            calculateTradeInValue();
+            calculateTradeInValue(selectedProducts);
         };
 
         btnTradeIn = rightColumnContainer.querySelector("#btnTradeIn").onclick = tradeInQuantityUpdate;
@@ -294,10 +308,10 @@ namespace.InventoryModule = function(options){
         txtUpc.value = product.upc;
         txtConsole.value = product.consoleName;
         txtItem.value = product.productName;
-        txtLoosePrice.value = product.loosePrice;
-        txtCibPrice.value = product.cibPrice;
-        txtGsTradeValue.value = product.gamestopTradePrice;
-        txtGsPrice.value = product.gamestopPrice;
+        txtLoosePrice.value = Math.floor(product.loosePrice).toFixed(2);
+        txtCibPrice.value = Math.floor(product.cibPrice).toFixed(2);
+        txtGsTradeValue.value = Math.floor(product.gamestopTradePrice).toFixed(2);
+        txtGsPrice.value = Math.floor(product.gamestopPrice).toFixed(2);
         txtQuantity.value = product.quantity;
     }
 
@@ -331,20 +345,22 @@ namespace.InventoryModule = function(options){
 
     function tradeInQuantityUpdate(){
         if(selectedProducts.length > 0){
-            selectedProducts.forEach((p)=>{
-                p.quantity++;
-                namespace.ajax.send({
-                    url: webServiceAddress + p.productId,
-                    method: "PUT",
-                    headers: {"Content-Type": "application/json", "Accept": "application/json"},
-				    requestBody: JSON.stringify(p),
-                    callback: function(response){
-                        console.log(response);
-                    }
+            if(confirm("Are you sure you want to finalize this trade-in?")){
+                selectedProducts.forEach((p)=>{
+                    p.quantity++;
+                    namespace.ajax.send({
+                        url: webServiceAddress + p.productId,
+                        method: "PUT",
+                        headers: {"Content-Type": "application/json", "Accept": "application/json"},
+                        requestBody: JSON.stringify(p),
+                        callback: function(response){
+                            console.log(response);
+                        }
+                    });
+                    selectedProducts.length = 0;
+                    refreshSelectedProducts();
                 });
-                selectedProducts.length = 0;
-                refreshSelectedProducts();
-            });
+            }
         }else{
             alert("Please add product(s) to the transaction list.")
         }
@@ -352,20 +368,22 @@ namespace.InventoryModule = function(options){
 
     function saleQuantityUpdate(){
         if(selectedProducts.length > 0){
-            selectedProducts.forEach((p)=>{
-                p.quantity = p.quantity - 1;
-                namespace.ajax.send({
-                    url: webServiceAddress + p.productId,
-                    method: "PUT",
-                    headers: {"Content-Type": "application/json", "Accept": "application/json"},
-				    requestBody: JSON.stringify(p),
-                    callback: function(response){
-                        console.log(response);
-                    }
+            if(confirm("Are you sure you want to finalize this sale?")){
+                selectedProducts.forEach((p)=>{
+                    p.quantity = p.quantity - 1;
+                    namespace.ajax.send({
+                        url: webServiceAddress + p.productId,
+                        method: "PUT",
+                        headers: {"Content-Type": "application/json", "Accept": "application/json"},
+                        requestBody: JSON.stringify(p),
+                        callback: function(response){
+                            console.log(response);
+                        }
+                    });
+                    selectedProducts.length = 0;
+                    refreshSelectedProducts();
                 });
-                selectedProducts.length = 0;
-                refreshSelectedProducts();
-            });
+            }
         }else{
             alert("Please add product(s) to the transaction list.")
         }
@@ -504,7 +522,9 @@ namespace.InventoryModule = function(options){
             
             clearProductInfoTextBoxes();
             refreshSelectedProducts();
-            calculateTradeInValue();
+            calculateTradeInValue(selectedProducts);
+            txtItemTradeInCreditValue.value = "";
+            txtItemTradeInCashValue.value = "";
         }
     }
 
@@ -516,13 +536,15 @@ namespace.InventoryModule = function(options){
         }
 
         refreshSelectedProducts();
-        calculateTradeInValue();
+        calculateTradeInValue(selectedProducts);
     }
 
     function removeSelectedClick(){
         if(selProductList.selectedIndex != -1){
             var id = selProductList.value;
             removeSelectedProduct(id);
+            txtItemTradeInCreditValue.value = "";
+            txtItemTradeInCashValue.value = "";
         }else{
             alert("Please select a product from the pending transaction list.")
         }
@@ -560,23 +582,40 @@ namespace.InventoryModule = function(options){
         for(var i = 0; i < selectedProducts.length; i++){
             if(selectedProducts[i].productId == selProductList.value){
                 populateProductForm(selectedProducts[i]);
+                calculateTradeInValue(selectedProducts);
             }
         }
     }
 
     //TODO: Talk to jake and find out how we want to do this.
-    function calculateTradeInValue(){
+    function calculateTradeInValue(products){
         totalTradeInCreditValue = 0;
         totalTradeInCashValue = 0;
-        selectedProducts.forEach((p)=>{
+        itemTradeInCreditValue;
+        itemTradeInCashValue;
+        for(var i = 0; i < products.length; i++){
+            var p = products[i];
             var consoleInName = p.productName.toLowerCase().includes("console");
             var systemInName = p.productName.toLowerCase().includes("system");
             if(!consoleInName && !systemInName){ 
                 //GAME PRICING
                 if(p.consoleName.toLowerCase() == "nes" || p.consoleName.toLowerCase() == "super nintendo" || p.consoleName.toLowerCase() == "nintendo 64"
                   || p.consoleName.toLowerCase() == "sega saturn" || p.consoleName.toLowerCase().includes("atari")){
-                    totalTradeInCreditValue += p.loosePrice * 0.4;
-                    totalTradeInCashValue += p.loosePrice * 0.3;
+                    totalTradeInCreditValue += Math.floor(p.loosePrice * 0.4);
+                    totalTradeInCashValue += Math.floor(p.loosePrice * 0.3);
+
+                    if(Math.floor(p.loosePrice * 4) < 1){
+                        totalTradeInCreditValue += 0.1;
+                    }
+
+                    if(selProductList.value == p.productId){
+                        itemTradeInCreditValue = Math.floor(p.loosePrice * 0.4);
+                        itemTradeInCashValue = Math.floor(p.loosePrice * 0.3);
+
+                        if(itemTradeInCreditValue < 1){
+                            itemTradeInCreditValue = 0.1;
+                        }
+                    }
                 }
                 
                 if(p.consoleName.toLowerCase() == "gamecube" || p.consoleName.toLowerCase() == "playstation" || p.consoleName.toLowerCase() == "playstation 2" 
@@ -585,14 +624,40 @@ namespace.InventoryModule = function(options){
                 || p.consoleName.toLowerCase() == "sega game gear" || p.consoleName.toLowerCase() == "sega genesis" || p.consoleName.toLowerCase() == "xbox"
                 || p.consoleName.toLowerCase() == "xbox 360" || p.consoleName.toLowerCase() == "nintendo ds" || p.consoleName.toLowerCase() == "sega dreamcast"
                 || p.consoleName.toLowerCase() == "wii"){
-                    totalTradeInCreditValue += p.loosePrice * 0.25;
-                    totalTradeInCashValue += p.loosePrice * 0.1;
+                    totalTradeInCreditValue += Math.floor(p.loosePrice * 0.25);
+                    totalTradeInCashValue += Math.floor(p.loosePrice * 0.1);
+
+                    if(Math.floor(p.loosePrice * 0.25) < 1){
+                        totalTradeInCreditValue += 0.1;
+                    }
+
+                    if(selProductList.value == p.productId){
+                        itemTradeInCreditValue = Math.floor(p.loosePrice * 0.25);
+                        itemTradeInCashValue = Math.floor(p.loosePrice * 0.1);
+
+                        if(itemTradeInCreditValue < 1){
+                            itemTradeInCreditValue = 0.1;
+                        }
+                    }
                 }
                 
                 if(p.consoleName.toLowerCase() == "xbox one" || p.consoleName.toLowerCase() == "playstation 4" || p.consoleName.toLowerCase() == "wii u"
                 || p.consoleName.toLowerCase() == "nintendo switch" || p.consoleName.toLowerCase() == "nintendo 3ds"){
-                    totalTradeInCreditValue += p.loosePrice * 0.5;
-                    totalTradeInCashValue += p.loosePrice * 0.3;
+                    totalTradeInCreditValue += Math.floor(p.loosePrice * 0.5);
+                    totalTradeInCashValue += Math.floor(p.loosePrice * 0.3);
+                    
+                    if(Math.floor(p.loosePrice * 0.5) < 1){
+                        totalTradeInCreditValue += 0.1;
+                    }
+
+                    if(selProductList.value == p.productId){
+                        itemTradeInCreditValue = Math.floor(p.loosePrice * 0.5);
+                        itemTradeInCashValue = Math.floor(p.loosePrice * 0.3);
+
+                        if(itemTradeInCreditValue < 1){
+                            itemTradeInCreditValue = 0.1;
+                        }
+                    }
                 }
             }else if(p.productName.toLowerCase().includes("console") || p.productName.toLowerCase().includes("system")){
                 //SYSTEM PRICING
@@ -600,8 +665,12 @@ namespace.InventoryModule = function(options){
                   || p.consoleName.toLowerCase() == "sega saturn" || p.consoleName.toLowerCase().includes("atari") || p.consoleName.toLowerCase() == "xbox one"
                   || p.consoleName.toLowerCase() == "playstation 4" || p.consoleName.toLowerCase() == "wii u" || p.consoleName.toLowerCase() == "nintendo switch"
                   || p.consoleName.toLowerCase() == "nintendo 3ds" ){
-                    totalTradeInCreditValue += p.loosePrice * 0.5;
-                    totalTradeInCashValue += p.loosePrice * 0.4;
+                    totalTradeInCreditValue += Math.floor(p.loosePrice * 0.5);
+                    totalTradeInCashValue += Math.floor(p.loosePrice * 0.4);
+                    if(selProductList.value == p.productId){
+                        itemTradeInCreditValue = Math.floor(p.loosePrice * 0.5);
+                        itemTradeInCashValue = Math.floor(p.loosePrice * 0.4);
+                    }
                 }
 
                 if(p.consoleName.toLowerCase() == "gamecube" || p.consoleName.toLowerCase() == "playstation" || p.consoleName.toLowerCase() == "playstation 2" 
@@ -610,16 +679,27 @@ namespace.InventoryModule = function(options){
                 || p.consoleName.toLowerCase() == "sega game gear" || p.consoleName.toLowerCase() == "sega genesis" || p.consoleName.toLowerCase() == "xbox"
                 || p.consoleName.toLowerCase() == "xbox 360" || p.consoleName.toLowerCase() == "nintendo ds" || p.consoleName.toLowerCase() == "sega dreamcast"
                 || p.consoleName.toLowerCase() == "wii"){
-                    totalTradeInCreditValue += p.loosePrice * 0.3;
-                    totalTradeInCashValue += p.loosePrice * 0.2;
+                    totalTradeInCreditValue += Math.floor(p.loosePrice * 0.3);
+                    totalTradeInCashValue += Math.floor(p.loosePrice * 0.2);
+                    if(selProductList.value == p.productId){
+                        itemTradeInCreditValue = Math.floor(p.loosePrice * 0.3);
+                        itemTradeInCashValue = Math.floor(p.loosePrice * 0.2);
+                    }
                 }
             }else{
-                totalTradeInCreditValue += p.loosePrice * 0.4;
-                totalTradeInCashValue += p.loosePrice * 0.3;
+                totalTradeInCreditValue += Math.floor(p.loosePrice * 0.4);
+                totalTradeInCashValue += Math.floor(p.loosePrice * 0.3);
+                if(selProductList.value == p.productId){
+                    itemTradeInCreditValue = Math.floor(p.loosePrice * 0.4);
+                    itemTradeInCashValue = Math.floor(p.loosePrice * 0.3);
+                }
             }
-        });
+        }
 
         txtTradeInCreditValue.value = totalTradeInCreditValue.toFixed(2);
         txtTradeInCashValue.value = totalTradeInCashValue.toFixed(2);
+        txtItemTradeInCreditValue.value = itemTradeInCreditValue.toFixed(2);
+        txtItemTradeInCashValue.value = itemTradeInCashValue.toFixed(2);
     }
+
 };
