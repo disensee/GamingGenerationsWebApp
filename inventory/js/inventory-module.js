@@ -55,6 +55,9 @@ namespace.InventoryModule = function(options){
     var btnTradeIn;
     var btnSale;
 
+    var btnAddToTradeInValue;
+    var btnRemoveFromTradeInValue;
+
     //running total variables
     var totalTradeInCreditValue = 0;
     var totalTradeInCashValue = 0;
@@ -172,6 +175,14 @@ namespace.InventoryModule = function(options){
                             <td><label for="trade-in-cash-value">Total Trade-In Cash Value:</label></td>
                             <td><input type="text" name="trade-in-cash-value" id="txtTradeInCashValue" readonly="true"></td>
                         </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <input type="button" value="Add 3%" id="btnAddToTradeInValue">
+                                <input type="button" value="Remove 3%" id="btnRemoveFromTradeInValue">
+                            </td>
+                        </tr>
+                        
                     </form>
                 </table>
             </div>`;
@@ -233,6 +244,9 @@ namespace.InventoryModule = function(options){
 
         btnTradeIn = rightColumnContainer.querySelector("#btnTradeIn").onclick = tradeInQuantityUpdate;
         btnSale = rightColumnContainer.querySelector("#btnSale").onclick = saleQuantityUpdate;
+
+        btnAddToTradeInValue = rightColumnContainer.querySelector("#btnAddToTradeInValue");
+        btnRemoveFromTradeInValue = rightColumnContainer.querySelector("#btnRemoveFromTradeInValue");
         
         //event handlers
         productTable.addEventListener("click", selectProductInList);
@@ -249,6 +263,14 @@ namespace.InventoryModule = function(options){
                 event.preventDefault();
                 leftColumnContainer.querySelector("#btnSearchByUpc").click();
             }
+        });
+
+        btnAddToTradeInValue.addEventListener("click", function(event){
+            addToTradeInValue(totalTradeInCreditValue, totalTradeInCashValue);
+        });
+
+        btnRemoveFromTradeInValue.addEventListener("click", function(event){
+            removeFromTradeInValue(totalTradeInCreditValue, totalTradeInCashValue);
         });
     }
 
@@ -585,6 +607,19 @@ namespace.InventoryModule = function(options){
                 calculateTradeInValue(selectedProducts);
             }
         }
+    }
+
+    function addToTradeInValue(baseValueCredit, baseValueCash){
+        //var holdValue = baseValue;
+        txtTradeInCreditValue.value = (parseFloat(txtTradeInCreditValue.value) + (baseValueCredit * 0.03)).toFixed(2);
+        txtTradeInCashValue.value = (parseFloat(txtTradeInCashValue.value) + (baseValueCash * 0.03)).toFixed(2);
+    
+    }
+
+    function removeFromTradeInValue(baseValueCredit, baseValueCash){
+        //var holdValue = baseValue;
+        txtTradeInCreditValue.value = (parseFloat(txtTradeInCreditValue.value) - (baseValueCredit * 0.03)).toFixed(2);
+        txtTradeInCashValue.value = (parseFloat(txtTradeInCashValue.value) - (baseValueCash * 0.03)).toFixed(2);
     }
 
     //TODO: Talk to jake and find out how we want to do this.
