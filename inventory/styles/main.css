@@ -35,9 +35,9 @@
 .column{
     float: left;
     /* display: block; */
-    overflow: auto;
+    /* overflow: visible; */
     background-color: lightgray;
-    z-index: 999999;
+    /* z-index: 999999; */
     font-family: 'Open Sans',Helvetica,Arial,Lucida,sans-serif;
 }
 
@@ -54,8 +54,10 @@
 
 .right{
     width: 35%;
-    margin-right: 6px;
-    /* margin right 10 */
+    margin-right: 25px;
+    position: -webkit-sticky; /*Safari*/
+    position: sticky;
+    top: 0px;
 }
 
 #search-container{
@@ -111,8 +113,19 @@
 }
 
 .info{
+    font-size: 15px;
     line-height: 30px;
-    /* height: 80%; */
+    height: 80%;
+    overflow-y: scroll;
+}
+
+.info::-webkit-scrollbar{
+    display: none;
+}
+
+.info input{
+    padding: 3px;
+    margin: 3px;
 }
 
 input{
@@ -151,8 +164,11 @@ input{
 
 
 #content-pane{
-    z-index: 9999999;
+    overflow: visible;
     min-height: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
 }
 
 table th{

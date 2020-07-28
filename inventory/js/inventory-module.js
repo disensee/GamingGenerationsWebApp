@@ -55,8 +55,10 @@ namespace.InventoryModule = function(options){
     var btnTradeIn;
     var btnSale;
 
-    var btnAddToTradeInValue;
-    var btnRemoveFromTradeInValue;
+    var btnAddOneToTradeInValue;
+    var btnAddFiveToTradeInValue;
+    var btnSubtractOneFromTradeInValue;
+    var btnSubtractFiveFromTradeInValue;
 
     //running total variables
     var totalTradeInCreditValue = 0;
@@ -178,11 +180,17 @@ namespace.InventoryModule = function(options){
                         <tr>
                             <td></td>
                             <td>
-                                <input type="button" value="Add 3%" id="btnAddToTradeInValue">
-                                <input type="button" value="Remove 3%" id="btnRemoveFromTradeInValue">
+                                <input type="button" value="Add 1$" id="btnAddOneToTradeInValue">
+                                <input type="button" value="Subtract 1$" id="btnSubtractOneFromTradeInValue">
                             </td>
                         </tr>
-                        
+                        <tr>
+                            <td></td>
+                            <td>
+                                <input type="button" value="Add 5$" id="btnAddFiveToTradeInValue">
+                                <input type="button" value="Subtract 5$" id="btnSubtractFiveFromTradeInValue">
+                            </td>
+                        </tr>
                     </form>
                 </table>
             </div>`;
@@ -245,8 +253,10 @@ namespace.InventoryModule = function(options){
         btnTradeIn = rightColumnContainer.querySelector("#btnTradeIn").onclick = tradeInQuantityUpdate;
         btnSale = rightColumnContainer.querySelector("#btnSale").onclick = saleQuantityUpdate;
 
-        btnAddToTradeInValue = rightColumnContainer.querySelector("#btnAddToTradeInValue");
-        btnRemoveFromTradeInValue = rightColumnContainer.querySelector("#btnRemoveFromTradeInValue");
+        btnAddOneToTradeInValue = rightColumnContainer.querySelector("#btnAddOneToTradeInValue");
+        btnAddFiveToTradeInValue = rightColumnContainer.querySelector("#btnAddFiveToTradeInValue");
+        btnSubtractOneFromTradeInValue = rightColumnContainer.querySelector("#btnSubtractOneFromTradeInValue");
+        btnSubtractFiveFromTradeInValue = rightColumnContainer.querySelector("#btnSubtractFiveFromTradeInValue");
         
         //event handlers
         productTable.addEventListener("click", selectProductInList);
@@ -265,12 +275,20 @@ namespace.InventoryModule = function(options){
             }
         });
 
-        btnAddToTradeInValue.addEventListener("click", function(event){
-            addToTradeInValue(totalTradeInCreditValue, totalTradeInCashValue);
+        btnAddOneToTradeInValue.addEventListener("click", function(event){
+            addOneToTradeInValue(totalTradeInCreditValue, totalTradeInCashValue);
         });
 
-        btnRemoveFromTradeInValue.addEventListener("click", function(event){
-            removeFromTradeInValue(totalTradeInCreditValue, totalTradeInCashValue);
+        btnAddFiveToTradeInValue.addEventListener("click", function(event){
+            addFiveToTradeInValue(totalTradeInCreditValue, totalTradeInCashValue);
+        });
+
+        btnSubtractOneFromTradeInValue.addEventListener("click", function(event){
+            removeOneFromTradeInValue(totalTradeInCreditValue, totalTradeInCashValue);
+        });
+
+        btnSubtractFiveFromTradeInValue.addEventListener("click", function(event){
+            removeFiveFromTradeInValue(totalTradeInCreditValue, totalTradeInCashValue);
         });
     }
 
@@ -609,17 +627,28 @@ namespace.InventoryModule = function(options){
         }
     }
 
-    function addToTradeInValue(baseValueCredit, baseValueCash){
+    function addOneToTradeInValue(baseValueCredit, baseValueCash){
         //var holdValue = baseValue;
-        txtTradeInCreditValue.value = (parseFloat(txtTradeInCreditValue.value) + (baseValueCredit * 0.03)).toFixed(2);
-        txtTradeInCashValue.value = (parseFloat(txtTradeInCashValue.value) + (baseValueCash * 0.03)).toFixed(2);
-    
+        txtTradeInCreditValue.value = (parseFloat(txtTradeInCreditValue.value) + (1)).toFixed(2);
+        txtTradeInCashValue.value = (parseFloat(txtTradeInCashValue.value) + (1)).toFixed(2);
     }
 
-    function removeFromTradeInValue(baseValueCredit, baseValueCash){
+    function addFiveToTradeInValue(baseValueCredit, baseValueCash){
         //var holdValue = baseValue;
-        txtTradeInCreditValue.value = (parseFloat(txtTradeInCreditValue.value) - (baseValueCredit * 0.03)).toFixed(2);
-        txtTradeInCashValue.value = (parseFloat(txtTradeInCashValue.value) - (baseValueCash * 0.03)).toFixed(2);
+        txtTradeInCreditValue.value = (parseFloat(txtTradeInCreditValue.value) + (5)).toFixed(2);
+        txtTradeInCashValue.value = (parseFloat(txtTradeInCashValue.value) + (5)).toFixed(2);
+    }
+
+    function removeOneFromTradeInValue(baseValueCredit, baseValueCash){
+        //var holdValue = baseValue;
+        txtTradeInCreditValue.value = (parseFloat(txtTradeInCreditValue.value) - (1)).toFixed(2);
+        txtTradeInCashValue.value = (parseFloat(txtTradeInCashValue.value) - (1)).toFixed(2);
+    }
+
+    function removeFiveFromTradeInValue(baseValueCredit, baseValueCash){
+        //var holdValue = baseValue;
+        txtTradeInCreditValue.value = (parseFloat(txtTradeInCreditValue.value) - (5)).toFixed(2);
+        txtTradeInCashValue.value = (parseFloat(txtTradeInCashValue.value) - (5)).toFixed(2);
     }
 
     //TODO: Talk to jake and find out how we want to do this.
