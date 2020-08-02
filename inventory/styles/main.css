@@ -57,7 +57,7 @@
     margin-right: 25px;
     position: -webkit-sticky; /*Safari*/
     position: sticky;
-    top: 0px;
+    top: 5px;
 }
 
 #search-container{
