@@ -9,9 +9,12 @@ class Product extends Model{
     public $loosePrice;
     public $cibPrice;
     public $gamestopPrice;
-    public $gamestopTradePrice;
+    public $gamestopTradeValue;
     public $upc;
-    public $quantity;
+    public $onaQuantity;
+    public $ecQuantity;
+    public $spQuantity;
+    public $shebQuantity;
 
     //Constructor
     public function __construct($args = []){
@@ -21,9 +24,12 @@ class Product extends Model{
         $this->loosePrice = $args['loosePrice'] ?? 0;
         $this->cibPrice = $args['cibPrice'] ?? 0;
         $this->gamestopPrice = $args['gamestopPrice'] ?? 0;
-        $this->gamestopTradePrice = $args['gamestopTradePrice'] ?? 0;
+        $this->gamestopTradeValue = $args['gamestopTradeValue'] ?? 0;
         $this->upc = $args['upc'] ?? "000000000000";
-        $this->quantity = $args['quantity'] ?? 0;
+        $this->onaQuantity = $args['onaQuantity'] ?? 0;
+        $this->ecQuantity = $args['ecQuantity'] ?? 0;
+        $this->spQuantity = $args['spQuantity'] ?? 0;
+        $this->shebQuantity = $args['shebQuantity'] ?? 0;
     }
 
     /**
@@ -53,10 +59,11 @@ class Product extends Model{
         if(empty($this->gamestopPrice) || !is_numeric($this->gamestopPrice)){
             return false;
         }
-        //gamestopTradePrice must not be empty and must be a number
-        if(empty($this->gamestopTradePrice) || !is_numeric($this->gamestopTradePrice)){
+        //gamestopTradeValue must not be empty and must be a number
+        if(empty($this->gamestopTradeValue) || !is_numeric($this->gamestopTradeValue)){
             return false;
         }
+        
         if(!empty($this->upc)){
         //upc must be 12 digits
             if(!preg_match('/^[0-9]{12}$/', $this->upc)){
@@ -64,8 +71,26 @@ class Product extends Model{
             }
         }
         //quantity must not be empty and must be a number
-        if($this->quantity != 0){
-            if(!(is_numeric($this->quantity)) || empty($this->quantity)){
+        if($this->onaQuantity !== 0){
+            if(!(is_numeric($this->onaQuantity)) || empty($this->onaQuantity)){
+                return false;
+            }
+        }
+
+        if($this->ecQuantity != 0){
+            if(!(is_numeric($this->ecQuantity)) || empty($this->ecQuantity)){
+                return false;
+            }
+        }
+
+        if($this->spQuantity != 0){
+            if(!(is_numeric($this->spQuantity)) || empty($this->spQuantity)){
+                return false;
+            }
+        }
+
+        if($this->shebQuantity != 0){
+            if(!(is_numeric($this->shebQuantity)) || empty($this->shebQuantity)){
                 return false;
             }
         }

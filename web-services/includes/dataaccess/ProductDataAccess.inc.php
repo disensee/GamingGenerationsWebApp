@@ -28,9 +28,12 @@ class ProductDataAccess extends DataAccess{
             $cleanProduct->loosePrice = mysqli_real_escape_string($this->link, $product->loosePrice);
             $cleanProduct->cibPrice = mysqli_real_escape_string($this->link, $product->cibPrice);
             $cleanProduct->gamestopPrice = mysqli_real_escape_string($this->link, $product->gamestopPrice);
-            $cleanProduct->gamestopTradePrice = mysqli_real_escape_string($this->link, $product->gamestopTradePrice);
-            $cleanProduct->upc = mysqli_real_escape_string($this->link, $product->upc);
-            $cleanProduct->quantity = mysqli_real_escape_string($this->link, $product->quantity);
+            $cleanProduct->gamestopTradeValue = mysqli_real_escape_string($this->link, $product->gamestopTradeValue);
+			$cleanProduct->upc = mysqli_real_escape_string($this->link, $product->upc);
+			$cleanProduct->onaQuantity = mysqli_real_escape_string($this->link, $product->onaQuantity);
+			$cleanProduct->ecQuantity = mysqli_real_escape_string($this->link, $product->ecQuantity);
+			$cleanProduct->spQuantity = mysqli_real_escape_string($this->link, $product->spQuantity);
+			$cleanProduct->shebQuantity = mysqli_real_escape_string($this->link, $product->shebQuantity);
 
 			return $cleanProduct;
 		}else{
@@ -52,9 +55,12 @@ class ProductDataAccess extends DataAccess{
         $cleanRow['loosePrice'] = htmlentities($row['loosePrice']);
         $cleanRow['cibPrice'] = htmlentities($row['cibPrice']);
         $cleanRow['gamestopPrice'] = htmlentities($row['gamestopPrice']);
-        $cleanRow['gamestopTradePrice'] = htmlentities($row['gamestopTradePrice']);
-        $cleanRow['upc'] = htmlentities($row['upc']);
-        $cleanRow['quantity'] = htmlentities($row['quantity']);
+        $cleanRow['gamestopTradeValue'] = htmlentities($row['gamestopTradeValue']);
+		$cleanRow['upc'] = htmlentities($row['upc']);
+		$cleanRow['onaQuantity'] = htmlentities($row['onaQuantity']);
+		$cleanRow['ecQuantity'] = htmlentities($row['ecQuantity']);
+		$cleanRow['spQuantity'] = htmlentities($row['spQuantity']);
+		$cleanRow['shebQuantity'] = htmlentities($row['shebQuantity']);
 
 		return $cleanRow;
     }
@@ -67,7 +73,7 @@ class ProductDataAccess extends DataAccess{
 	* @return {array}		Returns an array of product objects
 	*/
 	function getAll($args = []){
-		$qStr = "SELECT productId, consoleName, productName, loosePrice, cibPrice, gamestopPrice, gamestopTradePrice, upc, quantity FROM products";
+		$qStr = "SELECT productId, consoleName, productName, loosePrice, cibPrice, gamestopPrice, gamestopTradeValue, upc, onaQuantity, ecQuantity, spQuantity, shebQuantity FROM products";
 		//die($qStr);
 
 		//Many people run queries like this. Shows error messages to users. 
@@ -110,7 +116,7 @@ class ProductDataAccess extends DataAccess{
 	*/
 	function getById($productId){
 		$cleanProductId = $this->cleanDataGoingIntoDB($productId);
-		$qStr = "SELECT productId, consoleName, productName, loosePrice, cibPrice, gamestopPrice, gamestopTradePrice, upc, quantity FROM products WHERE productId = $cleanProductId";
+		$qStr = "SELECT productId, consoleName, productName, loosePrice, cibPrice, gamestopPrice, gamestopTradeValue, upc, onaQuantity, ecQuantity, spQuantity, shebQuantity FROM products WHERE productId = '$cleanProductId'";
 
 		$result = mysqli_query($this->link, $qStr) or $this->handleError(mysqli_error($this->link));
 		if(mysqli_num_rows($result) == 1){
@@ -129,10 +135,10 @@ class ProductDataAccess extends DataAccess{
 	* @param {string} 	 The name of the console the product is for
 	* @return {product} Returns an instance of a product model object
 	*/
-	function getByProductName($productName, $consoleName){
+	function getByProductName($productName){
 		$cleanProductName = $this->cleanDataGoingIntoDB($productName);
-		$cleanConsoleName = $this->cleanDataGoingIntoDB($consoleName);
-		$qStr = "SELECT productId, consoleName, productName, loosePrice, cibPrice, gamestopPrice, gamestopTradePrice, upc, quantity FROM products WHERE productName LIKE '%$cleanProductName%' AND consoleName = '$cleanConsoleName'";
+		//$cleanConsoleName = $this->cleanDataGoingIntoDB($consoleName);
+		$qStr = "SELECT productId, consoleName, productName, loosePrice, cibPrice, gamestopPrice, gamestopTradeValue, upc, onaQuantity, ecQuantity, spQuantity, shebQuantity FROM products WHERE productName LIKE '%$cleanProductName%'";
 
 		$result = mysqli_query($this->link, $qStr) or $this->handleError(mysqli_error($this->link));
 		$allproducts = [];
@@ -154,7 +160,7 @@ class ProductDataAccess extends DataAccess{
 	*/
 	function getByConsoleName($consoleName){
 		$cleanConsoleName = $this->cleanDataGoingIntoDB($consoleName);
-		$qStr = "SELECT productId, consoleName, productName, loosePrice, cibPrice, gamestopPrice, gamestopTradePrice, upc, quantity FROM products WHERE consoleName = '$cleanConsoleName' ORDER BY productName";
+		$qStr = "SELECT productId, consoleName, productName, loosePrice, cibPrice, gamestopPrice, gamestopTradeValue, upc, onaQuantity, ecQuantity, spQuantity, shebQuantity FROM products WHERE consoleName = '$cleanConsoleName' ORDER BY productName";
 
 		$result = mysqli_query($this->link, $qStr) or $this->handleError(mysqli_error($this->link));
 		$allproducts = [];
@@ -176,7 +182,7 @@ class ProductDataAccess extends DataAccess{
 	*/
 	function getByUpc($upc){
 		$cleanUpc = $this->cleanDataGoingIntoDB($upc);
-		$qStr = "SELECT productId, consoleName, productName, loosePrice, cibPrice, gamestopPrice, gamestopTradePrice, upc, quantity FROM products WHERE upc = '$cleanUpc'";
+		$qStr = "SELECT productId, consoleName, productName, loosePrice, cibPrice, gamestopPrice, gamestopTradeValue, upc, onaQuantity, ecQuantity, spQuantity, shebQuantity FROM products WHERE upc = '$cleanUpc'";
 
 		$result = mysqli_query($this->link, $qStr) or $this->handleError(mysqli_error($this->link));
 		if(mysqli_num_rows($result) == 1){
@@ -196,15 +202,18 @@ class ProductDataAccess extends DataAccess{
 	*/
 	function insert($product){
 		$cleanProduct = $this->cleanDataGoingIntoDB($product);
-		$qStr = "INSERT INTO products (consoleName, productName, loosePrice, cibPrice, gamestopPrice, gamestopTradePrice, upc, quantity) VALUES (
+		$qStr = "INSERT INTO products (consoleName, productName, loosePrice, cibPrice, gamestopPrice, gamestopTradeValue, upc, onaQuantity, ecQuantity, spQuantity, shebQuantity) VALUES (
 			'{$cleanProduct->consoleName}',
 			'{$cleanProduct->productName}',
             '{$cleanProduct->loosePrice}',
             '{$cleanProduct->cibPrice}',
             '{$cleanProduct->gamestopPrice}',
-            '{$cleanProduct->gamestopTradePrice}',
+            '{$cleanProduct->gamestopTradeValue}',
 			'{$cleanProduct->upc}',
-            '{$cleanProduct->quantity}'
+            '{$cleanProduct->onaQuantity}',
+			'{$cleanProduct->ecQuantity}',
+			'{$cleanProduct->spQuantity}',
+			'{$cleanProduct->shebQuantity}'
 		)";
 
 		$result = mysqli_query($this->link, $qStr) or $this->handleError(mysqli_error($this->link));
@@ -231,9 +240,12 @@ class ProductDataAccess extends DataAccess{
                 loosePrice = '{$cleanProduct->loosePrice}',
                 cibPrice = '{$cleanProduct->cibPrice}',
                 gamestopPrice = '{$cleanProduct->gamestopPrice}',
-                gamestopTradePrice = '{$cleanProduct->gamestopTradePrice}',
+                gamestopTradeValue = '{$cleanProduct->gamestopTradeValue}',
 				upc = '{$cleanProduct->upc}',
-                quantity = '{$cleanProduct->quantity}'
+                onaQuantity = '{$cleanProduct->onaQuantity}',
+				ecQuantity = '{$cleanProduct->ecQuantity}',
+				spQuantity = '{$cleanProduct->spQuantity}',
+				shebQuantity = '{$cleanProduct->shebQuantity}'
 				WHERE productId = '{$cleanProduct->productId}'";
 
 		$result = mysqli_query($this->link, $qStr) or $this->handleError(mysqli_error($this->link));

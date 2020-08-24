@@ -6,18 +6,18 @@ include_once("../includes/dataaccess/ProductDataAccess.inc.php");
 $testResults = [];
 
 testConstructor();
-testSanitizeHtml();
+//testSanitizeHtml();
 testCleanDataGoingIntoDB();
 testCleanDataComingFromDB();
 testGetById();
-testGetAllConsoles();
+//testGetAllConsoles();
 //testGetByProductName();
 //testGetByConsoleName();
 testGetByUpc();
-testGetAll();
-testInsert();
-testUpdate();
-testDelete();
+//testGetAll();
+//testInsert();
+//testUpdate();
+//testDelete();
 
 echo(implode("<br>", $testResults));
 
@@ -119,9 +119,12 @@ function testCleanDataComingFromDB(){
         'loosePrice' => 7.23,
         'cibPrice' => 9.46,
         'gamestopPrice' => 10.43,
-        'gamestopTradePrice' => 2.15,
-        'upc' => "012345678910",
-        'quantity' => 3
+        'gamestopTradeValue' => "3",
+        'upc' => "711719053156",
+        'onaQuantity' => 0,
+        'ecQuantity' => 1,
+        'spQuantity' => 2,
+        'shebQuantity' => 3
 	];
 
 	$cleanRow = $da->cleanDataComingFromDB($row);
@@ -151,7 +154,7 @@ function testGetByProductName(){
 	$testResults[] = "<h3>TESTING getByProductName()...</h3>";
 
 	$da = new ProductDataAccess(get_link());
-	$products = $da->getByProductName("madden", "Playstation 4");
+	$products = $da->getByProductName("madden");
 	var_dump($products);
 }
 
@@ -204,14 +207,17 @@ function testInsert(){
         'loosePrice' => 44.79,
         'cibPrice' => 59.99,
         'gamestopPrice' => 59.99,
-        'gamestopTradePrice' => 25.43,
-		'upc' => "012345678910",
-		'quantity' => 5
+        'gamestopTradeValue' => 25,
+        'upc' => "711719053156",
+        'onaQuantity' => 0,
+        'ecQuantity' => 1,
+        'spQuantity' => 2,
+        'shebQuantity' => 3
 	]);
 
 	//$newProduct = $da->insert($product);
 
-	//var_dump($newProduct);
+	var_dump($newProduct);
 }
 
 function testUpdate(){
@@ -220,11 +226,11 @@ function testUpdate(){
 
 	$da = new ProductDataAccess(get_link());
 	
-	//$productToUpdate = $da->getById(71822);
-	//$productToUpdate->productName = "DOOM: Eternal";
-	//$productToUpdate = $da->update($productToUpdate);
+	// $productToUpdate = $da->getById(71820);
+	// $productToUpdate->productName = "DOOM: Eternal";
+	// $productToUpdate = $da->update($productToUpdate);
 
-	//var_dump($productToUpdate);
+	// var_dump($productToUpdate);
 
 }
 
@@ -233,9 +239,9 @@ function testDelete(){
 	$testResults[] = "<h3>TESTING delete()...</h3>";
 
 	$da = new ProductDataAccess(get_link());
-	//$productDeleted = $da->delete(71822);
+	$productDeleted = $da->delete(71820);
 
-	//var_dump($productDeleted);
+	var_dump($productDeleted);
 }
 
 

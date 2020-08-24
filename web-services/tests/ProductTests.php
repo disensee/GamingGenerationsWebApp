@@ -44,9 +44,12 @@ function isValidTest(){
         'loosePrice' => "9.73",
         'cibPrice' => "12.35",
         'gamestopPrice' => "14.99",
-        'gamestopTradePrice' => "3",
+        'gamestopTradeValue' => "3",
         'upc' => "711719053156",
-        'quantity' => "0"
+        'onaQuantity' => "0",
+        'ecQuantity' => "1",
+        'spQuantity' => "2",
+        'shebQuantity' => "3"
     ));
 
     if($prod->isValid() === false){
@@ -62,9 +65,12 @@ function isValidTest(){
         'loosePrice' => "9.73",
         'cibPrice' => "12.35",
         'gamestopPrice' => "14.99",
-        'gamestopTradePrice' => "3",
+        'gamestopTradeValue' => "3",
         'upc' => "711719053156",
-        'quantity' => "0"
+        'onaQuantity' => "0",
+        'ecQuantity' => "1",
+        'spQuantity' => "2",
+        'shebQuantity' => "3"
     ));
 
     if($prod->isValid() === false){
@@ -80,9 +86,12 @@ function isValidTest(){
         'loosePrice' => "",
         'cibPrice' => "12.35",
         'gamestopPrice' => "14.99",
-        'gamestopTradePrice' => "3",
+        'gamestopTradeValue' => "3",
         'upc' => "711719053156",
-        'quantity' => "0"
+        'onaQuantity' => "0",
+        'ecQuantity' => "1",
+        'spQuantity' => "2",
+        'shebQuantity' => "3"
     ));
 
     if($prod->isValid() === false){
@@ -98,9 +107,12 @@ function isValidTest(){
         'loosePrice' => "asdf",
         'cibPrice' => "12.35",
         'gamestopPrice' => "14.99",
-        'gamestopTradePrice' => "3",
+        'gamestopTradeValue' => "3",
         'upc' => "711719053156",
-        'quantity' => "0"
+        'onaQuantity' => "0",
+        'ecQuantity' => "1",
+        'spQuantity' => "2",
+        'shebQuantity' => "3"
     ));
 
     if($prod->isValid() === false){
@@ -116,9 +128,12 @@ function isValidTest(){
         'loosePrice' => "9.73",
         'cibPrice' => "",
         'gamestopPrice' => "14.99",
-        'gamestopTradePrice' => "3",
+        'gamestopTradeValue' => "3",
         'upc' => "711719053156",
-        'quantity' => "0"
+        'onaQuantity' => "0",
+        'ecQuantity' => "1",
+        'spQuantity' => "2",
+        'shebQuantity' => "3"
     ));
 
     if($prod->isValid() === false){
@@ -134,9 +149,12 @@ function isValidTest(){
         'loosePrice' => "9.73",
         'cibPrice' => "asdf",
         'gamestopPrice' => "14.99",
-        'gamestopTradePrice' => "3",
+        'gamestopTradeValue' => "3",
         'upc' => "711719053156",
-        'quantity' => "0"
+        'onaQuantity' => "0",
+        'ecQuantity' => "1",
+        'spQuantity' => "2",
+        'shebQuantity' => "3"
     ));
 
     if($prod->isValid() === false){
@@ -152,9 +170,12 @@ function isValidTest(){
         'loosePrice' => "9.73",
         'cibPrice' => "12.35",
         'gamestopPrice' => "",
-        'gamestopTradePrice' => "3",
+        'gamestopTradeValue' => "3",
         'upc' => "711719053156",
-        'quantity' => "0"
+        'onaQuantity' => "0",
+        'ecQuantity' => "1",
+        'spQuantity' => "2",
+        'shebQuantity' => "3"
     ));
 
     if($prod->isValid() === false){
@@ -170,9 +191,12 @@ function isValidTest(){
         'loosePrice' => "9.73",
         'cibPrice' => "12.35",
         'gamestopPrice' => "asdf",
-        'gamestopTradePrice' => "3",
+        'gamestopTradeValue' => "3",
         'upc' => "711719053156",
-        'quantity' => "0"
+        'onaQuantity' => "0",
+        'ecQuantity' => "1",
+        'spQuantity' => "2",
+        'shebQuantity' => "3"
     ));
 
     if($prod->isValid() === false){
@@ -188,9 +212,12 @@ function isValidTest(){
         'loosePrice' => "9.73",
         'cibPrice' => "12.35",
         'gamestopPrice' => "14.99",
-        'gamestopTradePrice' => "",
+        'gamestopTradeValue' => "",
         'upc' => "711719053156",
-        'quantity' => "0"
+        'onaQuantity' => "0",
+        'ecQuantity' => "1",
+        'spQuantity' => "2",
+        'shebQuantity' => "3"
     ));
 
     if($prod->isValid() === false){
@@ -199,16 +226,19 @@ function isValidTest(){
         $testResults[] = "FAIL - Did not validate empty gamestop trade price properly";
     }
 
-    //Test 10 - returns false if gamestop trade price is NaN
+    //Test 10 - returns false if gamestop trade value is NaN
     $prod = new Product(array(
         'consoleName' => "Playstation 4",
         'productName' => "Bloodborne",
         'loosePrice' => "9.73",
         'cibPrice' => "12.35",
         'gamestopPrice' => "14.99",
-        'gamestopTradePrice' => "asdf",
+        'gamestopTradeValue' => "asdf",
         'upc' => "711719053156",
-        'quantity' => "0"
+        'onaQuantity' => "0",
+        'ecQuantity' => "1",
+        'spQuantity' => "2",
+        'shebQuantity' => "3"
     ));
 
     if($prod->isValid() === false){
@@ -225,9 +255,12 @@ function isValidTest(){
         'loosePrice' => "9.73",
         'cibPrice' => "12.35",
         'gamestopPrice' => "14.99",
-        'gamestopTradePrice' => "3",
+        'gamestopTradeValue' => "3",
         'upc' => "",
-        'quantity' => "0"
+        'onaQuantity' => "0",
+        'ecQuantity' => "1",
+        'spQuantity' => "2",
+        'shebQuantity' => "3"
     ));
 
     if($prod->isValid() === false){
@@ -243,9 +276,12 @@ function isValidTest(){
         'loosePrice' => "9.73",
         'cibPrice' => "12.35",
         'gamestopPrice' => "14.99",
-        'gamestopTradePrice' => "3",
+        'gamestopTradeValue' => "3",
         'upc' => "01",
-        'quantity' => "0"
+        'onaQuantity' => "0",
+        'ecQuantity' => "1",
+        'spQuantity' => "2",
+        'shebQuantity' => "3"
     ));
 
     if($prod->isValid() === false){
@@ -261,9 +297,12 @@ function isValidTest(){
         'loosePrice' => "9.73",
         'cibPrice' => "12.35",
         'gamestopPrice' => "14.99",
-        'gamestopTradePrice' => "3",
+        'gamestopTradeValue' => "3",
         'upc' => "711719053156",
-        'quantity' => ""
+        'onaQuantity' => "",
+        'ecQuantity' => 1,
+        'spQuantity' => 2,
+        'shebQuantity' => 3
     ));
 
     if($prod->isValid() === false){
@@ -279,9 +318,12 @@ function isValidTest(){
         'loosePrice' => "9.73",
         'cibPrice' => "12.35",
         'gamestopPrice' => "14.99",
-        'gamestopTradePrice' => "3",
+        'gamestopTradeValue' => "3",
         'upc' => "711719053156",
-        'quantity' => "asdf"
+        'onaQuantity' => "asdf",
+        'ecQuantity' => 1,
+        'spQuantity' => 2,
+        'shebQuantity' => 3
     ));
 
     if($prod->isValid() === false){
@@ -297,9 +339,12 @@ function isValidTest(){
         'loosePrice' => "9.73",
         'cibPrice' => "12.35",
         'gamestopPrice' => "14.99",
-        'gamestopTradePrice' => "3",
+        'gamestopTradeValue' => "3",
         'upc' => "711719053156",
-        'quantity' => "2"
+        'onaQuantity' => 0,
+        'ecQuantity' => 1,
+        'spQuantity' => 2,
+        'shebQuantity' => 3
     ));
 
     if($prod->isValid()){
