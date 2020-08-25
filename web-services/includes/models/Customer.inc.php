@@ -15,9 +15,9 @@ class Customer extends Model{
         $this->customerId = $args['customerId'] ?? 0;
         $this->customerFirstName = $args['customerFirstName'] ?? "";
         $this->customerLastName = $args['customerLastName'] ?? "";
-        $this->customerIdNumber = $args['customerIdNumber'] ?? "Has not been entered";
+        $this->customerIdNumber = $args['customerIdNumber'] ?? "";
         $this->customerEmail = $args['customerEmail'] ?? "";
-        $this->gamestopPrice = $args['customerPhone'] ?? "0000000000";
+        $this->customerPhone = $args['customerPhone'] ?? "";
     }
 
     /**
@@ -37,15 +37,15 @@ class Customer extends Model{
         }
         
         //customer first and last name must only contain letters
-        if(!preg_match("/^[a-zA-Z ]*$/",$customerFirstName)){
+        if(!preg_match("/^[a-zA-Z ]*$/",$this->customerFirstName)){
             return false;
         }
 
-        if(!preg_match("/^[a-zA-Z ]*$/",$customerLastName)){
+        if(!preg_match("/^[a-zA-Z ]*$/",$this->customerLastName)){
             return false;
         }
 
-        //customer email must be a valid email address
+        //customer email must be provided and must be a valid email address
         if(empty($this->customerEmail)){
             return false;
         }
@@ -54,6 +54,14 @@ class Customer extends Model{
             if(!filter_var($this->customerEmail, FILTER_VALIDATE_EMAIL)){
                 return false;
             }
+        }
+
+        //if phone number is provided, it must be valid
+        if(!empty($this->customerPhone)){
+            if(!preg_match("/^[0-9]{10}$/",$this->customerPhone)){
+                return false;
+            }
+            
         }
        
         return true;

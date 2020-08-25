@@ -25,11 +25,11 @@ switch($method){
   case "GET":
     if(in_array(strtolower(rawurldecode($url_path)), $consoles)){
       $selectedConsole = rawurldecode($url_path);
-    }else if(strpos(strtolower(rawurldecode($url_path)), "/") !== false){
+    }else{
       $split = explode("/", rawurldecode($url_path));
-      $selectedConsole = $split[0];
-      $selectedProduct = $split[1];
-    }
+      $selectedProduct = $split[0];
+      $selectedConsole = null;
+    } 
    
     if(empty($url_path)){
       $products = $da->getAll();
@@ -68,8 +68,8 @@ switch($method){
       header("Content-Type: application/json");
       echo($json);
       die();
-    }else if($url_path == rawurlencode($selectedConsole . '/' . $selectedProduct)){ 
-        $product = $da->getByProductName($selectedProduct, $selectedConsole);
+    }else if($url_path == rawurlencode($selectedProduct)){ 
+        $product = $da->getByProductName($selectedProduct);
         if($product == false){
           header('HTTP/1.1 404 Not Found', true, 404);
           die();

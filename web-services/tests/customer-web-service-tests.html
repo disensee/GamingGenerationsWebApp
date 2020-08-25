@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Product Web Service Tests</title>
+	<title>Customer Web Service Tests</title>
 	<script type="text/javascript">
 		
 
@@ -10,7 +10,7 @@ window.addEventListener("load", ()=>{
 
 	// DON'T FORGET TO UPDATE THE BASE URL FOR YOUR WEB SERVICE 
 	// (THE LIVE URL MAY BE DIFFERENT THAT THE URL ON DEV)
-	var baseURL = "https://localhost/GG/web-services/products/";  
+	var baseURL = "https://localhost/GG/web-services/customers/";  
 
 	if(location.hostname != "localhost"){ 
         baseURL = ""; 
@@ -37,26 +37,10 @@ window.addEventListener("load", ()=>{
 		http.send();
 	});
 
-	document.getElementById("btnGetAllByConsole").addEventListener("click", ()=>{
-		
-        var inputConsole = prompt("Enter a console");
-		var http = new XMLHttpRequest();
-		http.open("GET", baseURL + encodeURI(inputConsole));
-		
-		http.addEventListener("readystatechange", ()=>{
-			if(http.readyState == 4 && http.status == 200){
-				console.log(http.responseText);
-			}else if(http.readyState == 4){
-				errorCallback(http.status, http.statusText);
-			}
-		});
-		http.setRequestHeader("Content-Type","application/json");
-		http.send();
-	});
 
 	document.getElementById("btnGetById").addEventListener("click", ()=>{
 		
-		var pId = prompt("Enter a product ID");
+		var pId = prompt("Enter a customer ID");
 
 		var url = baseURL + pId;
 
@@ -74,31 +58,11 @@ window.addEventListener("load", ()=>{
 		http.send();
 	});
 
-	document.getElementById("btnGetByProduct").addEventListener("click", ()=>{
+	document.getElementById("btnGetByCustomerLastName").addEventListener("click", ()=>{
 		
-		var prodName = prompt("Enter a product name");
+		var custLastName = prompt("Enter a customer last name");
 
-		var url = encodeURI(baseURL + prodName);
-
-		var http = new XMLHttpRequest();
-		http.open("GET", url);
-		
-		http.addEventListener("readystatechange", ()=>{
-			if(http.readyState == 4 && http.status == 200){
-				console.log(http.responseText);
-			}else if(http.readyState == 4){
-				errorCallback(http.status, http.statusText);
-			}
-		});
-		
-		http.send();
-	});
-
-	document.getElementById("btnGetByUpc").addEventListener("click", ()=>{
-		
-		var upc = prompt("Enter a upc");
-
-		var url = baseURL + upc;
+		var url = encodeURI(baseURL + custLastName);
 
 		var http = new XMLHttpRequest();
 		http.open("GET", url);
@@ -128,32 +92,26 @@ window.addEventListener("load", ()=>{
 			}
 		});
 
-        //create a new product to insert
-		var product = {
-			consoleName: "PC Games",
-			productName:"Deep Rock Galactica",
-			loosePrice: 47.88,
-			cibPrice: 59.99,
-			gamestopPrice: 54.99,
-			gamestopTradeValue: 25.33,
-			upc: "001234567800",
-			onaQuantity: 4,
-			ecQuantity: 4,
-			spQuantity: 2,
-			shebQuantity: 10
+        //create a new customer to insert
+		var customer = {
+			customerFirstName: "Emdawg",
+			customerLastName: "Millionaire",
+			customerIdNumber: "M123809342572",
+			customerEmail: "emdawgmillions@e.com",
+			customerPhone: "0987654321"
 		};
-		var json = JSON.stringify(product);
+		var json = JSON.stringify(customer);
 		
 		http.send(json);
 	});
 
 	document.getElementById("btnPut").addEventListener("click", ()=>{
 		
-		var pId = prompt("Enter the id of the product you'd like to update");
+		var cId = prompt("Enter the id of the customer you'd like to update");
 
 		var http = new XMLHttpRequest();
 		
-		http.open("PUT", baseURL + pId);
+		http.open("PUT", baseURL + cId);
 		
 		http.addEventListener("readystatechange", ()=>{
 			if(http.readyState == 4 && http.status == 200){
@@ -162,28 +120,22 @@ window.addEventListener("load", ()=>{
 				errorCallback(http.status, http.statusText);
 			}
 		});
-		//updated product data
-		var product = {
-			productId: pId,
-			consoleName: "PC Games",
-			productName:"Deep Rock Galactica",
-			loosePrice: 47.88,
-			cibPrice: 59.99,
-			gamestopPrice: 54.99,
-			gamestopTradeValue: 25.33,
-			upc: "001234567800",
-			onaQuantity: 4,
-			ecQuantity: 4,
-			spQuantity: 2,
-			shebQuantity: 2
+		//updated Customer data
+		var customer = {
+            customerId: cId,
+			customerFirstName: "Slumdawg",
+			customerLastName: "Millionaire",
+			customerIdNumber: "M123809342572",
+			customerEmail: "emdawgmillions@e.com",
+			customerPhone: "0987654321"
 		};
-		var json = JSON.stringify(product);
+		var json = JSON.stringify(customer);
 		http.send(json);
 	});
 
 	document.getElementById("btnDelete").addEventListener("click", ()=>{
 		
-		var id = prompt("Enter a product id to delete");
+		var id = prompt("Enter a customer id to delete");
 
 		var url = baseURL + id;
 
@@ -207,22 +159,18 @@ window.addEventListener("load", ()=>{
 	</script>
 </head>
 <body>
-	<h1>Product Web Service Tests</h1>
+	<h1>Customer Web Service Tests</h1>
 	<p>Make sure to have the Network tab open in developer tools so that you can watch the HTTP request.</p>
-	<input type="button" id="btnGetAll" value="Get All Products">
+	<input type="button" id="btnGetAll" value="Get All Customers">
 	<br>
-	<input type="button" id="btnGetAllByConsole" value="Get All By Console">
+	<input type="button" id="btnGetById" value="Get Customer By ID">
 	<br>
-	<input type="button" id="btnGetById" value="Get Product By ID">
+	<input type="button" id="btnGetByCustomerLastName" value="Get Customer By Customer Name">
 	<br>
-	<input type="button" id="btnGetByProduct" value="Get Product By Product Name">
+	<input type="button" id="btnPost" value="Post Customer">
 	<br>
-	<input type="button" id="btnGetByUpc" value="Get Product By UPC">
+	<input type="button" id="btnPut" value="Put/Update Customer">
 	<br>
-	<input type="button" id="btnPost" value="Post Product">
-	<br>
-	<input type="button" id="btnPut" value="Put/Update Product">
-	<br>
-	<input type="button" id="btnDelete" value="Delete Product">
+	<input type="button" id="btnDelete" value="Delete Customer">
 </body>
 </html>

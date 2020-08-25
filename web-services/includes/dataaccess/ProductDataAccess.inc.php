@@ -154,8 +154,8 @@ class ProductDataAccess extends DataAccess{
     }
 
     /**
-	* Gets a product from the database by its product name
-	* @param {string} 	 The name of the product to get from a row in the database
+	* Gets a product from the database by its console name
+	* @param {string} 	 The console name of the product to get from a row in the database
 	* @return {product} Returns an instance of a product model object
 	*/
 	function getByConsoleName($consoleName){
@@ -176,8 +176,8 @@ class ProductDataAccess extends DataAccess{
 	}
 	
     /**
-	* Gets a product from the database by its product name
-	* @param {string} 	 The name of the product to get from a row in the database
+	* Gets a product from the database by its upc
+	* @param {string} 	 The upc of the product to get from a row in the database
 	* @return {product} Returns an instance of a product model object
 	*/
 	function getByUpc($upc){
