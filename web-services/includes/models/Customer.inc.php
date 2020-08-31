@@ -21,7 +21,7 @@ class Customer extends Model{
     }
 
     /**
-	* Validates the state of a Product object. Returns true if it is valid, false otherwise
+	* Validates the state of a Customer object. Returns true if it is valid, false otherwise
 	* @return {boolean}
     */
     public function isValid(){

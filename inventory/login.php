@@ -16,7 +16,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     if($userNameEntered == $userName && $passwordEntered == $password){
         
         session_regenerate_id(true);
-        $_SESSION['authenticated'] = "yes";
+        $_SESSION['gginv_authenticated'] = "yes";
 		header("Location: index.php");
 		exit();
 	}
