@@ -1,6 +1,6 @@
 <?php
 include_once('DataAccess.inc.php');
-include_once(__DIR__ . "/../models/customer.inc.php");
+include_once(__DIR__ . "/../models/Customer.inc.php");
 
 class CustomerDataAccess extends DataAccess{
 
