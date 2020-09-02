@@ -54,26 +54,6 @@ function testSanitizeHtml(){
 	// TEST X - MORE TESTS TO DO...make sure it removes other tags and malicious attributes -- if time permits
 }
 
-
-// function testConvertDateForMySQL(){
-// 	global $testResults;
-// 	$testResults[] = "<h3>TESTING convertDateForMySQL()...</h3>";
-
-// 	$da = new CustomerDataAccess(get_link());
-
-// 	// TEST 1 - Make sure it removes 'script' tags from the HTML string
-// 	$stringToFormat = "2/1/2020";
-// 	$expectedResult = "2020-02-01";
-// 	$actualResult = $da->convertDateForMySQL($stringToFormat);
-
-// 	if($expectedResult == $actualResult){
-// 		$testResults[] = "PASS - Formatted 2/1/202 into 2020-02-01";
-// 	}else{
-// 		$testResults[] = "FAIL - DID NOT format 2/1/202 into 2020-02-01";
-// 	}
-// }
-
-
 function testCleanDataGoingIntoDB(){
 	global $testResults;
 	$testResults[] = "<h3>TESTING cleanDataGoingIntoDB()...</h3>";
@@ -106,7 +86,7 @@ function testCleanDataComingFromDB(){
 
 	$da = new CustomerDataAccess(get_link());
 
-	// TEST 1 - Make sure to clean malicious HTML from the consoleName column
+	// TEST 1 - Make sure to clean malicious HTML from the customerFirstName column
 	// We need to simulate a row coming from the database (as an associative array)
 	// There should be malicious HTML in one of the values
 	$row = [

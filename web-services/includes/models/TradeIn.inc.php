@@ -22,7 +22,7 @@ class TradeIn extends Model{
     public function __construct($args = []){
         $this->tradeInId = $args['tradeInId'] ?? 0;
         $this->customerId = $args['customerId'] ?? 0;
-        $this->tradeInDateTime = $this->createDateTimeNow();
+        $this->tradeInDateTime = $args['tradeInDateTime'] ?? $this->createDateTimeNow();
         $this->tradeInEmployee = $args['tradeInEmployee'] ?? "";
     }
 

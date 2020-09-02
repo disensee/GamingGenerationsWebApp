@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>TradeIn Web Service Tests</title>
+	<script type="text/javascript">
+		
+
+
+window.addEventListener("load", ()=>{
+
+	// DON'T FORGET TO UPDATE THE BASE URL FOR YOUR WEB SERVICE 
+	// (THE LIVE URL MAY BE DIFFERENT THAT THE URL ON DEV)
+	var baseURL = "https://localhost/GG/web-services/tradeins/";  
+
+	if(location.hostname != "localhost"){ 
+        baseURL = ""; 
+	}
+
+	// this will be the default error handler function
+	function errorCallback(statusCode, statusText){
+		alert(statusCode + "\n" + statusText);
+	}
+
+	document.getElementById("btnGetAll").addEventListener("click", ()=>{
+		
+		var http = new XMLHttpRequest();
+		http.open("GET", baseURL);
+		
+		http.addEventListener("readystatechange", ()=>{
+			if(http.readyState == 4 && http.status == 200){
+				console.log(http.responseText);
+			}else if(http.readyState == 4){
+				errorCallback(http.status, http.statusText);
+			}
+		});
+		http.setRequestHeader("Content-Type","application/json");
+		http.send();
+	});
+
+
+	document.getElementById("btnGetById").addEventListener("click", ()=>{
+		
+		var tradeInId = prompt("Enter a trade in ID");
+
+		var url = baseURL + tradeInId;
+
+		var http = new XMLHttpRequest();
+		http.open("GET", url);
+		
+		http.addEventListener("readystatechange", ()=>{
+			if(http.readyState == 4 && http.status == 200){
+				console.log(http.responseText);
+			}else if(http.readyState == 4){
+				errorCallback(http.status, http.statusText);
+			}
+		});
+		
+		http.send();
+	});
+
+	document.getElementById("btnGetTradeInByCustomerId").addEventListener("click", ()=>{
+		
+		var cId = prompt("Enter a customer ID");
+
+		var url = encodeURI(baseURL + "customer" + cId);
+
+		var http = new XMLHttpRequest();
+		http.open("GET", url);
+		
+		http.addEventListener("readystatechange", ()=>{
+			if(http.readyState == 4 && http.status == 200){
+				console.log(http.responseText);
+			}else if(http.readyState == 4){
+				errorCallback(http.status, http.statusText);
+			}
+		});
+		
+		http.send();
+	});
+
+
+	document.getElementById("btnPost").addEventListener("click", ()=>{
+		
+		var http = new XMLHttpRequest();
+		http.open("POST", baseURL);
+		
+		http.addEventListener("readystatechange", ()=>{
+			if(http.readyState == 4 && http.status == 200){
+				console.log(http.responseText);
+			}else if(http.readyState == 4){
+				errorCallback(http.status, http.statusText);
+			}
+		});
+
+        //create a new customer to insert
+		var tradeIn = {
+            customerId: 4,
+			tradeInDateTime: null,
+			tradeInEmployee: "HSH",
+		};
+		var json = JSON.stringify(tradeIn);
+		
+		http.send(json);
+	});
+
+	document.getElementById("btnPut").addEventListener("click", ()=>{
+		
+		var tId = prompt("Enter the id of the trade in you'd like to update");
+
+		var http = new XMLHttpRequest();
+		
+		http.open("PUT", baseURL + tId);
+		
+		http.addEventListener("readystatechange", ()=>{
+			if(http.readyState == 4 && http.status == 200){
+				console.log(http.responseText);
+			}else if(http.readyState == 4){
+				errorCallback(http.status, http.statusText);
+			}
+		});
+		//updated trade in data
+		var tradeIn = {
+            tradeInId: tId,
+            customerId: 1,
+            tradeInDateTime: new Date(),
+			tradeInEmployee: "HSH"
+		};
+		var json = JSON.stringify(tradeIn);
+		http.send(json);
+	});
+
+	document.getElementById("btnDelete").addEventListener("click", ()=>{
+		
+		var id = prompt("Enter a trade in id to delete");
+
+		var url = baseURL + id;
+
+		var http = new XMLHttpRequest();
+		http.open("DELETE", url);
+		//alert(url);
+		
+		http.addEventListener("readystatechange", ()=>{
+			if(http.readyState == 4 && http.status == 200){
+				console.log(http.responseText);
+			}else if(http.readyState == 4){
+				errorCallback(http.status, http.statusText);
+			}
+		});
+
+		http.setRequestHeader("Content-Type","application/json");
+		http.send();
+	});
+
+});
+	</script>
+</head>
+<body>
+	<h1>Customer Web Service Tests</h1>
+	<p>Make sure to have the Network tab open in developer tools so that you can watch the HTTP request.</p>
+	<input type="button" id="btnGetAll" value="Get All Trade Ins">
+	<br>
+	<input type="button" id="btnGetById" value="Get Trade In By ID">
+	<br>
+	<input type="button" id="btnGetTradeInByCustomerId" value="Get Trade In By Customer ID">
+	<br>
+	<input type="button" id="btnPost" value="Post Trade In">
+	<br>
+	<input type="button" id="btnPut" value="Put/Update Trade In">
+	<br>
+	<input type="button" id="btnDelete" value="Delete Trade In">
+</body>
+</html>

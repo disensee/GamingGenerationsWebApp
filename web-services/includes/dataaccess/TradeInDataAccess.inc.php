@@ -19,10 +19,10 @@ class TradeInDataAccess extends DataAccess{
 
 		if($tradeIn instanceOf TradeIn){
 			$cleanTradeIn = new TradeIn();
-			$cleanTradeIn->customerId = mysqli_real_escape_string($this->link, $tradeIn->tradeInId);
+			$cleanTradeIn->tradeInId= mysqli_real_escape_string($this->link, $tradeIn->tradeInId);
 			$cleanTradeIn->customerId = mysqli_real_escape_string($this->link, $tradeIn->customerId);
             $cleanTradeIn->tradeInDateTime = mysqli_real_escape_string($this->link, $tradeIn->tradeInDateTime);
-            $cleanTradeIn->tradeInEmployee = mysqli_real_escape_string($this->link, $customer->tradeInEmployee);
+            $cleanTradeIn->tradeInEmployee = mysqli_real_escape_string($this->link, $tradeIn->tradeInEmployee);
             
 			return $cleanTradeIn;
 		}else{
@@ -47,7 +47,7 @@ class TradeInDataAccess extends DataAccess{
     }
     
     /**
-	* Gets all trade ins from a table in the database
+	* Gets all trade ins from a in the database
 	* @param {assoc array} 	This optional param would allow you to filter the result set
 	* 						For example, you could use it to somehow add a WHERE claus to the query
 	* 
@@ -151,8 +151,8 @@ class TradeInDataAccess extends DataAccess{
 		$cleanTradeIn = $this->cleanDataGoingIntoDB($tradeIn);
 		$qStr = "UPDATE tradeIns SET 
 				customerId = '{$cleanTradeIn->customerId}',
-                customerId = '{$cleanTradeIn->tradeInDateTime}',
-                customerIdNumber = '{$cleanTradeIn->tradeInEmployee}'
+                tradeInDateTime = '{$cleanTradeIn->tradeInDateTime}',
+                tradeInEmployee = '{$cleanTradeIn->tradeInEmployee}'
                 WHERE tradeInId = '{$cleanTradeIn->tradeInId}'";
 
 		$result = mysqli_query($this->link, $qStr) or $this->handleError(mysqli_error($this->link));

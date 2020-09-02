@@ -56,7 +56,7 @@ abstract class DataAccess{
 	*/
 	function convertDateForMySQL($dateStr){
 		$dt = new DateTime($dateStr);
-	    return $dt->format('Y-m-d');
+	    return $dt->format('Y-m-d H:i:s');
 	}
 
 	/**
