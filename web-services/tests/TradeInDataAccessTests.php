@@ -5,14 +5,14 @@ include_once("../includes/dataaccess/TradeInDataAccess.inc.php");
 
 $testResults = [];
 
-testConstructor();
-testSanitizeHtml();
-testConvertDateForMySQL();
-testCleanDataGoingIntoDB();
-testCleanDataComingFromDB();
-testGetById();
+//testConstructor();
+//testSanitizeHtml();
+//testConvertDateForMySQL();
+//testCleanDataGoingIntoDB();
+//testCleanDataComingFromDB();
+//testGetById();
 testGetTradeInByCustomerId();
-testGetAll();
+//testGetAll();
 //testInsert();
 //testUpdate();
 //testDelete();

@@ -45,6 +45,6 @@ class TradeIn extends Model{
         return true;
     }
 }
-
+//TODO: ADD TOTAL TRADE IN PAID PRICE FOR CASH, SC, AND CHECK!!!
 
 ?>

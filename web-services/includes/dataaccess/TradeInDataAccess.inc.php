@@ -1,6 +1,9 @@
 <?php
+include_once("../includes/config.inc.php");
 include_once('DataAccess.inc.php');
+include_once('CustomerDataAccess.inc.php');
 include_once(__DIR__ . "/../models/TradeIn.inc.php");
+include_once(__DIR__ . "/../models/Customer.inc.php");
 
 class TradeInDataAccess extends DataAccess{
 
@@ -99,21 +102,26 @@ class TradeInDataAccess extends DataAccess{
 	* @param {number} 	 The id of the customer whose trade ins are to be retreived from db
 	* @return {customer} Returns an array of trade in objects
 	*/
+
+	//EVALUATE HOW TO GET CUSTOMER DATA TO DISPLAY IN TABLE!!!!
 	function getTradeInByCustomerId($customerId){
+		$cda = new CustomerDataAccess(get_link());
         $cleanCustomerId = $this->cleanDataGoingIntoDB($customerId);
-		$qStr = "SELECT tradeInId, customerId, tradeInDateTime, tradeInEmployee FROM tradeins WHERE customerId LIKE '%$cleanCustomerId%'";
+		$qStr = "SELECT tradeInId, t.customerId, customerFirstName, customerLastName, tradeInDateTime, tradeInEmployee FROM tradeins t JOIN customers c on t.customerId = c.customerId WHERE t.customerId = '$cleanCustomerId'";
 
 		$result = mysqli_query($this->link, $qStr) or $this->handleError(mysqli_error($this->link));
-		$allTradeIns = [];
+		$allTradeInsWithCustomer = [];
 		if(mysqli_num_rows($result)){
 			while($row = mysqli_fetch_assoc($result)){
 				$cleanRow = $this->cleanDataComingFromDB($row);
+				$customer = $cda->getById($cleanCustomerId);
 				$tradeIn = new TradeIn($cleanRow);
 
-				$allTradeIns[] = $tradeIn;
+				$allTradeInsWithCustomer[] = $customer;
+				$allTradeInsWithCustomer[] = $tradeIn;
 			}
 		}
-		return $allTradeIns;
+		return $allTradeInsWithCustomer;
     }
 
 
