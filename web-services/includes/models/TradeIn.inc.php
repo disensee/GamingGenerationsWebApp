@@ -7,6 +7,10 @@ class TradeIn extends Model{
     public $customerId;
     public $tradeInDateTime;
     public $tradeInEmployee;
+    public $cashPaid;
+    public $creditPaid;
+    public $checkPaid;
+    public $checkNumber;
 
     //set datetime
     public function createDateTimeNow(){
@@ -24,8 +28,12 @@ class TradeIn extends Model{
         $this->customerId = $args['customerId'] ?? 0;
         $this->tradeInDateTime = $args['tradeInDateTime'] ?? $this->createDateTimeNow();
         $this->tradeInEmployee = $args['tradeInEmployee'] ?? "";
+        $this->cashPaid = $args['cashPaid'] ?? 0.00;
+        $this->creditPaid = $args['creditPaid'] ?? 0.00;
+        $this->checkPaid = $args['checkPaid'] ?? 0.00;
+        $this->checkNumber = $args['checkNumber'] ?? "";
     }
-
+    //Need to validate paid value vars
     public function isValid(){
         //validation not needed on tradeInId
         //validation not needed on customerId
@@ -45,6 +53,6 @@ class TradeIn extends Model{
         return true;
     }
 }
-//TODO: ADD TOTAL TRADE IN PAID PRICE FOR CASH, SC, AND CHECK!!!
+
 
 ?>
