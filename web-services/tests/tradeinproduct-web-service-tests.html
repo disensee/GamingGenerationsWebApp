@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>TradeIn Web Service Tests</title>
+	<title>TradeInProduct Web Service Tests</title>
 	<script type="text/javascript">
 		
 
@@ -10,7 +10,7 @@ window.addEventListener("load", ()=>{
 
 	// DON'T FORGET TO UPDATE THE BASE URL FOR YOUR WEB SERVICE 
 	// (THE LIVE URL MAY BE DIFFERENT THAT THE URL ON DEV)
-	var baseURL = "https://localhost/GG/web-services/tradeins/";  
+	var baseURL = "https://localhost/GG/web-services/tradeinproducts/";  
 
 	if(location.hostname != "localhost"){ 
         baseURL = ""; 
@@ -58,11 +58,11 @@ window.addEventListener("load", ()=>{
 		http.send();
 	});
 
-	document.getElementById("btnGetTradeInByCustomerId").addEventListener("click", ()=>{
+	document.getElementById("btnGetTradeInProductByTradeInId").addEventListener("click", ()=>{
 		
-		var cId = prompt("Enter a customer ID");
+		var tId = prompt("Enter a trade in ID");
 
-		var url = encodeURI(baseURL + "customer" + cId);
+		var url = encodeURI(baseURL + "tradein" + tId);
 
 		var http = new XMLHttpRequest();
 		http.open("GET", url);
@@ -92,20 +92,20 @@ window.addEventListener("load", ()=>{
 			}
 		});
 
-        //create a new tradeIn to insert
-		var tradeIn = {
-            customerId: 4,
-			tradeInDateTime: null,
-			tradeInEmployee: "HSH",
+        //create a new tradeInProduct to insert
+		var tradeInProd = {
+            tradeInId: 1,
+            productId: 1968,
+			serialNumber: "TJ120324PS5-02"
 		};
-		var json = JSON.stringify(tradeIn);
+		var json = JSON.stringify(tradeInProd);
 		
 		http.send(json);
 	});
 
 	document.getElementById("btnPut").addEventListener("click", ()=>{
 		
-		var tId = prompt("Enter the id of the trade in you'd like to update");
+		var tId = prompt("Enter the id of the trade in product you'd like to update");
 
 		var http = new XMLHttpRequest();
 		
@@ -118,20 +118,20 @@ window.addEventListener("load", ()=>{
 				errorCallback(http.status, http.statusText);
 			}
 		});
-		//updated trade in data
-		var tradeIn = {
-            tradeInId: tId,
-            customerId: 1,
-            tradeInDateTime: new Date(),
-			tradeInEmployee: "HSH"
+		//updated trade in product data
+		var tradeInProd = {
+            tpId: tId,
+            tradeInId: 1,
+            productId: 1967,
+			serialNumber: null
 		};
-		var json = JSON.stringify(tradeIn);
+		var json = JSON.stringify(tradeInProd);
 		http.send(json);
 	});
 
 	document.getElementById("btnDelete").addEventListener("click", ()=>{
 		
-		var id = prompt("Enter a trade in id to delete");
+		var id = prompt("Enter a trade in product id to delete");
 
 		var url = baseURL + id;
 
@@ -157,16 +157,16 @@ window.addEventListener("load", ()=>{
 <body>
 	<h1>Customer Web Service Tests</h1>
 	<p>Make sure to have the Network tab open in developer tools so that you can watch the HTTP request.</p>
-	<input type="button" id="btnGetAll" value="Get All Trade Ins">
+	<input type="button" id="btnGetAll" value="Get All Trade In Products">
 	<br>
-	<input type="button" id="btnGetById" value="Get Trade In By ID">
+	<input type="button" id="btnGetById" value="Get Trade In Product By ID">
 	<br>
-	<input type="button" id="btnGetTradeInByCustomerId" value="Get Trade In By Customer ID">
+	<input type="button" id="btnGetTradeInProductByTradeInId" value="Get Trade In Products by Trade In Id">
 	<br>
-	<input type="button" id="btnPost" value="Post Trade In">
+	<input type="button" id="btnPost" value="Post Trade In Product">
 	<br>
-	<input type="button" id="btnPut" value="Put/Update Trade In">
+	<input type="button" id="btnPut" value="Put/Update Trade In Product">
 	<br>
-	<input type="button" id="btnDelete" value="Delete Trade In">
+	<input type="button" id="btnDelete" value="Delete Trade In Product">
 </body>
 </html>

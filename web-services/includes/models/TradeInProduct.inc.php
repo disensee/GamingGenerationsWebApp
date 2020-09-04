@@ -28,6 +28,8 @@ class TradeInProduct extends Model{
         if(!isset($this->productId)){
             return false;
         }
+
+        return true;
     }
 }
 ?>
