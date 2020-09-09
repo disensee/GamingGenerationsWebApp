@@ -25,7 +25,11 @@ class TradeInDataAccess extends DataAccess{
 			$cleanTradeIn->tradeInId= mysqli_real_escape_string($this->link, $tradeIn->tradeInId);
 			$cleanTradeIn->customerId = mysqli_real_escape_string($this->link, $tradeIn->customerId);
             $cleanTradeIn->tradeInDateTime = mysqli_real_escape_string($this->link, $tradeIn->tradeInDateTime);
-            $cleanTradeIn->tradeInEmployee = mysqli_real_escape_string($this->link, $tradeIn->tradeInEmployee);
+			$cleanTradeIn->tradeInEmployee = mysqli_real_escape_string($this->link, $tradeIn->tradeInEmployee);
+			$cleanTradeIn->cashPaid = mysqli_real_escape_string($this->link, $tradeIn->cashPaid);
+			$cleanTradeIn->creditPaid = mysqli_real_escape_string($this->link, $tradeIn->creditPaid);
+			$cleanTradeIn->checkPaid = mysqli_real_escape_string($this->link, $tradeIn->checkPaid);
+			$cleanTradeIn->checkNumber = mysqli_real_escape_string($this->link, $tradeIn->checkNumber);
             
 			return $cleanTradeIn;
 		}else{
@@ -45,6 +49,10 @@ class TradeInDataAccess extends DataAccess{
         $cleanRow['customerId'] = htmlentities($row['customerId']);
         $cleanRow['tradeInDateTime'] = htmlentities($row['tradeInDateTime']);
         $cleanRow['tradeInEmployee'] = htmlentities($row['tradeInEmployee']);
+        $cleanRow['cashPaid'] = htmlentities($row['cashPaid']);
+        $cleanRow['creditPaid'] = htmlentities($row['creditPaid']);
+        $cleanRow['checkPaid'] = htmlentities($row['checkPaid']);
+        $cleanRow['checkNumber'] = htmlentities($row['checkNumber']);
 
 		return $cleanRow;
     }
@@ -57,7 +65,7 @@ class TradeInDataAccess extends DataAccess{
 	* @return {array}		Returns an array of trade in objects
 	*/
 	function getAll($args = []){
-		$qStr = "SELECT tradeInId, customerId, tradeInDateTime, tradeInEmployee FROM tradeIns";
+		$qStr = "SELECT tradeInId, customerId, tradeInDateTime, tradeInEmployee, cashPaid, creditPaid, checkPaid, checkNumber FROM tradeIns";
 		//die($qStr);
 
 		//Many people run queries like this. Shows error messages to users. 
@@ -84,7 +92,7 @@ class TradeInDataAccess extends DataAccess{
 	*/
 	function getById($tradeInId){
 		$cleanTradeInId = $this->cleanDataGoingIntoDB($tradeInId);
-		$qStr = "SELECT tradeInId, customerId, tradeInDateTime, tradeInEmployee FROM tradeins WHERE tradeInId = '$cleanTradeInId'";
+		$qStr = "SELECT tradeInId, customerId, tradeInDateTime, tradeInEmployee, cashPaid, creditPaid, checkPaid, checkNumber FROM tradeins WHERE tradeInId = '$cleanTradeInId'";
 
 		$result = mysqli_query($this->link, $qStr) or $this->handleError(mysqli_error($this->link));
 		if(mysqli_num_rows($result) == 1){
@@ -105,19 +113,19 @@ class TradeInDataAccess extends DataAccess{
 
 	//EVALUATE HOW TO GET CUSTOMER DATA TO DISPLAY IN TABLE!!!!
 	function getTradeInByCustomerId($customerId){
-		$cda = new CustomerDataAccess(get_link());
+		//$cda = new CustomerDataAccess(get_link());
         $cleanCustomerId = $this->cleanDataGoingIntoDB($customerId);
-		$qStr = "SELECT tradeInId, t.customerId, customerFirstName, customerLastName, tradeInDateTime, tradeInEmployee FROM tradeins t JOIN customers c on t.customerId = c.customerId WHERE t.customerId = '$cleanCustomerId'";
+		$qStr = "SELECT tradeInId, customerId, tradeInDateTime, tradeInEmployee, cashPaid, creditPaid, checkPaid, checkNumber FROM tradeins WHERE customerId = '$cleanCustomerId'";
 
 		$result = mysqli_query($this->link, $qStr) or $this->handleError(mysqli_error($this->link));
 		$allTradeInsWithCustomer = [];
 		if(mysqli_num_rows($result)){
 			while($row = mysqli_fetch_assoc($result)){
 				$cleanRow = $this->cleanDataComingFromDB($row);
-				$customer = $cda->getById($cleanCustomerId);
+				//$customer = $cda->getById($cleanCustomerId);
 				$tradeIn = new TradeIn($cleanRow);
 
-				$allTradeInsWithCustomer[] = $customer;
+				//$allTradeInsWithCustomer[] = $customer;
 				$allTradeInsWithCustomer[] = $tradeIn;
 			}
 		}
@@ -133,10 +141,14 @@ class TradeInDataAccess extends DataAccess{
 	*/
 	function insert($tradeIn){
 		$cleanTradeIn = $this->cleanDataGoingIntoDB($tradeIn);
-		$qStr = "INSERT INTO tradeIns (customerId, tradeInDateTime, tradeInEmployee) VALUES (
+		$qStr = "INSERT INTO tradeIns (customerId, tradeInDateTime, tradeInEmployee, cashPaid, creditPaid, checkPaid, checkNumber) VALUES (
 			'{$cleanTradeIn->customerId}',
             '{$cleanTradeIn->tradeInDateTime}',
-            '{$cleanTradeIn->tradeInEmployee}'
+            '{$cleanTradeIn->tradeInEmployee}',
+            '{$cleanTradeIn->cashPaid}',
+            '{$cleanTradeIn->creditPaid}',
+            '{$cleanTradeIn->checkPaid}',
+            '{$cleanTradeIn->checkNumber}'
 		)";
 
 		$result = mysqli_query($this->link, $qStr) or $this->handleError(mysqli_error($this->link));
@@ -160,7 +172,11 @@ class TradeInDataAccess extends DataAccess{
 		$qStr = "UPDATE tradeIns SET 
 				customerId = '{$cleanTradeIn->customerId}',
                 tradeInDateTime = '{$cleanTradeIn->tradeInDateTime}',
-                tradeInEmployee = '{$cleanTradeIn->tradeInEmployee}'
+                tradeInEmployee = '{$cleanTradeIn->tradeInEmployee}',
+				cashPaid = '{$cleanTradeIn->cashPaid}',
+				creditPaid = '{$cleanTradeIn->creditPaid}',
+				checkPaid = '{$cleanTradeIn->checkPaid}',
+				checkNumber = '{$cleanTradeIn->checkNumber}'
                 WHERE tradeInId = '{$cleanTradeIn->tradeInId}'";
 
 		$result = mysqli_query($this->link, $qStr) or $this->handleError(mysqli_error($this->link));

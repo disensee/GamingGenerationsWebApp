@@ -97,6 +97,10 @@ window.addEventListener("load", ()=>{
             customerId: 4,
 			tradeInDateTime: null,
 			tradeInEmployee: "HSH",
+			cashPaid: 1.00,
+			creditPaid: 0.00,
+			checkPaid: 0.00,
+			checkNumber: ""
 		};
 		var json = JSON.stringify(tradeIn);
 		
@@ -121,9 +125,13 @@ window.addEventListener("load", ()=>{
 		//updated trade in data
 		var tradeIn = {
             tradeInId: tId,
-            customerId: 1,
+            customerId: 4,
             tradeInDateTime: new Date(),
-			tradeInEmployee: "HSH"
+			tradeInEmployee: "HSH",
+			cashPaid: 0.00,
+			creditPaid: 0.00,
+			checkPaid: 127.00,
+			checkNumber: "456213",
 		};
 		var json = JSON.stringify(tradeIn);
 		http.send(json);

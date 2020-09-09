@@ -11,7 +11,7 @@ $testResults = [];
 //testCleanDataGoingIntoDB();
 //testCleanDataComingFromDB();
 //testGetById();
-testGetTradeInByCustomerId();
+//testGetTradeInByCustomerId();
 //testGetAll();
 //testInsert();
 //testUpdate();
@@ -144,7 +144,7 @@ function testGetTradeInByCustomerId(){
 	$testResults[] = "<h3>TESTING getTradeInByCustomerId()...</h3>";
 
 	$da = new TradeInDataAccess(get_link());
-	$tradeIns = $da->getTradeInByCustomerId(4);
+	$tradeIns = $da->getTradeInByCustomerId(1);
 	var_dump($tradeIns);
 }
 
@@ -166,12 +166,16 @@ function testInsert(){
 	$tradeIn = new TradeIn([
 		'customerId' => 4,
         'tradeInDateTime'=> null,
-        'tradeInEmployee' => "QWE"
+        'tradeInEmployee' => "QWE",
+        'cashPaid' => 0.00,
+        'creditPaid' => 25.00,
+        'checkPaid' => 0.00,
+        'checkNumber' => ""
 	]);
 
-	//$newTradeIn = $da->insert($tradeIn);
+	$newTradeIn = $da->insert($tradeIn);
 
-	//var_dump($newCustomer);
+	var_dump($newTradeIn);
 }
 
 function testUpdate(){
@@ -180,11 +184,11 @@ function testUpdate(){
 
 	$da = new TradeInDataAccess(get_link());
 	
-	$tradeInToUpdate = $da->getById(2);
+	$tradeInToUpdate = $da->getById(8);
 	$tradeInToUpdate->tradeInEmployee = "ERM";
-	//$tradeInToUpdate = $da->update($tradeInToUpdate);
+	$tradeInToUpdate = $da->update($tradeInToUpdate);
 
-	//var_dump($tradeInToUpdate);
+	var_dump($tradeInToUpdate);
 
 }
 
@@ -193,10 +197,9 @@ function testDelete(){
 	$testResults[] = "<h3>TESTING delete()...</h3>";
 
 	$da = new TradeInDataAccess(get_link());
-	$tradeInDeleted = $da->delete(3);
+	$tradeInDeleted = $da->delete(8);
 
 	var_dump($tradeInDeleted);
 }
-
 
 ?>

@@ -41,7 +41,11 @@ function isValidTest(){
     $tradeIn = new TradeIn(array(
         'tradeInId' => 0,
         'customerId' => 0,
-        'tradeInEmployee' => "DKI"
+        'tradeInEmployee' => "DKI",
+        'cashPaid' => 0.00,
+        'creditPaid' => 1.00,
+        'checkPaid' => 0.00,
+        'checkNumber' => ""
     ));
 
     if($tradeIn->isValid() === false){
