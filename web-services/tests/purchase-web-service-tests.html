@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>TradeIn Web Service Tests</title>
+	<script type="text/javascript">
+		
+
+
+window.addEventListener("load", ()=>{
+
+	// DON'T FORGET TO UPDATE THE BASE URL FOR YOUR WEB SERVICE 
+	// (THE LIVE URL MAY BE DIFFERENT THAT THE URL ON DEV)
+	var baseURL = "https://localhost/GG/web-services/purchases/";  
+
+	if(location.hostname != "localhost"){ 
+        baseURL = ""; 
+	}
+
+	// this will be the default error handler function
+	function errorCallback(statusCode, statusText){
+		alert(statusCode + "\n" + statusText);
+	}
+
+	document.getElementById("btnGetAll").addEventListener("click", ()=>{
+		
+		var http = new XMLHttpRequest();
+		http.open("GET", baseURL);
+		
+		http.addEventListener("readystatechange", ()=>{
+			if(http.readyState == 4 && http.status == 200){
+				console.log(http.responseText);
+			}else if(http.readyState == 4){
+				errorCallback(http.status, http.statusText);
+			}
+		});
+		http.setRequestHeader("Content-Type","application/json");
+		http.send();
+	});
+
+
+	document.getElementById("btnGetById").addEventListener("click", ()=>{
+		
+		var purchaseId = prompt("Enter a purchase ID");
+
+		var url = baseURL + purchaseId;
+
+		var http = new XMLHttpRequest();
+		http.open("GET", url);
+		
+		http.addEventListener("readystatechange", ()=>{
+			if(http.readyState == 4 && http.status == 200){
+				console.log(http.responseText);
+			}else if(http.readyState == 4){
+				errorCallback(http.status, http.statusText);
+			}
+		});
+		
+		http.send();
+	});
+
+	document.getElementById("btnGetPurchaseByCustomerId").addEventListener("click", ()=>{
+		
+		var cId = prompt("Enter a customer ID");
+
+		var url = encodeURI(baseURL + "customer" + cId);
+
+		var http = new XMLHttpRequest();
+		http.open("GET", url);
+		
+		http.addEventListener("readystatechange", ()=>{
+			if(http.readyState == 4 && http.status == 200){
+				console.log(http.responseText);
+			}else if(http.readyState == 4){
+				errorCallback(http.status, http.statusText);
+			}
+		});
+		
+		http.send();
+	});
+
+
+	document.getElementById("btnPost").addEventListener("click", ()=>{
+		
+		var http = new XMLHttpRequest();
+		http.open("POST", baseURL);
+		
+		http.addEventListener("readystatechange", ()=>{
+			if(http.readyState == 4 && http.status == 200){
+				console.log(http.responseText);
+			}else if(http.readyState == 4){
+				errorCallback(http.status, http.statusText);
+			}
+		});
+
+        //create a new purchase to insert
+		var purchase = {
+            customerId: 4,
+			purchaseDateTime: null,
+			purchaseEmployee: "HSH",
+			cashReceived: 1.00,
+			creditReceived: 0.00,
+			checkReceived: 0.00,
+			totalPurchasePrice: null
+		};
+		var json = JSON.stringify(purchase);
+		
+		http.send(json);
+	});
+
+	document.getElementById("btnPut").addEventListener("click", ()=>{
+		
+		var pId = prompt("Enter the id of the purchase you'd like to update");
+
+		var http = new XMLHttpRequest();
+		
+		http.open("PUT", baseURL + pId);
+		
+		http.addEventListener("readystatechange", ()=>{
+			if(http.readyState == 4 && http.status == 200){
+				console.log(http.responseText);
+			}else if(http.readyState == 4){
+				errorCallback(http.status, http.statusText);
+			}
+		});
+
+		//updated purchase data
+		var purchase = {
+            purchaseId: pId,
+            customerId: 1,
+			purchaseDateTime: null,
+			purchaseEmployee: "HSH",
+			cashReceived: 0.00,
+			creditReceived: 0.00,
+			storeCreditReceived: 127.00,
+			totalPurchasePrice: 127.00
+		};
+		var json = JSON.stringify(purchase);
+		http.send(json);
+	});
+
+	document.getElementById("btnDelete").addEventListener("click", ()=>{
+		
+		var id = prompt("Enter a purchase id to delete");
+
+		var url = baseURL + id;
+
+		var http = new XMLHttpRequest();
+		http.open("DELETE", url);
+		//alert(url);
+		
+		http.addEventListener("readystatechange", ()=>{
+			if(http.readyState == 4 && http.status == 200){
+				console.log(http.responseText);
+			}else if(http.readyState == 4){
+				errorCallback(http.status, http.statusText);
+			}
+		});
+
+		http.setRequestHeader("Content-Type","application/json");
+		http.send();
+	});
+
+});
+	</script>
+</head>
+<body>
+	<h1>Customer Web Service Tests</h1>
+	<p>Make sure to have the Network tab open in developer tools so that you can watch the HTTP request.</p>
+	<input type="button" id="btnGetAll" value="Get All Purchases">
+	<br>
+	<input type="button" id="btnGetById" value="Get Purchase By ID">
+	<br>
+	<input type="button" id="btnGetPurchaseByCustomerId" value="Get Purchase By Customer ID">
+	<br>
+	<input type="button" id="btnPost" value="Post Purchase">
+	<br>
+	<input type="button" id="btnPut" value="Put/Update Purchase">
+	<br>
+	<input type="button" id="btnDelete" value="Delete Purchase">
+</body>
+</html>

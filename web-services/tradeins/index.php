@@ -69,7 +69,7 @@ switch($method){
       $tradeIn = new TradeIn($assoc);
       
       if($tradeIn->isValid() == false){
-        header('HTTP/1.1 400 - INVALID REQUEST - INVALID customer DATA', true, 400);
+        header('HTTP/1.1 400 - INVALID REQUEST - INVALID trade in DATA', true, 400);
         die();
       }
       
@@ -97,7 +97,7 @@ switch($method){
       $tradeIn->tradeInDateTime = $da->convertDateForMySql($tradeIn->tradeInDateTime);
       
       if($tradeIn->isValid() == false){
-        header('HTTP/1.1 400 - INVALID REQUEST - INVALID customer DATA', true, 400);
+        header('HTTP/1.1 400 - INVALID REQUEST - INVALID trade in DATA', true, 400);
         die();
       }
 
@@ -122,7 +122,7 @@ switch($method){
         header('HTTP/1.1 200', true, 200);
         die();
       }else{
-        header('HTTP/1.1 500 - UNABLE TO DELETE customer', true, 500);
+        header('HTTP/1.1 500 - UNABLE TO DELETE trade in', true, 500);
         die();
       }
     }else{
