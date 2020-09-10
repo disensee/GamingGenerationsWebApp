@@ -1,9 +1,7 @@
 <?php
 include_once("../includes/config.inc.php");
 include_once('DataAccess.inc.php');
-include_once('CustomerDataAccess.inc.php');
 include_once(__DIR__ . "/../models/TradeIn.inc.php");
-include_once(__DIR__ . "/../models/Customer.inc.php");
 
 class TradeInDataAccess extends DataAccess{
 
@@ -15,8 +13,8 @@ class TradeInDataAccess extends DataAccess{
 
 	/**
 	* 'Cleans' the data in a TradeIn object to prevent SQL injection attacks
-	* @param {customer}	A tradeIn model object
-	* @return {customer} A new instance of tradeIn object with clean data in it
+	* @param {tradeIn}	A tradeIn model object
+	* @return {tradeIn} A new instance of tradeIn object with clean data in it
 	*/
 	function cleanDataGoingIntoDB($tradeIn){
 
@@ -90,7 +88,7 @@ class TradeInDataAccess extends DataAccess{
     /**
 	* Gets a trade in from the database by its id
 	* @param {number} 	 The id of the trade in to get from a row in the database
-	* @return {customer} Returns an instance of a trade in model object
+	* @return {tradeIn} Returns an instance of a trade in model object
 	*/
 	function getById($tradeInId){
 		$cleanTradeInId = $this->cleanDataGoingIntoDB($tradeInId);
@@ -110,28 +108,27 @@ class TradeInDataAccess extends DataAccess{
     /**
 	* Gets all tradeIns from the database by customer id
 	* @param {number} 	 The id of the customer whose trade ins are to be retreived from db
-	* @return {customer} Returns an array of trade in objects
+	* @return {array} Returns an array of trade in objects
 	*/
 
-	//EVALUATE HOW TO GET CUSTOMER DATA TO DISPLAY IN TABLE!!!!
 	function getTradeInByCustomerId($customerId){
 		//$cda = new CustomerDataAccess(get_link());
         $cleanCustomerId = $this->cleanDataGoingIntoDB($customerId);
 		$qStr = "SELECT tradeInId, customerId, tradeInDateTime, tradeInEmployee, cashPaid, creditPaid, checkPaid, checkNumber, totalPaid FROM tradeins WHERE customerId = '$cleanCustomerId'";
 
 		$result = mysqli_query($this->link, $qStr) or $this->handleError(mysqli_error($this->link));
-		$allTradeInsWithCustomer = [];
+		$allTradeInsByCustomer = [];
 		if(mysqli_num_rows($result)){
 			while($row = mysqli_fetch_assoc($result)){
 				$cleanRow = $this->cleanDataComingFromDB($row);
 				//$customer = $cda->getById($cleanCustomerId);
 				$tradeIn = new TradeIn($cleanRow);
 
-				//$allTradeInsWithCustomer[] = $customer;
-				$allTradeInsWithCustomer[] = $tradeIn;
+				//$allTradeInsByCustomer[] = $customer;
+				$allTradeInsByCustomer[] = $tradeIn;
 			}
 		}
-		return $allTradeInsWithCustomer;
+		return $allTradeInsByCustomer;
     }
 
 

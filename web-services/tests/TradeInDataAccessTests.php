@@ -11,7 +11,7 @@ $testResults = [];
 //testCleanDataGoingIntoDB();
 //testCleanDataComingFromDB();
 //testGetById();
-//testGetTradeInByCustomerId();
+testGetTradeInByCustomerId();
 //testGetAll();
 //testInsert();
 //testUpdate();
@@ -98,7 +98,7 @@ function testCleanDataGoingIntoDB(){
 	}
 
 
-	// MORE TESTS.....test to make sure each property of a customer object is 'cleaned' -- if time permits
+	// MORE TESTS.....test to make sure each property of a trade in object is 'cleaned' -- if time permits
 }
 
 function testCleanDataComingFromDB(){
@@ -144,7 +144,7 @@ function testGetTradeInByCustomerId(){
 	$testResults[] = "<h3>TESTING getTradeInByCustomerId()...</h3>";
 
 	$da = new TradeInDataAccess(get_link());
-	$tradeIns = $da->getTradeInByCustomerId(1);
+	$tradeIns = $da->getTradeInByCustomerId(4);
 	var_dump($tradeIns);
 }
 
