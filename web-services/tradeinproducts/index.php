@@ -95,7 +95,7 @@ switch($method){
       $tradeInProd = new TradeInProduct($assoc);
       
       if($tradeInProd->isValid() == false){
-        header('HTTP/1.1 400 - INVALID REQUEST - INVALID customer DATA', true, 400);
+        header('HTTP/1.1 400 - INVALID REQUEST - INVALID trade in product DATA', true, 400);
         die();
       }
 
@@ -120,7 +120,7 @@ switch($method){
         header('HTTP/1.1 200', true, 200);
         die();
       }else{
-        header('HTTP/1.1 500 - UNABLE TO DELETE customer', true, 500);
+        header('HTTP/1.1 500 - UNABLE TO DELETE trade in product', true, 500);
         die();
       }
     }else{

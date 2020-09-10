@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Purchase Web Service Tests</title>
+	<title>ProductPurchase Web Service Tests</title>
 	<script type="text/javascript">
 		
 
@@ -10,7 +10,7 @@ window.addEventListener("load", ()=>{
 
 	// DON'T FORGET TO UPDATE THE BASE URL FOR YOUR WEB SERVICE 
 	// (THE LIVE URL MAY BE DIFFERENT THAT THE URL ON DEV)
-	var baseURL = "https://localhost/GG/web-services/purchases/";  
+	var baseURL = "https://localhost/GG/web-services/productpurchases/";  
 
 	if(location.hostname != "localhost"){ 
         baseURL = ""; 
@@ -40,9 +40,9 @@ window.addEventListener("load", ()=>{
 
 	document.getElementById("btnGetById").addEventListener("click", ()=>{
 		
-		var purchaseId = prompt("Enter a purchase ID");
+		var productId = prompt("Enter a product ID");
 
-		var url = baseURL + purchaseId;
+		var url = baseURL + productId;
 
 		var http = new XMLHttpRequest();
 		http.open("GET", url);
@@ -58,11 +58,11 @@ window.addEventListener("load", ()=>{
 		http.send();
 	});
 
-	document.getElementById("btnGetPurchaseByCustomerId").addEventListener("click", ()=>{
+	document.getElementById("btnGetProductPurchaseByPurchaseId").addEventListener("click", ()=>{
 		
-		var cId = prompt("Enter a customer ID");
+		var pId = prompt("Enter a purchase ID");
 
-		var url = encodeURI(baseURL + "customer" + cId);
+		var url = encodeURI(baseURL + "purchase" + pId);
 
 		var http = new XMLHttpRequest();
 		http.open("GET", url);
@@ -92,24 +92,19 @@ window.addEventListener("load", ()=>{
 			}
 		});
 
-        //create a new purchase to insert
-		var purchase = {
-            customerId: 4,
-			purchaseDateTime: null,
-			purchaseEmployee: "HSH",
-			cashReceived: 1.00,
-			creditReceived: 0.00,
-			checkReceived: 0.00,
-			totalPurchasePrice: null
+        //create a new productPurchase to insert
+		var prodPurchase = {
+            purchaseId: 2,
+            productId: 1968,
 		};
-		var json = JSON.stringify(purchase);
+		var json = JSON.stringify(prodPurchase);
 		
 		http.send(json);
 	});
 
 	document.getElementById("btnPut").addEventListener("click", ()=>{
 		
-		var pId = prompt("Enter the id of the purchase you'd like to update");
+		var pId = prompt("Enter the id of the product purchase you'd like to update");
 
 		var http = new XMLHttpRequest();
 		
@@ -122,25 +117,19 @@ window.addEventListener("load", ()=>{
 				errorCallback(http.status, http.statusText);
 			}
 		});
-
-		//updated purchase data
-		var purchase = {
-            purchaseId: pId,
-            customerId: 1,
-			purchaseDateTime: null,
-			purchaseEmployee: "HSH",
-			cashReceived: 0.00,
-			creditReceived: 0.00,
-			storeCreditReceived: 127.00,
-			totalPurchasePrice: 127.00
+		//updated product purchase data
+		var prodPurchase = {
+            ppId: pId,
+            purchaseId: 2,
+            productId: 1967,
 		};
-		var json = JSON.stringify(purchase);
+		var json = JSON.stringify(prodPurchase);
 		http.send(json);
 	});
 
 	document.getElementById("btnDelete").addEventListener("click", ()=>{
 		
-		var id = prompt("Enter a purchase id to delete");
+		var id = prompt("Enter a product purchase id to delete");
 
 		var url = baseURL + id;
 
@@ -164,18 +153,18 @@ window.addEventListener("load", ()=>{
 	</script>
 </head>
 <body>
-	<h1>Purchase Web Service Tests</h1>
+	<h1>TradeInProduct Web Service Tests</h1>
 	<p>Make sure to have the Network tab open in developer tools so that you can watch the HTTP request.</p>
-	<input type="button" id="btnGetAll" value="Get All Purchases">
+	<input type="button" id="btnGetAll" value="Get All Product Purchases">
 	<br>
-	<input type="button" id="btnGetById" value="Get Purchase By ID">
+	<input type="button" id="btnGetById" value="Get Product Purchase By ID">
 	<br>
-	<input type="button" id="btnGetPurchaseByCustomerId" value="Get Purchase By Customer ID">
+	<input type="button" id="btnGetProductPurchaseByPurchaseId" value="Get Product Purchases by Purchase Id">
 	<br>
-	<input type="button" id="btnPost" value="Post Purchase">
+	<input type="button" id="btnPost" value="Post Product Purchase">
 	<br>
-	<input type="button" id="btnPut" value="Put/Update Purchase">
+	<input type="button" id="btnPut" value="Put/Update Product Purchase">
 	<br>
-	<input type="button" id="btnDelete" value="Delete Purchase">
+	<input type="button" id="btnDelete" value="Delete Product Purchase">
 </body>
 </html>
