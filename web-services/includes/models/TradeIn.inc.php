@@ -11,6 +11,7 @@ class TradeIn extends Model{
     public $creditPaid;
     public $checkPaid;
     public $checkNumber;
+    public $totalPaid;
 
     //set datetime
     public function createDateTimeNow(){
@@ -32,6 +33,7 @@ class TradeIn extends Model{
         $this->creditPaid = $args['creditPaid'] ?? 0.00;
         $this->checkPaid = $args['checkPaid'] ?? 0.00;
         $this->checkNumber = $args['checkNumber'] ?? "";
+        $this->totalPaid = $args['totalPaid'] ?? ($this->creditPaid+$this->cashPaid+$this->checkPaid);
     }
 
     public function isValid(){
@@ -61,12 +63,6 @@ class TradeIn extends Model{
             }else{
                 $valid = false;
             }
-
-            // if(!empty($this->checkPaid) && isset($this->checkPaid)){
-            //     $valid = true;
-            // }else{
-            //     $valid = false;
-            // }
         }
 
         if(!is_numeric($this->creditPaid)){
@@ -80,13 +76,6 @@ class TradeIn extends Model{
             }else{
                 $valid = false;
             }
-
-            // if(!empty($this->checkPaid) && isset($this->checkPaid)){
-            //     $valid = true;
-            // }else{
-            //     $valid = false;
-            // }
-
         }
 
         if(!is_numeric($this->checkPaid)){
@@ -100,11 +89,6 @@ class TradeIn extends Model{
                 $valid = false;
             }
 
-            // if(!empty($this->cashPaid) && isset($this->cashPaid)){
-            //     $valid = true;
-            // }else{
-            //     $valid = false;
-            // }
         }
 
         if(!is_numeric($this->checkNumber)){
@@ -117,6 +101,14 @@ class TradeIn extends Model{
             }else{
                 $valid = false;
             }
+        }
+
+        if(empty($this->totalPaid)){
+            $valid = false;
+        }
+
+        if($this->totalPaid != ($this->cashPaid + $this->creditPaid + $this->checkPaid)){
+            $valid = false;
         }
 
         return $valid;

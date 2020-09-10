@@ -100,7 +100,8 @@ window.addEventListener("load", ()=>{
 			cashPaid: 1.00,
 			creditPaid: 0.00,
 			checkPaid: 0.00,
-			checkNumber: ""
+			checkNumber: "",
+			totalPaid: 1.00
 		};
 		var json = JSON.stringify(tradeIn);
 		
@@ -122,16 +123,18 @@ window.addEventListener("load", ()=>{
 				errorCallback(http.status, http.statusText);
 			}
 		});
+
 		//updated trade in data
 		var tradeIn = {
             tradeInId: tId,
             customerId: 4,
-            tradeInDateTime: new Date(),
+			tradeInDateTime: null,
 			tradeInEmployee: "HSH",
 			cashPaid: 0.00,
 			creditPaid: 0.00,
 			checkPaid: 127.00,
 			checkNumber: "456213",
+			totalPaid: 127.00
 		};
 		var json = JSON.stringify(tradeIn);
 		http.send(json);

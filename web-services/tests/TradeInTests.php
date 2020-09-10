@@ -42,10 +42,11 @@ function isValidTest(){
         'tradeInId' => 0,
         'customerId' => 0,
         'tradeInEmployee' => "DKI",
-        'cashPaid' => 0.00,
+        'cashPaid' => 1.00,
         'creditPaid' => 1.00,
         'checkPaid' => 0.00,
-        'checkNumber' => ""
+        'checkNumber' => "",
+        'totalPaid' => 2.00
     ));
 
     if($tradeIn->isValid() === false){

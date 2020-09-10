@@ -57,8 +57,14 @@ abstract class Model {
 		return trim($XMLstring);
 	}
 
-	
+	//set datetime
+	public function createDateTimeNow(){
+		$tz_object = new DateTimeZone('America/Chicago');
+		//default timezone is central time
 
-
+		$dateTime = new DateTime();
+		$dateTime->setTimezone($tz_object);
+		return $dateTime->format('Y-m-d H:i:s');
+	}
 
 }
