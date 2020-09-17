@@ -31,8 +31,18 @@ switch($method){
       echo($json);
       die();
     }else if(preg_match("/^[a-zA-Z ]*$/", $url_path, $matches)){
-        $customerLastName = $matches[0];
-        $customer = $da -> getByCustomerLastName($customerLastName);
+        $customerName = $matches[0];
+        if(strpos($customerName, " ")){
+          $customerNameSplit = explode(" ", $customerName);
+          $customerFirstName = trim($customerNameSplit[0]);
+          $customerLastName = trim($customerNameSplit[1]);
+        }else{
+          $customerFirstName = $customerName;
+          $customerLastName = $customerName;
+        }
+        
+
+        $customer = $da -> getByCustomerName($customerFirstName, $customerLastName);
         if($customer == false){
             header('HTTP/1.1 404 Not Found', true, 404);
             die();

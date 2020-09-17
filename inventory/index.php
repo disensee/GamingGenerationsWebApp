@@ -24,12 +24,16 @@ require("authentication-check.inc.php");
     <title>Gaming Generations | Inventory</title>
 </head>
 <body>
-    <div id="header"></div>
+    <div id="header">
+        <img src=images/gg-logo.jpg><p>Gaming Generations Inventory</p>
+    </div>
     <div id="content-pane">
         <div id="left-column" class="column left"></div>
         <div id ="mid-column" class ="column mid"></div>
         <div id="right-column" class="column right"></div>
     </div>
-    <div id="footer"></div>
+    <div id="footer">
+        Gaming Generations &copy;2020
+    </div>
 </body>
 </html>

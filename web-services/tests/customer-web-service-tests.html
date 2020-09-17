@@ -60,9 +60,9 @@ window.addEventListener("load", ()=>{
 
 	document.getElementById("btnGetByCustomerLastName").addEventListener("click", ()=>{
 		
-		var custLastName = prompt("Enter a customer last name");
+		var custName = prompt("Enter a customer name");
 
-		var url = encodeURI(baseURL + custLastName);
+		var url = encodeURI(baseURL + custName);
 
 		var http = new XMLHttpRequest();
 		http.open("GET", url);

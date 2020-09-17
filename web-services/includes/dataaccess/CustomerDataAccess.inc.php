@@ -103,9 +103,10 @@ class CustomerDataAccess extends DataAccess{
 	* @param {string} 	 The name of the console the customer is for
 	* @return {customer} Returns an instance of a customer model object
 	*/
-	function getByCustomerLastName($customerLastName){
+	function getByCustomerName($customerFirstName, $customerLastName){
+		$cleanCustomerFirstName = $this->cleanDataGoingIntoDB($customerFirstName);
         $cleanCustomerLastName = $this->cleanDataGoingIntoDB($customerLastName);
-		$qStr = "SELECT customerId, customerFirstName, customerLastName, customerIdNumber, customerEmail, customerPhone FROM customers WHERE customerLastName LIKE '%$cleanCustomerLastName%'";
+		$qStr = "SELECT customerId, customerFirstName, customerLastName, customerIdNumber, customerEmail, customerPhone FROM customers WHERE customerFirstName LIKE '$cleanCustomerFirstName' OR customerLastName LIKE '%$cleanCustomerLastName%'";
 
 		$result = mysqli_query($this->link, $qStr) or $this->handleError(mysqli_error($this->link));
 		$allCustomers = [];

@@ -137,7 +137,7 @@ input{
     margin: 5px;
 }
 
-.product-table-row:hover{
+.mid-table-row:hover{
     cursor: pointer;
     color: gray;
 }
@@ -176,18 +176,18 @@ table th{
 
 }
 
-#product-table-list h4{
+#mid-table-list h4{
     text-align: right;
     font-weight: bold;
 }
 
-#product-table-list table{
+#mid-table-list table{
     width: 100%;
     border-collapse: collapse;
     color: darkslategray;
 }
 
-#product-table-list th, #product-table-list td{
+#mid-table-list th, #mid-table-list td{
     height: 50px;
     border: 1px gray solid;
     padding-left: 6px;

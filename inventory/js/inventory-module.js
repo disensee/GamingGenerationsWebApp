@@ -196,8 +196,6 @@ namespace.InventoryModule = function(options){
             </div>`;
 
         //inject HTML
-        header = document.querySelector("#header");
-        header.innerHTML = `<img src=images/gg-logo.jpg><p>Gaming Generations Inventory<p>`;
         leftColumnContainer.innerHTML = leftColumnContainerTemplate;
         midColumnContainer.innerHTML = midColumnContainerTemplate;
         rightColumnContainer.innerHTML = rightColumnContainerTemplate;
