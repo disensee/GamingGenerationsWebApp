@@ -16,7 +16,7 @@ require("authentication-check.inc.php");
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri&display=swap" rel="stylesheet">
     
     <script src="js/ajax.js"></script>
-    <script src="js/inventory-module.js"></script>
+    <script src="js/customer-module.js"></script>
     <script src="js/main.js"></script>
     
     <meta charset="UTF-8">
