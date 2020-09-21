@@ -252,6 +252,16 @@ namespace.CustomerModule = function(options){
         return customer;
     }
 
+    function validateEmail(email){
+        var regExp = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+        return regExp.test(email);
+    }
+    
+    function validatePhone(phone){
+        var regExp = /^([0-9]){10}$/;
+        return regExp.test(phone);
+    }
+
     function validateCustomer(){
         if(txtCustomerFirstName.value == ''){
 
