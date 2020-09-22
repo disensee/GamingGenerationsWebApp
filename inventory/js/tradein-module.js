@@ -6,7 +6,7 @@ namespace.TradeInModule = function(options){
     var rightColumnContainer = options.rightColumnContainer || null;
     var callback = options.callback;
     var webServiceAddress = options.webServiceAddress || "http://localhost/GG/web-services/tradeins/" //THIS IS REQUIRED!!
-    var customer = options.customer || null;
+    var customer = options.customer; //REQUIRED TO FUNCTION
 
     initialize();
 
