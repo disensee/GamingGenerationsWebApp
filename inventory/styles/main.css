@@ -56,6 +56,10 @@
     top: 5px;
 }
 
+.validation{
+    color:red;
+}
+
 #search-container{
     border-style: solid;
     border-width: 1px;

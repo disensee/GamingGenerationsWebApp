@@ -130,9 +130,11 @@ class CustomerDataAccess extends DataAccess{
 	*/
 	function insert($customer){
 		$cleanCustomer = $this->cleanDataGoingIntoDB($customer);
+		$ucCustomerFirstName = ucfirst($cleanCustomer->customerFirstName);
+		$ucCustomerLastName = ucfirst($cleanCustomer->customerLastName);
 		$qStr = "INSERT INTO customers (customerFirstName, customerLastName, customerIdNumber, customerEmail, customerPhone) VALUES (
-			'{$cleanCustomer->customerFirstName}',
-            '{$cleanCustomer->customerLastName}',
+			'{$ucCustomerFirstName}',
+            '{$ucCustomerLastName}',
             '{$cleanCustomer->customerIdNumber}',
             '{$cleanCustomer->customerEmail}',
             '{$cleanCustomer->customerPhone}'
@@ -156,9 +158,11 @@ class CustomerDataAccess extends DataAccess{
 	*/
 	function update($customer){
 		$cleanCustomer = $this->cleanDataGoingIntoDB($customer);
+		$ucCustomerFirstName = ucfirst($cleanCustomer->customerFirstName);
+		$ucCustomerLastName = ucfirst($cleanCustomer->customerLastName);
 		$qStr = "UPDATE customers SET 
-				customerFirstName = '{$cleanCustomer->customerFirstName}',
-				customerLastName = '{$cleanCustomer->customerLastName}',
+				customerFirstName = '{$ucCustomerFirstName}',
+				customerLastName = '{$ucCustomerLastName}',
                 customerIdNumber = '{$cleanCustomer->customerIdNumber}',
                 customerEmail = '{$cleanCustomer->customerEmail}',
                 customerPhone = '{$cleanCustomer->customerPhone}'
