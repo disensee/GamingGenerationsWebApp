@@ -5,7 +5,7 @@ namespace.CustomerModule = function(options){
     var midColumnContainer = options.midColumnContainer || null
     var rightColumnContainer = options.rightColumnContainer || null;
     var callback = options.callback;
-    var webServiceAddress = options.webServiceAddress || "http://localhost/GG/web-services/customers/" //THIS IS REQUIRED!!
+    var webServiceAddress = options.webServiceAddress || "https://localhost/GG/web-services/customers/" //THIS IS REQUIRED!!
 
     //left column search vars
     var txtSearchCustomer;

@@ -43,13 +43,25 @@ switch($method){
             die();
         }
     }else if(preg_match('/^tradein([0-9]*\/?)$/', $url_path, $matches)){ 
-      $tradeInId = $matches[1];
-      $tradeInProd = $da->getTradeInProductByTradeInId($tradeInId);
-      if($tradeInProd == false){
+        $tradeInId = $matches[1];
+        $tradeInProd = $da->getTradeInProductByTradeInId($tradeInId);
+        if($tradeInProd == false){
+          header('HTTP/1.1 404 Not Found', true, 404);
+          die();
+        }else{
+          $json = json_encode($tradeInProd);
+          header("Content-Type: application/json");
+          echo($json);
+          die();
+        }
+    }else if(preg_match('/^product([0-9]*\/?)$/', $url_path, $matches)){
+      $tradedInId = $matches[1];
+      $tradedInProd = $da->getProductInfoFromTradeInId($tradedInId);
+      if($tradedInProd == false){
         header('HTTP/1.1 404 Not Found', true, 404);
         die();
       }else{
-        $json = json_encode($tradeInProd);
+        $json = json_encode($tradedInProd);
         header("Content-Type: application/json");
         echo($json);
         die();

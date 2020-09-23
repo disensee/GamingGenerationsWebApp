@@ -7,6 +7,9 @@ class TradeInProduct extends Model{
     public $tradeInId;
     public $productId;
     public $serialNumber;
+    public $retailPrice;
+    public $cashValue;
+    public $creditValue;
 
     //constructor
     public function __construct($args = []){
@@ -14,6 +17,9 @@ class TradeInProduct extends Model{
         $this->tradeInId = $args['tradeInId'] ?? 0;
         $this->productId = $args['productId'] ?? 0;
         $this->serialNumber = $args['serialNumber'] ?? "";
+        $this->retailPrice = $args['retailPrice'] ?? "";
+        $this->cashValue = $args['cashValue'] ?? "";
+        $this->creditValue = $args['creditValue'] ?? "";
     }
 
     public function isValid(){
@@ -26,6 +32,14 @@ class TradeInProduct extends Model{
         }
         
         if(!isset($this->productId)){
+            return false;
+        }
+
+        if(empty($this->retailPrice)){
+            return false;
+        }
+
+        if(empty($this->cashValue && empty($this->creditValue))){
             return false;
         }
 
