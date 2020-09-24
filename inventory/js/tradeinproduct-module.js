@@ -76,6 +76,8 @@ namespace.TradeInProductModule = function(options){
     initialize();
 
     function initialize(){
+        console.log(tradeIn);
+
         leftColumnContainer.style.display = "block";
         leftColumnContainer.innerHTML = "";
         midColumnContainer.innerHTML = "";
@@ -254,8 +256,15 @@ namespace.TradeInProductModule = function(options){
             calculateTradeInValue(selectedProducts);
         };
 
-        btnTradeIn = rightColumnContainer.querySelector("#btnTradeIn").onclick = tradeInQuantityUpdate;
-        btnSale = rightColumnContainer.querySelector("#btnSale").onclick = saleQuantityUpdate;
+        if(tradeIn != null){
+            btnTradeIn = rightColumnContainer.querySelector("#btnTradeIn").onclick = tradeInQuantityUpdate;
+            btnSale = rightColumnContainer.querySelector("#btnSale").style.display = "none";
+        }
+
+        if(purchase != null){
+            btnSale = rightColumnContainer.querySelector("#btnSale").onclick = saleQuantityUpdate;
+            btnTrade = rightColumnContainer.querySelector("#btnTradeIn").style.display = "none";
+        }
 
         btnAddOneToTradeInValue = rightColumnContainer.querySelector("#btnAddOneToTradeInValue");
         btnAddFiveToTradeInValue = rightColumnContainer.querySelector("#btnAddFiveToTradeInValue");
@@ -366,7 +375,7 @@ namespace.TradeInProductModule = function(options){
             consoleName: txtConsole.value,
             loosePrice: txtLoosePrice.value,
             cibPrice: txtCibPrice.value,
-            gamestopTradePrice: txtGsTradeValue.value,
+            gamestopTradeValue: txtGsTradeValue.value,
             gamestopPrice: txtGsPrice.value,
             upc: txtUpc.value,
             quantity: txtQuantity.value
