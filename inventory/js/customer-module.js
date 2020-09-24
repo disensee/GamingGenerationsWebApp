@@ -163,13 +163,6 @@ namespace.CustomerModule = function(options){
         btnSaveCustomer.addEventListener("click", editCustomer);
         btnAdd.addEventListener("click", addCustomer);
 
-        // btnTradeIn.addEventListener("click", namespace.TradeInModule{
-        //     leftColumnContainer: document.getElementById("left-column"),
-        //     midColumnContainer : document.getElementById("mid-column"),
-        //     rightColumnContainer: document.getElementById("right-column"),
-        //     webServiceAddress: "https://localhost/GG/web-services/tradeins/"
-        //     //webServiceAddress: "https://www.dylanisensee.com/gg/web-services/tradeins/"
-        // });
 
         btnTradeIn.addEventListener("click", rturn)
         //display props
@@ -462,8 +455,8 @@ namespace.CustomerModule = function(options){
             	midColumnContainer : document.getElementById("mid-column"),
             	rightColumnContainer: document.getElementById("right-column"),
                 webServiceAddress: "https://localhost/GG/web-services/tradeins/",
+                //webServiceAddress: "https://www.dylanisensee.com/gg/web-services/tradeins/"
                 customer: customerForTransaction
-            	//webServiceAddress: "https://www.dylanisensee.com/gg/web-services/tradeins/"
             });
     }
 

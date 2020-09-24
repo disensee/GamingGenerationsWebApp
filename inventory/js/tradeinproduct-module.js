@@ -1,13 +1,18 @@
 var namespace = namespace || {};
 
-namespace.InventoryModule = function(options){
+namespace.TradeInProductModule = function(options){
     var leftColumnContainer = options.leftColumnContainer || null;
     var midColumnContainer = options.midColumnContainer || null
     var rightColumnContainer = options.rightColumnContainer || null;
     var callback = options.callback;
-    var webServiceAddress = options.webServiceAddress || "http://localhost/GG/web-services/products/"; //THIS IS REQUIRED!
+    var webServiceAddress = options.webServiceAddress || "https://localhost/GG/web-services/tradeinproducts/" //THIS IS REQUIRED!!
+    //Trade in or purchase have to have a value. Need to account for this. 
+    var tradeIn = options.tradeIn || null; //REQUIRED TO WORK PROPERLY
+    var purchase = options.purchase || null;
 
-
+    var tiWebServiceAddress = "https://localhost/GG/web-services/tradeins/";
+    var prodWebServiceAddress= "https://localhost/GG/web-services/products/";
+    
     var consoleArr = ["NES", "Super Nintendo", "Nintendo 64", "Gamecube", "Wii", "Wii U", "Nintendo Switch", "GameBoy", "GameBoy Color", "GameBoy Advance", 
     "Nintendo DS", "Nintendo 3DS", "Playstation", "Playstation 2", "Playstation 3", "Playstation 4", "PSP", "Playstation Vita", 
     "Xbox", "Xbox 360", "Xbox One", "Sega Genesis", "Sega Saturn", "Sega Dreamcast", "Sega Game Gear", "Atari 2600", "Atari 400", "Atari 5200", "Atari 7800", "Atari Lynx", "Atari ST" ];
@@ -71,6 +76,7 @@ namespace.InventoryModule = function(options){
     initialize();
 
     function initialize(){
+        leftColumnContainer.style.display = "block";
         leftColumnContainer.innerHTML = "";
         midColumnContainer.innerHTML = "";
         rightColumnContainer.innerHTML = "";
@@ -92,9 +98,9 @@ namespace.InventoryModule = function(options){
             `</div>`;
 
         var midColumnContainerTemplate = `
-            <div id="product-table-list">
+            <div id="mid-table-list">
                 <p style="text-align:right;">Search for a product to see results</p>
-                <table id="product-table">
+                <table id="mid-table">
                 </table>
             </div>`;
         
@@ -202,7 +208,7 @@ namespace.InventoryModule = function(options){
         footer = document.querySelector("#footer");
         footer.innerHTML=`Gaming Generations &copy;2020`;
 
-        productTableListContainer = document.getElementById("product-table-list");
+        productTableListContainer = document.getElementById("mid-table-list");
 
         //search by product name
         consoleSelectBox = leftColumnContainer.querySelector("#consoleSelectBox");
@@ -217,7 +223,7 @@ namespace.InventoryModule = function(options){
         consoleList = leftColumnContainer.querySelector("#consoleList").onclick = getProductsByConsoleName;
 
         //mid column product table
-        productTable = midColumnContainer.querySelector("#product-table");
+        productTable = midColumnContainer.querySelector("#mid-table");
 
         //right column text fields
         txtProductId = rightColumnContainer.querySelector("#txtProductId");
@@ -299,11 +305,11 @@ namespace.InventoryModule = function(options){
         
         if(Array.isArray(products)){
             for(var x = 0; x < products.length; x++){
-                html += `<tr class="product-table-row" productId="${products[x].productId}">
-                            <td class="product-table-cell">
+                html += `<tr class="mid-table-row" productId="${products[x].productId}">
+                            <td class="mid-table-cell">
                                 ${products[x].consoleName}
                             </td>
-                            <td class="product-table-cell">
+                            <td class="mid-table-cell">
                                 ${products[x].productName}
                             </td>
                         </tr>`;
@@ -326,12 +332,12 @@ namespace.InventoryModule = function(options){
 
     function selectProductInList(evt){
         var target = evt.target
-        if(target.classList.contains("product-table-cell")){
+        if(target.classList.contains("mid-table-cell")){
             var selectedProductId = target.closest("tr").getAttribute("productId");
         }
 
         namespace.ajax.send({
-            url: webServiceAddress + selectedProductId,
+            url: prodWebServiceAddress + selectedProductId,
             method: "GET",
             callback: function(response){
                 //console.log(response);
@@ -348,7 +354,7 @@ namespace.InventoryModule = function(options){
         txtItem.value = product.productName;
         txtLoosePrice.value = Math.floor(product.loosePrice).toFixed(2);
         txtCibPrice.value = Math.floor(product.cibPrice).toFixed(2);
-        txtGsTradeValue.value = Math.floor(product.gamestopTradePrice).toFixed(2);
+        txtGsTradeValue.value = Math.floor(product.gamestopTradeValue).toFixed(2);
         txtGsPrice.value = Math.floor(product.gamestopPrice).toFixed(2);
         txtQuantity.value = product.quantity;
     }
@@ -371,7 +377,7 @@ namespace.InventoryModule = function(options){
 
     function getAllProducts(){
         namespace.ajax.send({
-            url: webServiceAddress,
+            url: prodWebServiceAddress,
             method: "GET",
             callback: function(response){
                 //console.log(response);
@@ -387,7 +393,7 @@ namespace.InventoryModule = function(options){
                 selectedProducts.forEach((p)=>{
                     p.quantity++;
                     namespace.ajax.send({
-                        url: webServiceAddress + p.productId,
+                        url: prodWebServiceAddress + p.productId,
                         method: "PUT",
                         headers: {"Content-Type": "application/json", "Accept": "application/json"},
                         requestBody: JSON.stringify(p),
@@ -410,7 +416,7 @@ namespace.InventoryModule = function(options){
                 selectedProducts.forEach((p)=>{
                     p.quantity = p.quantity - 1;
                     namespace.ajax.send({
-                        url: webServiceAddress + p.productId,
+                        url: prodWebServiceAddress + p.productId,
                         method: "PUT",
                         headers: {"Content-Type": "application/json", "Accept": "application/json"},
                         requestBody: JSON.stringify(p),
@@ -434,10 +440,10 @@ namespace.InventoryModule = function(options){
         }
 
         namespace.ajax.send({
-            url: webServiceAddress + vgConsole,
+            url: prodWebServiceAddress + vgConsole,
             method: "GET",
             callback: function(response){
-                //console.log(response);
+                console.log(response);
                 var products = JSON.parse(response);
                 generateProductList(products);
             }
@@ -446,7 +452,7 @@ namespace.InventoryModule = function(options){
 
     function getProductsByProductName(product, vgConsole){
         namespace.ajax.send({
-            url: webServiceAddress + vgConsole + "/" + product,
+            url: prodWebServiceAddress + vgConsole + "/" + product,
             method: "GET",
             callback: function(response){
                 var products = JSON.parse(response);
@@ -462,7 +468,7 @@ namespace.InventoryModule = function(options){
 
     function getProductByUpc(upc){
         namespace.ajax.send({
-            url: webServiceAddress + upc,
+            url: prodWebServiceAddress + upc,
             method: "GET",
             callback: function(response){
                 console.log(response);
@@ -763,5 +769,4 @@ namespace.InventoryModule = function(options){
         txtItemTradeInCreditValue.value = itemTradeInCreditValue.toFixed(2);
         txtItemTradeInCashValue.value = itemTradeInCashValue.toFixed(2);
     }
-
-};
+}

@@ -19,6 +19,7 @@ require("authentication-check.inc.php");
 
     <script src="js/main.js"></script>
     <script src="js/ajax.js"></script>
+
     
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -39,5 +40,6 @@ require("authentication-check.inc.php");
 
     <script src="js/customer-module.js"></script>
     <script src="js/tradein-module.js"></script>
+    <script src="js/tradeinproduct-module.js"></script>
 </body>
 </html>

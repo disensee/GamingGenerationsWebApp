@@ -8,11 +8,18 @@ namespace.TradeInModule = function(options){
     var webServiceAddress = options.webServiceAddress || "https://localhost/GG/web-services/tradeins/" //THIS IS REQUIRED!!
 
     var tipWebServiceAddress = "https://localhost/GG/web-services/tradeinproducts/";
-    var prodWebServiceAddress= "https://localhost/GG/web-services/products/";
+    //var prodWebServiceAddress= "https://localhost/GG/web-services/products/";
     var customer = options.customer; //REQUIRED TO WORK PROPERLY
 
     var tradeInProducts = [];
+    
+    //mid column vars
+    var tradeInTableListContainer;
+    var tradeInTable;
 
+    var btnNewTradeIn;
+
+    //right column vars
     var txtSerialNumber;
     var txtRetailPrice;
     var txtCashValue;
@@ -35,6 +42,9 @@ namespace.TradeInModule = function(options){
             <div id="mid-table-list">
                 <table id="mid-table">
                 </table>
+            </div>
+            <div class="mid-button-container">
+                <button class="btn btn-outline-primary btn=sm" id="btnNewTradeIn">New Trade In</button>
             </div>`;
 
         var rightColumnContainerTemplate=`
@@ -74,6 +84,8 @@ namespace.TradeInModule = function(options){
 
         tradeInTableListContainer = midColumnContainer.querySelector('#mid-table-list');
         tradeInTable = midColumnContainer.querySelector('#mid-table');
+
+        btnNewTradeIn = midColumnContainer.querySelector("#btnNewTradeIn");
         //right column vars
         txtSerialNumber = rightColumnContainer.querySelector("#txtSerialNumber");
         txtRetailPrice = rightColumnContainer.querySelector("#txtRetailPrice");
@@ -83,7 +95,10 @@ namespace.TradeInModule = function(options){
 
         //eventHandlers
         tradeInTable.addEventListener("click", populateProdsByTradeIn);
+        selProductList.addEventListener("change", populateFormFromSelectBox);
+        btnNewTradeIn.addEventListener("click", createNewTradeIn);
 
+        //load customer trade ins
         getTradeInsByCustomerId(customer.customerId);
     }
 
@@ -96,6 +111,9 @@ namespace.TradeInModule = function(options){
                 callback: function(response){
                     var tradeIns = JSON.parse(response);
                     generateTradeInList(tradeIns);
+                },
+                errorCallback: function(){
+                    tradeInTableListContainer.innerHTML += `<p style="text-align:right;">Customer does not have any trade-ins.</p>`
                 }
             });
         }else{
@@ -104,6 +122,8 @@ namespace.TradeInModule = function(options){
     }
 
     function populateProdsByTradeIn(evt){
+        selProductList.innerHTML = "";
+        tradeInProducts = [];
         var target = evt.target;
         if(target.classList.contains("mid-table-cell")){
             var selectedTradeInId = target.closest("tr").getAttribute("tradeInId");
@@ -127,21 +147,6 @@ namespace.TradeInModule = function(options){
             return false;
         }
     }
-
-    // function getProdsFromDB(tips){
-    //     tips.forEach((tip)=>{
-    //         namespace.ajax.send({
-    //             url: prodWebServiceAddress + tip.productId,
-    //             method: "GET",
-    //             headers: {"Content-Type": "application/json", "Accept": "application/json"},
-    //             callback: function(response){
-    //                 selProductList.innerHTML = "";
-    //                 var prod = JSON.parse(response);
-    //                 selProductList.innerHTML += `<option productId="${prod.prouctId}>${prod.consoleName} - ${prod.prouctName}</option>`;
-    //             }
-    //         });
-    //     });
-    // }
 
     function generateTradeInList(tradeIns){
         tradeInTableListContainer.innerHTML = `<p style="text-align:right;">${customer.customerFirstName} ${customer.customerLastName} - Trade Ins</p>`;
@@ -204,14 +209,69 @@ namespace.TradeInModule = function(options){
         return tradeInTable;
     }
 
+    function populateFormFromSelectBox(){
+        for(var i = 0; i < tradeInProducts.length; i++){
+            if(tradeInProducts[i].productId == selProductList.value){
+                populateTipForm(tradeInProducts[i]);
+            }
+        }
+    }
+
+    function populateTipForm(tradeInProduct){
+        txtSerialNumber.value = tradeInProduct.serialNumber;
+        txtRetailPrice.value = tradeInProduct.retailPrice;
+        txtCashValue.value = tradeInProduct.cashValue;
+        txtCreditValue.value = tradeInProduct.creditValue;
+    }
+
     function populateSelBoxProds(){
         selProductList.innerHTML = '';
 
         tradeInProducts.forEach((p)=>{
-            selProductList.innerHTML += `<option productId="${p.productId}">${p.consoleName} - ${p.productName}</option>`
+            selProductList.innerHTML += `<option value="${p.productId}">${p.consoleName} - ${p.productName}</option>`
         });
     }
 
+    function createNewTradeIn(){
+        if(customer.customerIdNumber == ""){
+            alert("Customer ID number is not stored. Please edit customer information in order to proceed.");
+            return false;
+        }
+        //var newTradeIn;
+        var tradeInToAdd = {
+            tradeInId: 0,
+            customerId: customer.customerId,
+            tradeInDateTime: new Date(),
+            tradeInEmployee: "GG",
+            cashPaid: 0.00,
+            creditPaid: 0.00,
+            checkPaid: 0.00,
+            checkNumber: null,
+            totalPaid: 0.00
+        };
 
-    
+        // namespace.ajax.send({
+        //     url: webServiceAddress,
+        //     method: "POST",
+        //     headers: {"Content-Type": "application/json", "Accept": "application/json"},
+        //     requestBody: JSON.stringify(tradeInToAdd),
+        //     callback: function(response){
+        //         newTradeIn = JSON.parse(response);
+        //     },
+        //     errorCallback: function(response){
+        //         alert(response);
+        //     }
+        // });
+
+        namespace.TradeInProductModule({
+            leftColumnContainer: document.getElementById("left-column"),
+            midColumnContainer : document.getElementById("mid-column"),
+            rightColumnContainer: document.getElementById("right-column"),
+            webServiceAddress: "https://localhost/GG/web-services/tradeinproducts/",
+            //webServiceAddress: "https://www.dylanisensee.com/gg/web-services/tradeins/"
+            tradeIn: tradeInToAdd
+        });
+    }
+
+    return createNewTradeIn;
 }
