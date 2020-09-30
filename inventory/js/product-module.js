@@ -43,7 +43,10 @@ namespace.ProductModule = function(options){
     var txtCibPrice;
     var txtGsTradeValue;
     var txtGsPrice;
-    var txtQuantity;
+    var txtOnaQuantity;
+    var txtEcQuantity;
+    var txtSpQuantity;
+    var txtShebQuantity;
 
     var selProductList;
     var txtTradeInCreditValue;
@@ -85,14 +88,14 @@ namespace.ProductModule = function(options){
 
         var leftColumnContainerTemplate = `
             <div id="search-container">
-                <p>Search for item:</p><br>
+                <p>Search for item:</p>
                 <p>Search by name:</p>` + 
                 createConsoleSelectBox(consoleArr) + 
                `<input type="text" id="txtSearchProduct" placeholder="Enter product name"><br>
-                <input id="btnSearchByProdName" type="button" value="Search"><br>
+                <button class="btn btn-outline-primary btn-sm" id="btnSearchByProdName">Search</button><br>
                 <p>Searby by UPC:</p>
                 <input type="text" id="txtSearchUpc" placeholder="Enter UPC">
-                <input id="btnSearchByUpc" type="button" value="Search">
+                <button class="btn btn-outline-primary btn-sm" id="btnSearchByUpc">Search</button>
             </div>
             <div id="list-container">
                 <p>Filter:</p>` +
@@ -143,14 +146,26 @@ namespace.ProductModule = function(options){
                             <td><input type="text" name="gsPrice" id="txtGsPrice" placeholder="Gamestop Price" readonly="true"></td>
                         </tr>
                         <tr>
-                            <td><label for="quantity">Quantity in stock:</label></td>
-                            <td><input type="text" name="quantity" id="txtQuantity" readonly="true"></td>
+                            <td><label for="onaQuantity">Ona Quantity in stock:</label></td>
+                            <td><input type="text" name="onaQuantity" id="txtOnaQuantity" readonly="true"></td>
+                        </tr>
+                        <tr>
+                            <td><label for="ecQuantity">EC Quantity in stock:</label></td>
+                            <td><input type="text" name="ecQuantity" id="txtEcQuantity" readonly="true"></td>
+                        </tr>
+                        <tr>
+                            <td><label for="spQuantity">SP Quantity in stock:</label></td>
+                            <td><input type="text" name="spQuantity" id="txtSpQuantity" readonly="true"></td>
+                        </tr>
+                        <tr>
+                            <td><label for="shebQuantity">Sheb Quantity in stock:</label></td>
+                            <td><input type="text" name="shebQuantity" id="txtShebQuantity" readonly="true"></td>
                         </tr>
                         <tr>
                             <td></td>
                             <td>
-                                <input type="button" value="Add" id="btnAddToList">
-                                <input type="button" value="Clear" id="btnClearForm">
+                                <button class="btn btn-outline-primary btn-sm" id="btnAddToList">Add</button>
+                                <button class="btn btn-outline-primary btn-sm" id="btnClearForm">Clear Form</button>
                             </td>
                         </tr>
                         <tr>
@@ -161,12 +176,12 @@ namespace.ProductModule = function(options){
                         </tr>
                         <tr>
                             <td>
-                                <input type="button" value="Remove Selected" id="btnRemoveSelected">
-                                <input type="button" value="Clear All" id="btnClearAll">
+                                <button class="btn btn-outline-primary btn-sm" id="btnRemoveSelected">Remove Selected</button>
+                                <button class="btn btn-outline-danger btn-sm" id="btnClearAll">Clear All</button>
                             </td>
                             <td>
-                                <input type="button" value="Trade-In" id="btnTradeIn">
-                                <input type="button" value="Sale" id="btnSale">
+                                <button class="btn btn-outline-success btn-sm" id="btnTradeIn">Trade In</button>
+                                <button class="btn btn-outline-success btn-sm" id="btnSale">Sale</button>
                             </td>
                         </tr>
                         <tr>
@@ -188,15 +203,15 @@ namespace.ProductModule = function(options){
                         <tr>
                             <td></td>
                             <td>
-                                <input type="button" value="Add 1$" id="btnAddOneToTradeInValue">
-                                <input type="button" value="Subtract 1$" id="btnSubtractOneFromTradeInValue">
+                                <button class="btn btn-outline-dark btn-sm" id="btnAddOneToTradeInValue">Add $1</button>
+                                <button class="btn btn-outline-dark btn-sm" id="btnSubtractOneFromTradeInValue">Subtract $1</button>
                             </td>
                         </tr>
                         <tr>
                             <td></td>
                             <td>
-                                <input type="button" value="Add 5$" id="btnAddFiveToTradeInValue">
-                                <input type="button" value="Subtract 5$" id="btnSubtractFiveFromTradeInValue">
+                                <button class="btn btn-outline-dark btn-sm" id="btnAddFiveToTradeInValue">Add $5</button>
+                                <button class="btn btn-outline-dark btn-sm" id="btnSubtractFiveFromTradeInValue">Subtract $5</button>
                             </td>
                         </tr>
                     </form>
@@ -236,7 +251,10 @@ namespace.ProductModule = function(options){
         txtCibPrice = rightColumnContainer.querySelector("#txtCibPrice");
         txtGsTradeValue = rightColumnContainer.querySelector("#txtGsTradeValue");
         txtGsPrice = rightColumnContainer.querySelector("#txtGsPrice");
-        txtQuantity = rightColumnContainer.querySelector("#txtQuantity");
+        txtOnaQuantity = rightColumnContainer.querySelector("#txtOnaQuantity");
+        txtEcQuantity = rightColumnContainer.querySelector("#txtEcQuantity");
+        txtSpQuantity = rightColumnContainer.querySelector("#txtSpQuantity");
+        txtShebQuantity = rightColumnContainer.querySelector("#txtShebQuantity");
         selProductList = rightColumnContainer.querySelector("#selProductList");
 
         txtTradeInCreditValue = rightColumnContainer.querySelector("#txtTradeInCreditValue");
@@ -365,7 +383,10 @@ namespace.ProductModule = function(options){
         txtCibPrice.value = Math.floor(product.cibPrice).toFixed(2);
         txtGsTradeValue.value = Math.floor(product.gamestopTradeValue).toFixed(2);
         txtGsPrice.value = Math.floor(product.gamestopPrice).toFixed(2);
-        txtQuantity.value = product.quantity;
+        txtOnaQuantity.value = product.onaQuantity;
+        txtEcQuantity.value = product.ecQuantity;
+        txtSpQuantity.value = product.spQuantity;
+        txtShebQuantity.value = product.shebQuantity;
     }
 
     function createProductFromForm(){
@@ -378,7 +399,10 @@ namespace.ProductModule = function(options){
             gamestopTradeValue: txtGsTradeValue.value,
             gamestopPrice: txtGsPrice.value,
             upc: txtUpc.value,
-            quantity: txtQuantity.value
+            onaQuantity: txtOnaQuantity.value,
+            ecQuantity: txtEcQuantity.value,
+            spQuantity: txtSpQuantity.value,
+            shebQuantity: txtShebQuantity.value
         };
 
         return product;
@@ -407,7 +431,7 @@ namespace.ProductModule = function(options){
                         headers: {"Content-Type": "application/json", "Accept": "application/json"},
                         requestBody: JSON.stringify(p),
                         callback: function(response){
-                            console.log(response);
+                            //console.log(response);
                         }
                     });
                     selectedProducts.length = 0;
@@ -430,7 +454,7 @@ namespace.ProductModule = function(options){
                         headers: {"Content-Type": "application/json", "Accept": "application/json"},
                         requestBody: JSON.stringify(p),
                         callback: function(response){
-                            console.log(response);
+                            //console.log(response);
                         }
                     });
                     selectedProducts.length = 0;
@@ -452,7 +476,7 @@ namespace.ProductModule = function(options){
             url: prodWebServiceAddress + vgConsole,
             method: "GET",
             callback: function(response){
-                console.log(response);
+                //console.log(response);
                 var products = JSON.parse(response);
                 generateProductList(products);
             }
@@ -480,7 +504,7 @@ namespace.ProductModule = function(options){
             url: prodWebServiceAddress + upc,
             method: "GET",
             callback: function(response){
-                console.log(response);
+                //console.log(response);
                 var product = JSON.parse(response);
                 generateProductList(product);
             }
@@ -555,7 +579,10 @@ namespace.ProductModule = function(options){
         txtCibPrice.value="";
         txtGsTradeValue.value="";
         txtGsPrice.value="";
-        txtQuantity.value="";
+        txtOnaQuantity.value="";
+        txtEcQuantity.value="";
+        txtSpQuantity.value="";
+        txtShebQuantity.value="";
     }
 
     function refreshSelectedProducts(){
@@ -715,6 +742,7 @@ namespace.ProductModule = function(options){
                         if(itemTradeInCreditValue < 1){
                             itemTradeInCreditValue = 0.1;
                         }
+                        
                     }
                 }
                 
@@ -733,6 +761,10 @@ namespace.ProductModule = function(options){
 
                         if(itemTradeInCreditValue < 1){
                             itemTradeInCreditValue = 0.1;
+                        }
+
+                        if(itemTradeInCashValue < 1){
+                            itemTradeInCashValue = 0.01;
                         }
                     }
                 }

@@ -48,10 +48,10 @@ namespace.CustomerModule = function(options){
 
         var leftColumnContainerTemplate = `
             <div id="search-container">
-                <p>Search for customer:</p><br>
+                <p>Search for customer:</p>
                 <span class="validation" id="vSearch" style="display: block;"></span>
                 <input type="text" id="txtSearchCustomer" placeholder="Enter customer name"><br>
-                <input id="btnSearchByCustomerName" type="button" value="Search"><br>
+                <button class="btn btn-outline-primary btn-sm" id="btnSearchByCustomerName">Search</button><br>
             </div>`;
 
         var midColumnContainerTemplate =`
