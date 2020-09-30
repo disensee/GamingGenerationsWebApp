@@ -1,6 +1,6 @@
 var namespace = namespace || {};
 
-namespace.TradeInProductModule = function(options){
+namespace.ProductModule = function(options){
     var leftColumnContainer = options.leftColumnContainer || null;
     var midColumnContainer = options.midColumnContainer || null
     var rightColumnContainer = options.rightColumnContainer || null;

@@ -263,7 +263,7 @@ namespace.TradeInModule = function(options){
         //     }
         // });
 
-        namespace.TradeInProductModule({
+        namespace.ProductModule({
             leftColumnContainer: document.getElementById("left-column"),
             midColumnContainer : document.getElementById("mid-column"),
             rightColumnContainer: document.getElementById("right-column"),

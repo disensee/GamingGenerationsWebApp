@@ -1,79 +1,121 @@
-#header>*{
-    /* Select level 1 children */
-    display: inline-block;
-} 
-
-#header img{
-    max-width: 100%;
-    max-height: 100%;
-    padding-left: 5px;
-    /* display: block; */
+/***********************************TAG SELECTORS******************************************/
+input{
+    margin:5px;
+    padding: 5px;
 }
 
-#header{
-    height: 100px;
-    width: 98%;
-    margin: 10px;
-    padding-bottom: 10px;
-    border-style: solid;
-    border-width: 1px;
-    border-color: gray;
-    border-radius: 5px;
-    background-color:#1881c5;
+
+table th{
+    font-size: 15px;
 }
 
-#header p{
-    color:white;
-    font-size: 2em;
-    padding-bottom: 10px;
-    font-family: 'Hind Siliguri', sans-serif;;
-    float: right;
-    padding-top: 50px;
-    padding-right: 20px;
-
-}
+/**********************************CLASS SELECTORS*****************************************/
 .column{
-    float: left;
     background-color: lightgray;
+    float: left;
     font-family: 'Open Sans',Helvetica,Arial,Lucida,sans-serif;
 }
 
 .left{
+    margin-left: 6px;
     width: 20%;
-    margin-left: 6px; 
 }
 
 .mid{
-    width: 40%;
     background-color: white;
+    width: 40%;
 }
 
 .right{
-    width: 35%;
     margin-right: 25px;
     position: -webkit-sticky; /*Safari*/
     position: sticky;
     top: 5px;
+    width: 35%;
 }
 
 .validation{
     color:red;
 }
 
-#search-container{
-    border-style: solid;
-    border-width: 1px;
+.mid-button-container{
+    margin: 5px 0 0 0;
+    text-align: right;
+}
+
+.info{
+    font-size: 15px;
+    height: 80%;
+    line-height: 30px;
+    overflow-y: scroll;
+}
+
+.info::-webkit-scrollbar{
+    display: none;
+}
+
+.info input{
+    margin: 3px;
+    padding: 3px;
+}
+
+.info select{
+    margin: 5px;
+}
+
+.mid-table-row:hover{
+    cursor: pointer;
+    color: gray;
+}
+
+/*************************************ID SELECTORS*****************************************/
+#header>*{
+    /* Select level 1 children */
+    display: inline-block;
+} 
+
+#header img{
+    max-height: 100%;
+    max-width: 100%;
+    padding-left: 5px;
+    /* display: block; */
+}
+
+#header{
+    background-color:#1881c5;
     border-color: gray;
     border-radius: 5px;
+    border-style: solid;
+    border-width: 1px;
+    height: 100px;
+    margin: 10px;
+    padding-bottom: 10px;
+    width: 98%;
+}
+
+#header p{
+    color:white;
+    font-family: 'Hind Siliguri', sans-serif;
+    font-size: 2em;
+    padding: 50px 20px 10px;
+    position: absolute;
+    right: 20px;
+}
+
+#search-container{
+    border-color: gray;
+    border-radius: 5px;
+    border-style: solid;
+    border-width: 1px;
     padding: 10px;
 }
 
 #list-container{
-    border-style: solid;
-    border-width: 1px;
-    border-top: 0px;
-    border-radius: 5px;
     border-color: gray;
+    border-radius: 5px;
+    border-style: solid;
+    border-top: 0px;
+    border-width: 1px;
     padding: 10px;
 }
 
@@ -91,109 +133,68 @@
 
 #list-container li a:hover{
     color: inherit;
+    cursor: pointer;
     line-height: 20px;
     text-decoration: underline;
-    cursor: pointer;
 }
 
 #mid-column{
-    border-style: solid;
-    border-width: 1px;
     border-color: gray;
     border-radius: 5px;
+    border-style: solid;
+    border-width: 1px;
     padding: 10px;
 }
 
 #right-column{
-    border-style: solid;
-    border-width: 1px;
     border-color: gray;
     border-radius: 5px;
+    border-style: solid;
+    border-width: 1px;
     padding: 10px;
 }
 
-.mid-button-container{
-    margin: 5px 0 0 0;
-    text-align: right;
-}
-
-.info{
-    font-size: 15px;
-    line-height: 30px;
-    height: 80%;
-    overflow-y: scroll;
-}
-
-.info::-webkit-scrollbar{
-    display: none;
-}
-
-.info input{
-    padding: 3px;
-    margin: 3px;
-}
-
-input{
-    padding: 5px;
-    margin:5px;
-}
-
-.info select{
-    margin: 5px;
-}
-
-.mid-table-row:hover{
-    cursor: pointer;
-    color: gray;
-}
 
 #footer{
-    border-style: solid;
-    border-width: 1px;
+    background-color: #1881c5;
     border-color: gray;
     border-radius: 5px;
+    border-style: solid;
+    border-width: 1px;
+    color: white;
     display: inline-block;
-    width: 98%;
-    background-color: #1881c5;
-    position: relative;
-    bottom: 0;
-    left:0;
     font-family: 'Hind Siliguri', sans-serif;
     font-size: 0.75em;
     margin: 5px;
-    padding-top: 20px;
     padding-left: 5px;
-    color: white;
+    padding-top: 20px;
+    position: relative;
+    width: 98%;
 }
 
 
 #content-pane{
-    overflow: visible;
-    min-height: 100%;
+    align-items: flex-start;
     display: flex;
     justify-content: space-around;
-    align-items: flex-start;
-}
-
-table th{
-    font-size: 15px;
-
+    min-height: 100%;
+    overflow: visible;
 }
 
 #mid-table-list h4{
-    text-align: right;
     font-weight: bold;
+    text-align: right;
 }
 
 #mid-table-list table{
-    width: 100%;
     border-collapse: collapse;
     color: darkslategray;
+    width: 100%;
 }
 
 #mid-table-list th, #mid-table-list td{
-    height: 50px;
     border: 1px gray solid;
+    height: 50px;
     padding-left: 6px;
 }
 
