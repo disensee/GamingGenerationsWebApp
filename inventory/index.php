@@ -6,6 +6,8 @@ if(empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == "off"){
 	exit();
 }
 require("authentication-check.inc.php");
+
+//var_dump($_SESSION);
 ?>
 
 <!DOCTYPE html>
@@ -27,7 +29,9 @@ require("authentication-check.inc.php");
 </head>
 <body>
     <div id="header">
-        <img src=images/gg-logo.jpg><p>Gaming Generations Inventory</p>
+        <img src=images/gg-logo.jpg>
+        <a class="logout" href="login.php">Log Out</a>
+        <p>Gaming Generations Inventory</p>
     </div>
     <div id="content-pane">
         <div id="left-column" class="column left"></div>

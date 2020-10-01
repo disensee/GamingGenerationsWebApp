@@ -7,19 +7,63 @@ if(empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == "off"){
 }
 session_start();
 if($_SERVER['REQUEST_METHOD'] == "POST"){
-    $userNameEntered = $_POST['username'] ?? NULL;
+    $userNameEntered = strtolower($_POST['username']) ?? NULL;
     $passwordEntered = $_POST['password'] ?? NULL;
 
     $userName = "admin";
-    $password = "Gamesrock12";
+    $password = "Gamesrock12#";
+
+    $onaUserName = "onalaska";
+    $onaPassword = "608Brewing12#";
+
+    $ecUserName = "eau claire";
+    $ecPassword = "BrewingProjekt12#";
+
+    $spUserName = "stevens point";
+    $spPassword = "CentralWaters12#";
+
+    $shebUserName="sheboygan";
+    $shebPassword="3Sheeps12#";
 
     if($userNameEntered == $userName && $passwordEntered == $password){
         
         session_regenerate_id(true);
-        $_SESSION['gginv_authenticated'] = "yes";
+        $_SESSION['gginv_admin_authenticated'] = "yes";
 		header("Location: index.php");
 		exit();
-	}
+    }
+    
+    if($userNameEntered == $onaUserName && $passwordEntered == $onaPassword){
+        
+        session_regenerate_id(true);
+        $_SESSION['gginv_ona_authenticated'] = "yes";
+		header("Location: index.php");
+		exit();
+    }
+
+    if($userNameEntered == $ecUserName && $passwordEntered == $ecPassword){
+        
+        session_regenerate_id(true);
+        $_SESSION['gginv_ec_authenticated'] = "yes";
+		header("Location: index.php");
+		exit();
+    }
+
+    if($userNameEntered == $spUserName && $passwordEntered == $spPassword){
+        
+        session_regenerate_id(true);
+        $_SESSION['gginv_sp_authenticated'] = "yes";
+		header("Location: index.php");
+		exit();
+    }
+
+    if($userNameEntered == $shebUserName && $passwordEntered == $shebPassword){
+        
+        session_regenerate_id(true);
+        $_SESSION['gginv_sheb_authenticated'] = "yes";
+		header("Location: index.php");
+		exit();
+    }
 }
 
 ?>
