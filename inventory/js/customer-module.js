@@ -42,6 +42,7 @@ namespace.CustomerModule = function(options){
     initialize();
 
     function initialize(){
+        leftColumnContainer.style.display = "block";
         leftColumnContainer.innerHTML = "";
         midColumnContainer.innerHTML = "";
         rightColumnContainer.innerHTML = "";

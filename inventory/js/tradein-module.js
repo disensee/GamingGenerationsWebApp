@@ -17,6 +17,7 @@ namespace.TradeInModule = function(options){
     var tradeInTableListContainer;
     var tradeInTable;
 
+    var btnBack;
     var btnNewTradeIn;
 
     //right column vars
@@ -44,6 +45,7 @@ namespace.TradeInModule = function(options){
                 </table>
             </div>
             <div class="mid-button-container">
+                <button class="btn btn-outline-primary btn=sm" id="btnBack">Back To Customers</button>
                 <button class="btn btn-outline-primary btn=sm" id="btnNewTradeIn">New Trade In</button>
             </div>`;
 
@@ -85,6 +87,7 @@ namespace.TradeInModule = function(options){
         tradeInTableListContainer = midColumnContainer.querySelector('#mid-table-list');
         tradeInTable = midColumnContainer.querySelector('#mid-table');
 
+        btnBack = midColumnContainer.querySelector("#btnBack");
         btnNewTradeIn = midColumnContainer.querySelector("#btnNewTradeIn");
         //right column vars
         txtSerialNumber = rightColumnContainer.querySelector("#txtSerialNumber");
@@ -97,6 +100,7 @@ namespace.TradeInModule = function(options){
         tradeInTable.addEventListener("click", populateProdsByTradeIn);
         selProductList.addEventListener("change", populateFormFromSelectBox);
         btnNewTradeIn.addEventListener("click", createNewTradeIn);
+        btnBack.addEventListener("click", backToCustomerModule);
 
         //load customer trade ins
         getTradeInsByCustomerId(customer.customerId);
@@ -250,19 +254,6 @@ namespace.TradeInModule = function(options){
             totalPaid: 0.00
         };
 
-        // namespace.ajax.send({
-        //     url: webServiceAddress,
-        //     method: "POST",
-        //     headers: {"Content-Type": "application/json", "Accept": "application/json"},
-        //     requestBody: JSON.stringify(tradeInToAdd),
-        //     callback: function(response){
-        //         newTradeIn = JSON.parse(response);
-        //     },
-        //     errorCallback: function(response){
-        //         alert(response);
-        //     }
-        // });
-
         namespace.ProductModule({
             leftColumnContainer: document.getElementById("left-column"),
             midColumnContainer : document.getElementById("mid-column"),
@@ -272,6 +263,19 @@ namespace.TradeInModule = function(options){
             tradeIn: tradeInToAdd
         });
     }
+
+    function backToCustomerModule(){
+        customer = {};
+
+        namespace.CustomerModule({
+            leftColumnContainer: document.getElementById("left-column"),
+		    midColumnContainer : document.getElementById("mid-column"),
+		    rightColumnContainer: document.getElementById("right-column"),
+		    webServiceAddress: "https://localhost/GG/web-services/customers/"
+		    //webServiceAddress: "https://www.dylanisensee.com/gg/web-services/customers/"
+        });
+    }
+
 
     return createNewTradeIn;
 }

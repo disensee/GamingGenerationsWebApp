@@ -35,7 +35,7 @@ table th{
     position: -webkit-sticky; /*Safari*/
     position: sticky;
     max-height: 850px;
-    scrollbar-width: 15px;
+    /* scrollbar-width: 15px; */
     top: 5px;
     width: 35%;
 }
@@ -54,17 +54,13 @@ table th{
     height: 80%;
     line-height: 30px;
     overflow-x: hidden;
-    overflow-y: auto;
+    overflow-y: hidden;
 }
 
-.info::-webkit-scrollbar{
-    /* display: none; */
-    scrollbar-width: 10px;
-}
-
-.info input{
+.info input[type="text"]{
     margin: 3px;
     padding: 3px;
+    width: 100%;
 }
 
 .info select{

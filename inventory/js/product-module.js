@@ -111,8 +111,8 @@ namespace.ProductModule = function(options){
         
         var rightColumnContainerTemplate = `
             <div class="info">
-                <table class="info-pane">
-                    <form>
+                
+                    <table class="info-pane">
                         <tr>
                             <td><label for="productId" hidden="true">Product ID:</label></td>
                             <td><input type="text" name="productId" id="txtProductId" placeholder="Product ID" readonly="true" hidden="true"></td>
@@ -176,12 +176,10 @@ namespace.ProductModule = function(options){
                         </tr>
                         <tr>
                             <td>
-                                <button class="btn btn-outline-primary btn-sm" id="btnRemoveSelected">Remove Selected</button>
-                                <button class="btn btn-outline-danger btn-sm" id="btnClearAll">Clear All</button>
                             </td>
                             <td>
-                                <button class="btn btn-outline-success btn-sm" id="btnTradeIn">Trade In</button>
-                                <button class="btn btn-outline-success btn-sm" id="btnSale">Sale</button>
+                                <button class="btn btn-outline-primary btn-sm" id="btnRemoveSelected">Remove Selected</button>
+                                <button class="btn btn-outline-danger btn-sm" id="btnClearAll">Clear All</button>
                             </td>
                         </tr>
                         <tr>
@@ -214,8 +212,31 @@ namespace.ProductModule = function(options){
                                 <button class="btn btn-outline-dark btn-sm" id="btnSubtractFiveFromTradeInValue">Subtract $5</button>
                             </td>
                         </tr>
-                    </form>
-                </table>
+                        <tr>
+                        <tr>
+                            <td>TOTAL PAID:</td>
+                            <td><input type="text" name="trade-in-total-paid" id="txtTradeInTotalPaid"></td>
+                        </tr>
+                            <td></td>
+                            <td>
+                                <input type="radio" value ="storecredit" id="rbStCredit" name="tradeInPayment">
+                                <label for="rbStCredit">Store Credit</label>
+
+                                <input type="radio" value ="cash" id="rbCash" name="tradeInPayment">
+                                <label for="rbCash">Cash</label>
+
+                                <input type="radio" value ="check" id="rbCheck" name="tradeInPayment">
+                                <label for="rbCheck">Check</label>
+                            </td>
+                        <tr>
+                        <tr>
+                            <td colspan="2">
+                                <button style="margin: 25px auto 10px;; width:98%;"class="btn btn-outline-success btn-sm" id="btnTradeIn">Trade In</button>
+                                <button class="btn btn-outline-success btn-sm" id="btnSale">Sale</button>
+                            </td>
+                        </tr>
+                    </table>
+                
             </div>`;
 
         //inject HTML
@@ -342,11 +363,11 @@ namespace.ProductModule = function(options){
                         </tr>`;
             }
         }else{
-            html += `<tr class="product-table-row" productId="${products.productId}">
-                            <td class="product-table-cell">
+            html += `<tr class="mid-table-row" productId="${products.productId}">
+                            <td class="mid-table-cell">
                                 ${products.consoleName}
                             </td>
-                            <td class="product-table-cell">
+                            <td class="mid-table-cell">
                                 ${products.productName}
                             </td>
                         </tr>`;
@@ -404,8 +425,6 @@ namespace.ProductModule = function(options){
             spQuantity: txtSpQuantity.value,
             shebQuantity: txtShebQuantity.value
         };
-
-        return product;
     }
 
     function getAllProducts(){
@@ -595,7 +614,7 @@ namespace.ProductModule = function(options){
 
     function addProductForTransaction(){
         if(txtProductId.value == ""){
-            alert("Please select a product to add to the pending transaction list.")
+            alert("Please select a product to add to the pending transaction list.");
         }else{
             var product = createProductFromForm();
             selectedProducts.push(product);
