@@ -147,19 +147,19 @@ namespace.ProductModule = function(options){
                         </tr>
                         <tr>
                             <td><label for="onaQuantity">Ona Quantity in stock:</label></td>
-                            <td><input type="text" name="onaQuantity" id="txtOnaQuantity" readonly="true"></td>
+                            <td><input type="text" name="onaQuantity" id="txtOnaQuantity" placeholder="Onalaska Stock" readonly="true"></td>
                         </tr>
                         <tr>
                             <td><label for="ecQuantity">EC Quantity in stock:</label></td>
-                            <td><input type="text" name="ecQuantity" id="txtEcQuantity" readonly="true"></td>
+                            <td><input type="text" name="ecQuantity" id="txtEcQuantity" placeholder="Eau Claire Stock" readonly="true"></td>
                         </tr>
                         <tr>
                             <td><label for="spQuantity">SP Quantity in stock:</label></td>
-                            <td><input type="text" name="spQuantity" id="txtSpQuantity" readonly="true"></td>
+                            <td><input type="text" name="spQuantity" id="txtSpQuantity" placeholder="Stevents Point Stock" readonly="true"></td>
                         </tr>
                         <tr>
                             <td><label for="shebQuantity">Sheb Quantity in stock:</label></td>
-                            <td><input type="text" name="shebQuantity" id="txtShebQuantity" readonly="true"></td>
+                            <td><input type="text" name="shebQuantity" id="txtShebQuantity" placeholder="Shegoygan Stock" readonly="true"></td>
                         </tr>
                         <tr>
                             <td></td>
@@ -425,23 +425,27 @@ namespace.ProductModule = function(options){
             spQuantity: txtSpQuantity.value,
             shebQuantity: txtShebQuantity.value
         };
+
+        return product;
     }
 
-    function getAllProducts(){
-        namespace.ajax.send({
-            url: prodWebServiceAddress,
-            method: "GET",
-            callback: function(response){
-                //console.log(response);
-                var products = JSON.parse(response);
-                generateProductList(products);
-            }
-        });
-    }
+    // function getAllProducts(){
+    //     namespace.ajax.send({
+    //         url: prodWebServiceAddress,
+    //         method: "GET",
+    //         callback: function(response){
+    //             //console.log(response);
+    //             var products = JSON.parse(response);
+    //             generateProductList(products);
+    //         }
+    //     });
+    // }
 
     function tradeInQuantityUpdate(){
         if(selectedProducts.length > 0){
             if(confirm("Are you sure you want to finalize this trade-in?")){
+
+
                 selectedProducts.forEach((p)=>{
                     p.quantity++;
                     namespace.ajax.send({
@@ -458,7 +462,7 @@ namespace.ProductModule = function(options){
                 });
             }
         }else{
-            alert("Please add product(s) to the transaction list.")
+            alert("Please add product(s) to the transaction list.");
         }
     }
 
