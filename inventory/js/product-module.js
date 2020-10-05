@@ -52,6 +52,9 @@ namespace.ProductModule = function(options){
     var txtTradeInCreditValue;
     var txtTradeInCashValue;
 
+    var txtTotalPaid;
+    var txtCheckNumber;
+    var txtEmployee;
     var selectedProducts = [];
 
     //right column buttons
@@ -67,6 +70,11 @@ namespace.ProductModule = function(options){
     var btnAddFiveToTradeInValue;
     var btnSubtractOneFromTradeInValue;
     var btnSubtractFiveFromTradeInValue;
+
+    //right column radio buttons
+    var rbStoreCredit;
+    var rbCash;
+    var rbCheck;
 
     //running total variables
     var totalTradeInCreditValue = 0;
@@ -214,21 +222,25 @@ namespace.ProductModule = function(options){
                         </tr>
                         <tr>
                         <tr>
-                            <td>TOTAL PAID:</td>
-                            <td><input type="text" name="trade-in-total-paid" id="txtTradeInTotalPaid"></td>
+                            <td><label for="txtTotalPaid">TOTAL PAID:</label></td>
+                            <td><input type="number" name="trade-in-total-paid" id="txtTotalPaid" style="width:50%;">
+                            <input type="number" id="txtCheckNumber" placeholder="Check #" style="width:40%;"></td>
                         </tr>
                             <td></td>
                             <td>
-                                <input type="radio" value ="storecredit" id="rbStCredit" name="tradeInPayment">
-                                <label for="rbStCredit">Store Credit</label>
+                                <input type="radio" value ="creditPaid" id="rbStoreCredit" name="tradeInPayment">
+                                <label for="rbStoreCredit">Store Credit</label>
 
-                                <input type="radio" value ="cash" id="rbCash" name="tradeInPayment">
+                                <input type="radio" value ="cashPaid" id="rbCash" name="tradeInPayment">
                                 <label for="rbCash">Cash</label>
 
-                                <input type="radio" value ="check" id="rbCheck" name="tradeInPayment">
+                                <input type="radio" value ="checkPaid" id="rbCheck" name="tradeInPayment">
                                 <label for="rbCheck">Check</label>
                             </td>
                         <tr>
+                            <td><label for="txtEmployee">Employee:</label></td>
+                            <td><input type="text" id="txtEmployee" placeholder="Employee Initials" style="width:50%;"></td>
+                        </tr>
                         <tr>
                             <td colspan="2">
                                 <button style="margin: 25px auto 10px;; width:98%;"class="btn btn-outline-success btn-sm" id="btnTradeIn">Trade In</button>
@@ -282,6 +294,15 @@ namespace.ProductModule = function(options){
         txtTradeInCashValue = rightColumnContainer.querySelector("#txtTradeInCashValue");
         txtItemTradeInCreditValue = rightColumnContainer.querySelector("#txtItemTradeInCreditValue");
         txtItemTradeInCashValue = rightColumnContainer.querySelector("#txtItemTradeInCashValue");
+
+        rbStoreCredt = rightColumnContainer.querySelector("#rbStoreCredit");
+        rbCash = rightColumnContainer.querySelector("#rbCash");
+        rbCheck = rightColumnContainer.querySelector("#rbCheck");
+
+        txtCheckNumber = rightColumnContainer.querySelector("#txtCheckNumber");
+        txtCheckNumber.style.visibility="hidden";
+
+        txtEmployee = rightColumnContainer.querySelector("#txtEmployee");
 
         //right column buttons
         btnAddToList = rightColumnContainer.querySelector("#btnAddToList").onclick = addProductForTransaction;
@@ -441,25 +462,83 @@ namespace.ProductModule = function(options){
     //     });
     // }
 
-    function tradeInQuantityUpdate(){
+    function tradeInQuantityUpdate(){// SPLIT FUNCTION TO CREATE TRADE IN AND TRADE IN PRODUCTS, AND SEPARATE QUANITIES
         if(selectedProducts.length > 0){
             if(confirm("Are you sure you want to finalize this trade-in?")){
+                var finalTradeIn = {
+                    customerId: tradeIn.customerId,
+                    tradeInDateTime: new Date(),
+                    tradeInEmployee: txtEmployee.value,
+                    cashPaid: 0,
+                    creditPaid: 0,
+                    checkPaid: 0,
+                    checkNumber: null,
+                    totalPaid: 0
+                }
 
+                if(paymentMethod == "cashPaid"){
+                    finalTradeIn.cashPaid = txtTotalPaid.value;
+                }else if(paymentMethod == "creditPaid"){
+                    finalTradeIn.creditPaid = txtTotalPaid.value;
+                }else{
+                    finalTradeIn.checkPaid = txtTotalPaid.value;
+                    finalTradeIn.checkNumber = txtCheckNumber.value;
+                }
 
-                selectedProducts.forEach((p)=>{
-                    p.quantity++;
+                alert(finalTradeIn);
+
+                namespace.ajax.send({
+                    url: tiWebServiceAddress,
+                    method: "POST",
+                    headers: {"Content-Type": "application/json", "Accept": "application/json"},
+                    requestBody: JSON.stringify(finalTradeIn),
+                    callback: function(response){
+                        finalTradeIn = JSON.parse(response);
+                        console.log(response);
+                    },
+                    errorCallback: function(response){
+                        alert("TRADE IN ERROR: \n\r" + response);
+                    }
+                });
+
+                selectedProducts.forEach((p) =>{
+                    var values = calculateTradeInValue(p);
+                    var tradeInProduct = {
+                        tradeInId: finalTradeIn.tradeInId,
+                        productId: p.productId,
+                        retailPrice: p.loosePrice,
+                        cashValue: values[1],
+                        creditValue: values[0]
+                    };
+
                     namespace.ajax.send({
-                        url: prodWebServiceAddress + p.productId,
-                        method: "PUT",
+                        url: webServiceAddress,
+                        method: "POST",
                         headers: {"Content-Type": "application/json", "Accept": "application/json"},
-                        requestBody: JSON.stringify(p),
+                        requestBody: JSON.stringify(tradeInProduct),
                         callback: function(response){
-                            //console.log(response);
+                            console.log(response);
                         }
                     });
-                    selectedProducts.length = 0;
-                    refreshSelectedProducts();
                 });
+
+                //PICK UP HERE!!! NEED TO GET USER FROM COOKIES AND UPDATE QUANTITIES ACCORDINGLY
+
+
+                // selectedProducts.forEach((p)=>{
+                //     p.quantity++;
+                //     namespace.ajax.send({
+                //         url: prodWebServiceAddress + p.productId,
+                //         method: "PUT",
+                //         headers: {"Content-Type": "application/json", "Accept": "application/json"},
+                //         requestBody: JSON.stringify(p),
+                //         callback: function(response){
+                //             //console.log(response);
+                //         }
+                //     });
+                //     selectedProducts.length = 0;
+                //     refreshSelectedProducts();
+                // });
             }
         }else{
             alert("Please add product(s) to the transaction list.");
@@ -714,8 +793,8 @@ namespace.ProductModule = function(options){
         txtTradeInCashValue.value = (parseFloat(txtTradeInCashValue.value) - (5)).toFixed(2);
     }
 
-    //TODO: Talk to jake and find out how we want to do this.
     function calculateTradeInValue(products){
+        var returnValues = [2];
         totalTradeInCreditValue = 0;
         totalTradeInCashValue = 0;
         itemTradeInCreditValue;
@@ -832,5 +911,12 @@ namespace.ProductModule = function(options){
         txtTradeInCashValue.value = totalTradeInCashValue.toFixed(2);
         txtItemTradeInCreditValue.value = itemTradeInCreditValue.toFixed(2);
         txtItemTradeInCashValue.value = itemTradeInCashValue.toFixed(2);
+
+        returnValues[0] = itemTradeInCreditValue;
+        returnValues[1] = itemTradeInCashValue;
+
+        return returnValues;
     }
+
+
 }
