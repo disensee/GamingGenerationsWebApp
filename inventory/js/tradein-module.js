@@ -250,7 +250,7 @@ namespace.TradeInModule = function(options){
             cashPaid: 0.00,
             creditPaid: 0.00,
             checkPaid: 0.00,
-            checkNumber: null,
+            checkNumber: 0,
             totalPaid: 0.00
         };
 

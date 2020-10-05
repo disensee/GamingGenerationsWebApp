@@ -295,9 +295,11 @@ namespace.ProductModule = function(options){
         txtItemTradeInCreditValue = rightColumnContainer.querySelector("#txtItemTradeInCreditValue");
         txtItemTradeInCashValue = rightColumnContainer.querySelector("#txtItemTradeInCashValue");
 
-        rbStoreCredt = rightColumnContainer.querySelector("#rbStoreCredit");
+        rbStoreCredit = rightColumnContainer.querySelector("#rbStoreCredit");
         rbCash = rightColumnContainer.querySelector("#rbCash");
         rbCheck = rightColumnContainer.querySelector("#rbCheck");
+
+        txtTotalPaid = rightColumnContainer.querySelector("#txtTotalPaid");
 
         txtCheckNumber = rightColumnContainer.querySelector("#txtCheckNumber");
         txtCheckNumber.style.visibility="hidden";
@@ -317,7 +319,7 @@ namespace.ProductModule = function(options){
         };
 
         if(tradeIn != null){
-            btnTradeIn = rightColumnContainer.querySelector("#btnTradeIn").onclick = tradeInQuantityUpdate;
+            btnTradeIn = rightColumnContainer.querySelector("#btnTradeIn").onclick = tradeInDBInsert;
             btnSale = rightColumnContainer.querySelector("#btnSale").style.display = "none";
         }
 
@@ -409,7 +411,7 @@ namespace.ProductModule = function(options){
             url: prodWebServiceAddress + selectedProductId,
             method: "GET",
             callback: function(response){
-                //console.log(response);
+                console.log(response);
                 var product = JSON.parse(response);
                 populateProductForm(product);
             }
@@ -462,65 +464,71 @@ namespace.ProductModule = function(options){
     //     });
     // }
 
-    function tradeInQuantityUpdate(){// SPLIT FUNCTION TO CREATE TRADE IN AND TRADE IN PRODUCTS, AND SEPARATE QUANITIES
+    function tradeInDBInsert(){// SPLIT FUNCTION TO CREATE TRADE IN AND TRADE IN PRODUCTS, AND SEPARATE QUANITIES
         if(selectedProducts.length > 0){
             if(confirm("Are you sure you want to finalize this trade-in?")){
-                var finalTradeIn = {
-                    customerId: tradeIn.customerId,
-                    tradeInDateTime: new Date(),
-                    tradeInEmployee: txtEmployee.value,
-                    cashPaid: 0,
-                    creditPaid: 0,
-                    checkPaid: 0,
-                    checkNumber: null,
-                    totalPaid: 0
+                var completedTradeIn;
+                var paymentMethod;
+                if(rbCash.checked){
+                    paymentMethod = rbCash.value;
+                }else if(rbStoreCredit.checked){
+                    paymentMethod = rbStoreCredit.value;
+                }else{
+                    paymentMethod = rbCheck.value;
                 }
+
+                tradeIn.tradeInEmplyee = txtEmployee.value;
+                tradeIn.totalPaid = txtTotalPaid.value;
 
                 if(paymentMethod == "cashPaid"){
-                    finalTradeIn.cashPaid = txtTotalPaid.value;
+                    tradeIn.cashPaid = txtTotalPaid.value;
                 }else if(paymentMethod == "creditPaid"){
-                    finalTradeIn.creditPaid = txtTotalPaid.value;
+                    tradeIn.creditPaid = txtTotalPaid.value;
                 }else{
-                    finalTradeIn.checkPaid = txtTotalPaid.value;
-                    finalTradeIn.checkNumber = txtCheckNumber.value;
+                    tradeIn.checkPaid = txtTotalPaid.value;
+                    tradeIn.checkNumber = txtCheckNumber.value;
                 }
-
-                alert(finalTradeIn);
 
                 namespace.ajax.send({
                     url: tiWebServiceAddress,
                     method: "POST",
                     headers: {"Content-Type": "application/json", "Accept": "application/json"},
-                    requestBody: JSON.stringify(finalTradeIn),
+                    requestBody: JSON.stringify(tradeIn),
                     callback: function(response){
-                        finalTradeIn = JSON.parse(response);
-                        console.log(response);
+                        completedTradeIn = JSON.parse(response);
+                        console.log(completedTradeIn);
                     },
                     errorCallback: function(response){
                         alert("TRADE IN ERROR: \n\r" + response);
                     }
                 });
+            }
+        }else{
+            alert("Please add product(s) to the transaction list.");
+        }
+    }
+            
 
-                selectedProducts.forEach((p) =>{
-                    var values = calculateTradeInValue(p);
-                    var tradeInProduct = {
-                        tradeInId: finalTradeIn.tradeInId,
-                        productId: p.productId,
-                        retailPrice: p.loosePrice,
-                        cashValue: values[1],
-                        creditValue: values[0]
-                    };
-
-                    namespace.ajax.send({
-                        url: webServiceAddress,
-                        method: "POST",
-                        headers: {"Content-Type": "application/json", "Accept": "application/json"},
-                        requestBody: JSON.stringify(tradeInProduct),
-                        callback: function(response){
-                            console.log(response);
-                        }
-                    });
-                });
+                // selectedProducts.forEach((p) =>{
+                //     var values = calculateTradeInValue(p);
+                //     var tradeInProduct = {
+                //         tradeInId: completedTradeIn.tradeInId,
+                //         productId: p.productId,
+                //         retailPrice: p.loosePrice,
+                //         cashValue: values[1],
+                //         creditValue: values[0]
+                //     };
+                //     console.log(tradeInProduct);
+                //     namespace.ajax.send({
+                //         url: webServiceAddress,
+                //         method: "POST",
+                //         headers: {"Content-Type": "application/json", "Accept": "application/json"},
+                //         requestBody: JSON.stringify(tradeInProduct),
+                //         callback: function(response){
+                //             console.log(response);
+                //         }
+                //     });
+                // });
 
                 //PICK UP HERE!!! NEED TO GET USER FROM COOKIES AND UPDATE QUANTITIES ACCORDINGLY
 
@@ -539,11 +547,6 @@ namespace.ProductModule = function(options){
                 //     selectedProducts.length = 0;
                 //     refreshSelectedProducts();
                 // });
-            }
-        }else{
-            alert("Please add product(s) to the transaction list.");
-        }
-    }
 
     function saleQuantityUpdate(){
         if(selectedProducts.length > 0){

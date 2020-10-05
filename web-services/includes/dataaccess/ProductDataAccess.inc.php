@@ -135,10 +135,10 @@ class ProductDataAccess extends DataAccess{
 	* @param {string} 	 The name of the console the product is for
 	* @return {product} Returns an instance of a product model object
 	*/
-	function getByProductName($productName){
+	function getByProductName($consoleName, $productName){
 		$cleanProductName = $this->cleanDataGoingIntoDB($productName);
-		//$cleanConsoleName = $this->cleanDataGoingIntoDB($consoleName);
-		$qStr = "SELECT productId, consoleName, productName, loosePrice, cibPrice, gamestopPrice, gamestopTradeValue, upc, onaQuantity, ecQuantity, spQuantity, shebQuantity FROM products WHERE productName LIKE '%$cleanProductName%'";
+		$cleanConsoleName = $this->cleanDataGoingIntoDB($consoleName);
+		$qStr = "SELECT productId, consoleName, productName, loosePrice, cibPrice, gamestopPrice, gamestopTradeValue, upc, onaQuantity, ecQuantity, spQuantity, shebQuantity FROM products WHERE consoleName = '$cleanConsoleName' AND productName LIKE '%$cleanProductName%'";
 
 		$result = mysqli_query($this->link, $qStr) or $this->handleError(mysqli_error($this->link));
 		$allproducts = [];
