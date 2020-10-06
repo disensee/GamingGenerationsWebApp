@@ -39,7 +39,7 @@ class TradeInProduct extends Model{
             return false;
         }
 
-        if(empty($this->cashValue && empty($this->creditValue))){
+        if(empty($this->cashValue) && empty($this->creditValue)){
             return false;
         }
 

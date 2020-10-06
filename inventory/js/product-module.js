@@ -17,6 +17,7 @@ namespace.ProductModule = function(options){
     "Nintendo DS", "Nintendo 3DS", "Playstation", "Playstation 2", "Playstation 3", "Playstation 4", "PSP", "Playstation Vita", 
     "Xbox", "Xbox 360", "Xbox One", "Sega Genesis", "Sega Saturn", "Sega Dreamcast", "Sega Game Gear", "Atari 2600", "Atari 400", "Atari 5200", "Atari 7800", "Atari Lynx", "Atari ST" ];
     
+    var completedTradeIn;
     //var header;
     //var footer;
     var productTableListContainer;
@@ -83,6 +84,8 @@ namespace.ProductModule = function(options){
     //item value variables
     var itemTradeInCreditValue = 0;
     var itemTradeInCashValue = 0;
+    var productCreditValue = 0;
+    var productCashValue = 0;
 
     initialize();
 
@@ -464,10 +467,9 @@ namespace.ProductModule = function(options){
     //     });
     // }
 
-    function tradeInDBInsert(){// SPLIT FUNCTION TO CREATE TRADE IN AND TRADE IN PRODUCTS, AND SEPARATE QUANITIES
+    function tradeInDBInsert(){// SPLIT FUNCTION TO CREATE TRADE IN AND TRADE IN PRODUCTS, AND SEPARATE QUANITIES, VALIDATE INPUT!!
         if(selectedProducts.length > 0){
             if(confirm("Are you sure you want to finalize this trade-in?")){
-                var completedTradeIn;
                 var paymentMethod;
                 if(rbCash.checked){
                     paymentMethod = rbCash.value;
@@ -477,15 +479,16 @@ namespace.ProductModule = function(options){
                     paymentMethod = rbCheck.value;
                 }
 
-                tradeIn.tradeInEmplyee = txtEmployee.value;
-                tradeIn.totalPaid = txtTotalPaid.value;
+                
+                tradeIn.tradeInEmployee = txtEmployee.value.toUpperCase();
+                tradeIn.totalPaid = parseFloat(txtTotalPaid.value).toFixed(2);
 
                 if(paymentMethod == "cashPaid"){
-                    tradeIn.cashPaid = txtTotalPaid.value;
+                    tradeIn.cashPaid = parseFloat(txtTotalPaid.value).toFixed(2);
                 }else if(paymentMethod == "creditPaid"){
-                    tradeIn.creditPaid = txtTotalPaid.value;
+                    tradeIn.creditPaid = parseFloat(txtTotalPaid.value).toFixed(2);
                 }else{
-                    tradeIn.checkPaid = txtTotalPaid.value;
+                    tradeIn.checkPaid = parseFloat(txtTotalPaid.value).toFixed(2);
                     tradeIn.checkNumber = txtCheckNumber.value;
                 }
 
@@ -497,6 +500,7 @@ namespace.ProductModule = function(options){
                     callback: function(response){
                         completedTradeIn = JSON.parse(response);
                         console.log(completedTradeIn);
+                        tradeInProductDBInsert();
                     },
                     errorCallback: function(response){
                         alert("TRADE IN ERROR: \n\r" + response);
@@ -507,46 +511,59 @@ namespace.ProductModule = function(options){
             alert("Please add product(s) to the transaction list.");
         }
     }
+
+    function tradeInProductDBInsert(){
+         selectedProducts.forEach((p) =>{
+                    var values = calculateTradeInValue(p);
+                    var tradeInProduct = {
+                        tradeInId: completedTradeIn.tradeInId,
+                        productId: p.productId,
+                        retailPrice: p.loosePrice,
+                        cashValue: values[1],
+                        creditValue: values[0]
+                    };
+                    console.log(tradeInProduct);
+                    namespace.ajax.send({
+                        url: webServiceAddress,
+                        method: "POST",
+                        headers: {"Content-Type": "application/json", "Accept": "application/json"},
+                        requestBody: JSON.stringify(tradeInProduct),
+                        callback: function(response){
+                            clearProductInfoTextBoxes();
+                            console.log(response);
+                            updateTradeInQuantity();
+                        },
+                        errorCallback: function(response){
+                            alert("ERROR: " + response);
+                        }
+                    });
+                });
+    }
+
+    function updateTradeInQuantity(){
+    //PICK UP HERE!!! NEED TO GET USER FROM COOKIES AND UPDATE QUANTITIES ACCORDINGLY
+         var user = getUser();
+
+        console.log(user);
+
+        // selectedProducts.forEach((p)=>{
+
             
+		    
 
-                // selectedProducts.forEach((p) =>{
-                //     var values = calculateTradeInValue(p);
-                //     var tradeInProduct = {
-                //         tradeInId: completedTradeIn.tradeInId,
-                //         productId: p.productId,
-                //         retailPrice: p.loosePrice,
-                //         cashValue: values[1],
-                //         creditValue: values[0]
-                //     };
-                //     console.log(tradeInProduct);
-                //     namespace.ajax.send({
-                //         url: webServiceAddress,
-                //         method: "POST",
-                //         headers: {"Content-Type": "application/json", "Accept": "application/json"},
-                //         requestBody: JSON.stringify(tradeInProduct),
-                //         callback: function(response){
-                //             console.log(response);
-                //         }
-                //     });
-                // });
-
-                //PICK UP HERE!!! NEED TO GET USER FROM COOKIES AND UPDATE QUANTITIES ACCORDINGLY
-
-
-                // selectedProducts.forEach((p)=>{
-                //     p.quantity++;
-                //     namespace.ajax.send({
-                //         url: prodWebServiceAddress + p.productId,
-                //         method: "PUT",
-                //         headers: {"Content-Type": "application/json", "Accept": "application/json"},
-                //         requestBody: JSON.stringify(p),
-                //         callback: function(response){
-                //             //console.log(response);
-                //         }
-                //     });
-                //     selectedProducts.length = 0;
-                //     refreshSelectedProducts();
-                // });
+        //     namespace.ajax.send({
+        //         url: prodWebServiceAddress + p.productId,
+        //         method: "PUT",
+        //         headers: {"Content-Type": "application/json", "Accept": "application/json"},
+        //         requestBody: JSON.stringify(p),
+        //         callback: function(response){
+        //             //console.log(response);
+        //         }
+        //     });
+        //     selectedProducts.length = 0;
+        //     refreshSelectedProducts();
+        // });
+    }
 
     function saleQuantityUpdate(){
         if(selectedProducts.length > 0){
@@ -688,6 +705,7 @@ namespace.ProductModule = function(options){
         txtEcQuantity.value="";
         txtSpQuantity.value="";
         txtShebQuantity.value="";
+
     }
 
     function refreshSelectedProducts(){
@@ -796,14 +814,23 @@ namespace.ProductModule = function(options){
         txtTradeInCashValue.value = (parseFloat(txtTradeInCashValue.value) - (5)).toFixed(2);
     }
 
-    function calculateTradeInValue(products){
-        var returnValues = [2];
+    function calculateTradeInValue(prods){
+        var products = [];
+        if(Array.isArray(prods)){
+            products = [...prods];
+        }else{
+            products.push(prods);
+        };
+        
+        var returnValues = [];
+        
         totalTradeInCreditValue = 0;
         totalTradeInCashValue = 0;
         itemTradeInCreditValue;
         itemTradeInCashValue;
-        for(var i = 0; i < products.length; i++){
-            var p = products[i];
+        products.forEach((p)=>{
+        //for(var i = 0; i < products.length; i++){
+           // var p = products[i];
             var consoleInName = p.productName.toLowerCase().includes("console");
             var systemInName = p.productName.toLowerCase().includes("system");
             if(!consoleInName && !systemInName){ 
@@ -812,6 +839,13 @@ namespace.ProductModule = function(options){
                   || p.consoleName.toLowerCase() == "sega saturn" || p.consoleName.toLowerCase().includes("atari")){
                     totalTradeInCreditValue += Math.floor(p.loosePrice * 0.4);
                     totalTradeInCashValue += Math.floor(p.loosePrice * 0.3);
+                    productCreditValue = Math.floor(p.loosePrice * 0.4);
+                    productCashValue = Math.floor(p.loosePrice * 0.3);
+
+                    if(productCreditValue < 1){
+                        productCreditValue = 0.10;
+                        productCashValue = 0.1;
+                    }
 
                     if(Math.floor(p.loosePrice * 4) < 1){
                         totalTradeInCreditValue += 0.1;
@@ -835,6 +869,13 @@ namespace.ProductModule = function(options){
                 || p.consoleName.toLowerCase() == "wii"){
                     totalTradeInCreditValue += Math.floor(p.loosePrice * 0.25);
                     totalTradeInCashValue += Math.floor(p.loosePrice * 0.1);
+                    productCreditValue = Math.floor(p.loosePrice * 0.25);
+                    productCashValue = Math.floor(p.loosePrice * 0.1);
+
+                    if(productCreditValue < 1){
+                        productCreditValue = 0.10;
+                        productCashValue = 0.1;
+                    }
 
                     if(Math.floor(p.loosePrice * 0.25) < 1){
                         totalTradeInCreditValue += 0.1;
@@ -855,6 +896,13 @@ namespace.ProductModule = function(options){
                 || p.consoleName.toLowerCase() == "nintendo switch" || p.consoleName.toLowerCase() == "nintendo 3ds"){
                     totalTradeInCreditValue += Math.floor(p.loosePrice * 0.5);
                     totalTradeInCashValue += Math.floor(p.loosePrice * 0.3);
+                    productCreditValue = Math.floor(p.loosePrice * 0.5);
+                    productCashValue = Math.floor(p.loosePrice * 0.3);
+
+                    if(productCreditValue < 1){
+                        productCreditValue = 0.10;
+                        productCashValue = 0.1;
+                    }
                     
                     if(Math.floor(p.loosePrice * 0.5) < 1){
                         totalTradeInCreditValue += 0.1;
@@ -881,6 +929,14 @@ namespace.ProductModule = function(options){
                   || p.consoleName.toLowerCase() == "nintendo 3ds" ){
                     totalTradeInCreditValue += Math.floor(p.loosePrice * 0.5);
                     totalTradeInCashValue += Math.floor(p.loosePrice * 0.4);
+                    productCreditValue = Math.floor(p.loosePrice * 0.5);
+                    productCashValue = Math.floor(p.loosePrice * 0.4);
+
+                    if(productCreditValue < 1){
+                        productCreditValue = 0.10;
+                        productCashValue = 0.1;
+                    }
+
                     if(selProductList.value == p.productId){
                         itemTradeInCreditValue = Math.floor(p.loosePrice * 0.5);
                         itemTradeInCashValue = Math.floor(p.loosePrice * 0.4);
@@ -895,6 +951,14 @@ namespace.ProductModule = function(options){
                 || p.consoleName.toLowerCase() == "wii"){
                     totalTradeInCreditValue += Math.floor(p.loosePrice * 0.3);
                     totalTradeInCashValue += Math.floor(p.loosePrice * 0.2);
+                    productCreditValue = Math.floor(p.loosePrice * 0.3);
+                    productCashValue = Math.floor(p.loosePrice * 0.2);
+
+                    if(productCreditValue < 1){
+                        productCreditValue = 0.10;
+                        productCashValue = 0.1;
+                    }
+
                     if(selProductList.value == p.productId){
                         itemTradeInCreditValue = Math.floor(p.loosePrice * 0.3);
                         itemTradeInCashValue = Math.floor(p.loosePrice * 0.2);
@@ -903,22 +967,58 @@ namespace.ProductModule = function(options){
             }else{
                 totalTradeInCreditValue += Math.floor(p.loosePrice * 0.4);
                 totalTradeInCashValue += Math.floor(p.loosePrice * 0.3);
+                productCreditValue = Math.floor(p.loosePrice * 0.4);
+                productCashValue = Math.floor(p.loosePrice * 0.3);
+
+                if(productCreditValue < 1){
+                    productCreditValue = 0.10;
+                    productCashValue = 0.1;
+                }
+
                 if(selProductList.value == p.productId){
                     itemTradeInCreditValue = Math.floor(p.loosePrice * 0.4);
                     itemTradeInCashValue = Math.floor(p.loosePrice * 0.3);
                 }
             }
-        }
+        //}
+        });
 
         txtTradeInCreditValue.value = totalTradeInCreditValue.toFixed(2);
         txtTradeInCashValue.value = totalTradeInCashValue.toFixed(2);
         txtItemTradeInCreditValue.value = itemTradeInCreditValue.toFixed(2);
         txtItemTradeInCashValue.value = itemTradeInCashValue.toFixed(2);
 
-        returnValues[0] = itemTradeInCreditValue;
-        returnValues[1] = itemTradeInCashValue;
+        returnValues[0] = productCreditValue;
+        returnValues[1] = productCashValue;
 
         return returnValues;
+    }
+
+    function getUser(){
+        var user;
+        var cookies = document.cookie.split(";");
+
+        cookies.forEach((c)=>{
+            var name = c.split("=")[0].trim() || null;
+            var value = c.split("=")[1] || null;
+            
+            if(name == "gginv_admin_authenticated" && value == "yes"){
+                user = "admin";
+            }else if(name == "gginv_ona_authenticated" && value == "yes"){
+                user = "onalaska";
+            }else if(name == "gginv_ec_authenticated" && value == "yes"){
+                user = "eau claire";
+            }else if(name == "gginv_sp_authenticated" && value == "yes"){
+                user = "stevens point";
+            }else if(name == "gginv_sheb_authenticated" && value == "yes"){
+                user = "sheboygan";
+            }else{
+                user = null;
+                alert("Invalid user. Please log out and log back in.");
+            }
+        });
+
+        return user;
     }
 
 
