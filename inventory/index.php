@@ -29,7 +29,7 @@ require("authentication-check.inc.php");
 </head>
 <body>
     <div id="header">
-        <img src=images/gg-logo.jpg>
+        <img id="gg-logo" src=images/gg-logo.jpg>
         <a class="logout" href="login.php">Log Out</a>
         <p>Gaming Generations Inventory</p>
     </div>

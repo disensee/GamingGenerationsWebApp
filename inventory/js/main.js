@@ -12,6 +12,17 @@ window.addEventListener("load", function(){
 
 	document.querySelector(".logout").addEventListener("click", function(event){
 		removeCookie("PHPSESSID");
+		removeCookie("ggUserName");
+	});
+
+	document.querySelector("#gg-logo").addEventListener("click", function(){
+		namespace.CustomerModule({
+			leftColumnContainer: document.getElementById("left-column"),
+			midColumnContainer : document.getElementById("mid-column"),
+			rightColumnContainer: document.getElementById("right-column"),
+			webServiceAddress: "https://localhost/GG/web-services/customers/"
+			//webServiceAddress: "https://www.dylanisensee.com/gg/web-services/customers/"
+		});
 	});
 
 	function removeCookie(cookieName){

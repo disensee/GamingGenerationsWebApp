@@ -67,8 +67,8 @@ namespace.CustomerModule = function(options){
                 <table class="info-pane">
                     <form>
                         <tr>
-                            <td><label for="customerId">Customer ID:</label></td>
-                            <td><input type="text" name="customerId" id="txtCustomerId" placeholder="Customer ID" readonly="true" value="0"></td>
+                            <td><label for="customerId" hidden="true">Customer ID:</label></td>
+                            <td><input type="text" name="customerId" id="txtCustomerId" placeholder="Customer ID" readonly="true" value="0" hidden="true"></td>
                         </tr>
                         <tr>
                             <td><label for="customerFirstName">First Name:</label></td>

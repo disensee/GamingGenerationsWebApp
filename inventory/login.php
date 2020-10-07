@@ -29,6 +29,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         
         session_regenerate_id(true);
         $_SESSION['gginv_admin_authenticated'] = "yes";
+        setcookie("ggUserName", "admin", 0, "/");
 		header("Location: index.php");
 		exit();
     }
@@ -37,6 +38,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         
         session_regenerate_id(true);
         $_SESSION['gginv_ona_authenticated'] = "yes";
+        setcookie("ggUserName", "onalaska", 0, "/");
 		header("Location: index.php");
 		exit();
     }
@@ -45,6 +47,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         
         session_regenerate_id(true);
         $_SESSION['gginv_ec_authenticated'] = "yes";
+        setcookie("ggUserName", "eauClaire", 0, "/");
 		header("Location: index.php");
 		exit();
     }
@@ -53,6 +56,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         
         session_regenerate_id(true);
         $_SESSION['gginv_sp_authenticated'] = "yes";
+        setcookie("ggUserName", "stevensPoint", 0, "/");
 		header("Location: index.php");
 		exit();
     }
@@ -61,6 +65,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         
         session_regenerate_id(true);
         $_SESSION['gginv_sheb_authenticated'] = "yes";
+        setcookie("ggUserName", "sheboygan", 0, "/");
 		header("Location: index.php");
 		exit();
     }
