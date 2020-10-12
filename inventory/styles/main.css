@@ -15,7 +15,7 @@ table th{
 /**********************************CLASS SELECTORS*****************************************/
 .column{
     background-color: lightgray;
-    float: left;
+    /* float: left; */
     font-family: 'Open Sans',Helvetica,Arial,Lucida,sans-serif;
 }
 
@@ -26,7 +26,7 @@ table th{
 
 .mid{
     background-color: white;
-    width: 40%;
+    width: 35%;
 }
 
 .right{
@@ -37,11 +37,12 @@ table th{
     max-height: 850px;
     /* scrollbar-width: 15px; */
     top: 5px;
-    width: 35%;
+    width: 45%;
 }
 
 .validation{
     color:red;
+    font-size: 0.75em;
 }
 
 .mid-button-container{
@@ -60,7 +61,7 @@ table th{
 .info input[type="text"]{
     margin: 3px;
     padding: 3px;
-    width: 100%;
+    width: 90%;
 }
 
 .info select{
@@ -93,9 +94,8 @@ table th{
     border-width: 1px;
     font-family: 'Hind Siliguri', sans-serif;
     height: 100px;
-    margin: 10px;
     padding-bottom: 10px;
-    width: 98%;
+    width: 100%;
 }
 
 #header p{
@@ -188,20 +188,20 @@ table th{
     display: inline-block;
     font-family: 'Hind Siliguri', sans-serif;
     font-size: 0.75em;
-    margin: 5px;
-    padding-left: 5px;
-    padding-top: 20px;
+    margin: 15px auto;
+    padding: 20px 5px 0;
     position: relative;
-    width: 98%;
+    width: 100%;
 }
 
 
 #content-pane{
     align-items: flex-start;
     display: flex;
-    justify-content: space-around;
-    min-height: 100%;
-    overflow: visible;
+    margin: 25px 0 25px;
+    /* justify-content: space-around; */
+    /* min-height: 100%; */
+    /*overflow: visible; */
 }
 
 #mid-table-list h4{

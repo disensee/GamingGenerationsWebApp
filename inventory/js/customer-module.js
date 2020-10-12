@@ -418,7 +418,7 @@ namespace.CustomerModule = function(options){
 
         if(txtCustomerPhone.value != ''){
             if(!validatePhone(txtCustomerPhone.value)){
-                vPhone.innerHTML = "Please enter a valid phone number. Do not include dashes, spaces, or parantheses."
+                vPhone.innerHTML = "Please enter a valid phone number. Do not include spaces or symbols."
                 isValid = false;
             }
         }
