@@ -10,8 +10,11 @@ namespace.ProductModule = function(options){
     var tradeIn = options.tradeIn || null;
     var purchase = options.purchase || null;
 
-    var tiWebServiceAddress = "https://localhost/GG/web-services/tradeins/";
-    var prodWebServiceAddress= "https://localhost/GG/web-services/products/";
+    //var tiWebServiceAddress = "https://localhost/GG/web-services/tradeins/";
+    //var prodWebServiceAddress= "https://localhost/GG/web-services/products/";
+
+    var tiWebServiceAddress = "https://www.dylanisensee.com/gg/web-services/tradeins/";
+    var prodWebServiceAddress= "https://www.dylanisensee.com/gg/web-services/products/";
     
     var consoleArr = ["NES", "Super Nintendo", "Nintendo 64", "Gamecube", "Wii", "Wii U", "Nintendo Switch", "GameBoy", "GameBoy Color", "GameBoy Advance", 
     "Nintendo DS", "Nintendo 3DS", "Playstation", "Playstation 2", "Playstation 3", "Playstation 4", "PSP", "Playstation Vita", 
@@ -1125,8 +1128,8 @@ namespace.ProductModule = function(options){
             leftColumnContainer: document.getElementById("left-column"),
 		    midColumnContainer : document.getElementById("mid-column"),
 		    rightColumnContainer: document.getElementById("right-column"),
-		    webServiceAddress: "https://localhost/GG/web-services/customers/"
-		    //webServiceAddress: "https://www.dylanisensee.com/gg/web-services/customers/"
+		    //webServiceAddress: "https://localhost/GG/web-services/customers/"
+		    webServiceAddress: "https://www.dylanisensee.com/gg/web-services/customers/"
         });
     }
 

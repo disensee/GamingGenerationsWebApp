@@ -65,7 +65,7 @@ class TradeInDataAccess extends DataAccess{
 	* @return {array}		Returns an array of trade in objects
 	*/
 	function getAll($args = []){
-		$qStr = "SELECT tradeInId, customerId, tradeInDateTime, tradeInEmployee, cashPaid, creditPaid, checkPaid, checkNumber, totalPaid FROM tradeIns";
+		$qStr = "SELECT tradeInId, customerId, tradeInDateTime, tradeInEmployee, cashPaid, creditPaid, checkPaid, checkNumber, totalPaid FROM tradeins";
 		//die($qStr);
 
 		//Many people run queries like this. Shows error messages to users. 
@@ -140,7 +140,7 @@ class TradeInDataAccess extends DataAccess{
 	*/
 	function insert($tradeIn){
 		$cleanTradeIn = $this->cleanDataGoingIntoDB($tradeIn);
-		$qStr = "INSERT INTO tradeIns (customerId, tradeInDateTime, tradeInEmployee, cashPaid, creditPaid, checkPaid, checkNumber, totalPaid) VALUES (
+		$qStr = "INSERT INTO tradeins (customerId, tradeInDateTime, tradeInEmployee, cashPaid, creditPaid, checkPaid, checkNumber, totalPaid) VALUES (
 			'{$cleanTradeIn->customerId}',
             '{$cleanTradeIn->tradeInDateTime}',
             '{$cleanTradeIn->tradeInEmployee}',
@@ -170,7 +170,7 @@ class TradeInDataAccess extends DataAccess{
 	function update($tradeIn){
 		$cleanTradeIn = $this->cleanDataGoingIntoDB($tradeIn);
 		$getTradeIn = $this->getById($cleanTradeIn->tradeInId);
-		$qStr = "UPDATE tradeIns SET 
+		$qStr = "UPDATE tradeins SET 
 				customerId = '{$cleanTradeIn->customerId}',
 				tradeInDateTime = '{$getTradeIn->tradeInDateTime}',
                 tradeInEmployee = '{$cleanTradeIn->tradeInEmployee}',

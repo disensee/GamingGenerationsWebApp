@@ -32,8 +32,8 @@ if($_SERVER['SERVER_NAME'] == "localhost"){
 	define("DB_HOST", "localhost");
 	define("DB_USER", "dylanise_gg_dev");
 	define("DB_PASSWORD", "FjGgPHOyx38i");
-	define("DB_NAME", "dylanise_gg_dev0");
-	define("SITE_ADMIN_EMAIL", "PUT EMAIL ADDRESS HERE");
+	define("DB_NAME", "dylanise_gg_dev1");
+	define("SITE_ADMIN_EMAIL", "dylan@dylanisensee.com");
 	define("SITE_DOMAIN", $_SERVER['SERVER_NAME']);
 }
 
@@ -91,7 +91,7 @@ function myErrorHandler($errno, $errstr, $errfile, $errline){
 		$str .= print_r($_ENV, true);
 		
 		//send email to web admin
-		//mail(SITE_ADMIN_EMAIL, SITE_DOMAIN . " - ERROR", $str);
+		mail(SITE_ADMIN_EMAIL, SITE_DOMAIN . " - ERROR", $str);
 		
 		//TODO: echo a nice message to the user, or redirect to an error page
 		die("We are sorry, there has been an error. But we have been notified and are working in it.");
@@ -124,7 +124,7 @@ function myExceptionHandler($exception) {
 		$str .= print_r($_ENV, true);
 		
 		//send email to web admin
-		//mail(SITE_ADMIN_EMAIL, SITE_DOMAIN . " - EXCEPTION", $str);
-		die("We're sorry, there was an error and we have been notified of it (TODO: redirect to a nice looking 'sorry' page)");
+		mail(SITE_ADMIN_EMAIL, SITE_DOMAIN . " - EXCEPTION", $str);
+		die("We're sorry, there was an error and we have been notified of it");
 	}
 }
