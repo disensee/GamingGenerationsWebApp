@@ -5,16 +5,19 @@ namespace.ProductModule = function(options){
     var midColumnContainer = options.midColumnContainer || null
     var rightColumnContainer = options.rightColumnContainer || null;
     var callback = options.callback;
-    var webServiceAddress = options.webServiceAddress || "https://localhost/GG/web-services/tradeinproducts/" //THIS IS REQUIRED!!
+    var webServiceAddress = options.webServiceAddress;// || "https://localhost/GG/web-services/tradeinproducts/" //THIS IS REQUIRED!!
+    
     //Trade in or purchase have to have a value. Need to account for this. 
     var tradeIn = options.tradeIn || null;
     var purchase = options.purchase || null;
 
-    //var tiWebServiceAddress = "https://localhost/GG/web-services/tradeins/";
-    //var prodWebServiceAddress= "https://localhost/GG/web-services/products/";
-
-    var tiWebServiceAddress = "https://www.dylanisensee.com/gg/web-services/tradeins/";
-    var prodWebServiceAddress= "https://www.dylanisensee.com/gg/web-services/products/";
+    var purchaseWebServiceAddress = "https://localhost/GG/web-services/purchases/";
+    var tiWebServiceAddress = "https://localhost/GG/web-services/tradeins/";
+    var prodWebServiceAddress= "https://localhost/GG/web-services/products/";
+    
+    //var purchaseWebServiceAddress= "https://www.dylanisensee.com/gg/web-services/purchases/";
+    //var tiWebServiceAddress = "https://www.dylanisensee.com/gg/web-services/tradeins/";
+    //var prodWebServiceAddress= "https://www.dylanisensee.com/gg/web-services/products/";
     
     var consoleArr = ["NES", "Super Nintendo", "Nintendo 64", "Gamecube", "Wii", "Wii U", "Nintendo Switch", "GameBoy", "GameBoy Color", "GameBoy Advance", 
     "Nintendo DS", "Nintendo 3DS", "Playstation", "Playstation 2", "Playstation 3", "Playstation 4", "PSP", "Playstation Vita", 
@@ -96,7 +99,8 @@ namespace.ProductModule = function(options){
     initialize();
 
     function initialize(){
-        console.log(tradeIn);
+        console.log("TRADE IN: " + tradeIn);
+        console.log("PURCHASE: " + purchase);
 
         leftColumnContainer.style.display = "block";
         leftColumnContainer.innerHTML = "";

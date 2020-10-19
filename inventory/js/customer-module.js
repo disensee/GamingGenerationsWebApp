@@ -165,7 +165,8 @@ namespace.CustomerModule = function(options){
         btnAdd.addEventListener("click", addCustomer);
 
 
-        btnTradeIn.addEventListener("click", rturn)
+        btnTradeIn.addEventListener("click", goToTradeIn)
+        btnPurchase.addEventListener("click", goToPurchase);
         //display props
         btnTradeIn.style.display = 'none';
         btnPurchase.style.display = 'none';
@@ -449,18 +450,30 @@ namespace.CustomerModule = function(options){
         vPhone.innerHTML='';
     }
 
-    function rturn(){
+    function goToTradeIn(){
         customerForTransaction = createCustomerFromForm();
         namespace.TradeInModule({
             	leftColumnContainer: document.getElementById("left-column"),
             	midColumnContainer : document.getElementById("mid-column"),
             	rightColumnContainer: document.getElementById("right-column"),
                 //webServiceAddress: "https://localhost/GG/web-services/tradeins/",
-                webServiceAddress: "https://www.dylanisensee.com/gg/web-services/tradeins/",
+                //webServiceAddress: "https://www.dylanisensee.com/gg/web-services/tradeins/",
                 customer: customerForTransaction
             });
     }
 
-    return rturn;
+    function goToPurchase(){
+        customerForTransaction = createCustomerFromForm();
+        namespace.PurchaseModule({
+            	leftColumnContainer: document.getElementById("left-column"),
+            	midColumnContainer : document.getElementById("mid-column"),
+            	rightColumnContainer: document.getElementById("right-column"),
+                //webServiceAddress: "https://localhost/GG/web-services/purchases/",
+                //webServiceAddress: "https://www.dylanisensee.com/gg/web-services/purchases/",
+                customer: customerForTransaction
+            });
+    }
+
+    //return rturn;
 
 };

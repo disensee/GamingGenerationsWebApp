@@ -44,6 +44,7 @@ require("authentication-check.inc.php");
 
     <script src="js/customer-module.js"></script>
     <script src="js/tradein-module.js"></script>
+    <script src="js/purchase-module.js"></script>
     <script src="js/product-module.js"></script>
 </body>
 </html>

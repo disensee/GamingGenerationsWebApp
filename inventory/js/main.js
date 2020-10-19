@@ -7,7 +7,7 @@ window.addEventListener("load", function(){
 		midColumnContainer : document.getElementById("mid-column"),
 		rightColumnContainer: document.getElementById("right-column"),
 		//webServiceAddress: "https://localhost/GG/web-services/customers/"
-		webServiceAddress: "https://www.dylanisensee.com/gg/web-services/customers/"
+		//webServiceAddress: "https://www.dylanisensee.com/gg/web-services/customers/"
 	});
 
 	document.querySelector(".logout").addEventListener("click", function(event){
@@ -21,7 +21,7 @@ window.addEventListener("load", function(){
 			midColumnContainer : document.getElementById("mid-column"),
 			rightColumnContainer: document.getElementById("right-column"),
 			//webServiceAddress: "https://localhost/GG/web-services/customers/"
-			webServiceAddress: "https://www.dylanisensee.com/gg/web-services/customers/"
+			//webServiceAddress: "https://www.dylanisensee.com/gg/web-services/customers/"
 		});
 	});
 
