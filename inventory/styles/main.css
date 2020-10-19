@@ -73,6 +73,11 @@ table th{
     color: gray;
 }
 
+.transaction-final {
+    margin: 25px auto 10px; 
+    width:98%;
+}
+
 /*************************************ID SELECTORS*****************************************/
 #header>*{
     /* Select level 1 children */

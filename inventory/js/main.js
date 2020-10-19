@@ -11,7 +11,7 @@ window.addEventListener("load", function(){
 	});
 
 	document.querySelector(".logout").addEventListener("click", function(event){
-		removeCookie("PHPSESSID");
+		sessionStorage.clear();
 		removeCookie("ggUserName");
 	});
 

@@ -71,7 +71,7 @@ class Product extends Model{
             }
         }
         //quantity must not be empty and must be a number
-        if($this->onaQuantity !== 0){
+        if($this->onaQuantity != 0){
             if(!(is_numeric($this->onaQuantity)) || empty($this->onaQuantity)){
                 return false;
             }

@@ -7,7 +7,6 @@ if(empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == "off"){
 }
 require("authentication-check.inc.php");
 
-//var_dump($_SESSION);
 ?>
 
 <!DOCTYPE html>

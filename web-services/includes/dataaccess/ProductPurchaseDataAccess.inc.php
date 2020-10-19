@@ -22,6 +22,7 @@ class ProductPurchaseDataAccess extends DataAccess{
 			$cleanProdPurchase->ppId= mysqli_real_escape_string($this->link, $prodPurchase->ppId);
 			$cleanProdPurchase->purchaseId = mysqli_real_escape_string($this->link, $prodPurchase->purchaseId);
 			$cleanProdPurchase->productId = mysqli_real_escape_string($this->link, $prodPurchase->productId);
+			$cleanProdPurchase->serialNumber = mysqli_real_escape_string($this->link, $prodPurchase->serialNumber);
             
 			return $cleanProdPurchase;
 		}else{
@@ -39,7 +40,8 @@ class ProductPurchaseDataAccess extends DataAccess{
 		$cleanRow = [];
 		$cleanRow['ppId'] = htmlentities($row['ppId']);
         $cleanRow['purchaseId'] = htmlentities($row['purchaseId']);
-        $cleanRow['productId'] = htmlentities($row['productId']);
+		$cleanRow['productId'] = htmlentities($row['productId']);
+		$cleanRow['serialNumber'] = htmlentities($row['serialNumber']);
 
 		return $cleanRow;
     }
@@ -52,7 +54,7 @@ class ProductPurchaseDataAccess extends DataAccess{
 	* @return {array}		Returns an array of productPurchase objects
 	*/
 	function getAll($args = []){
-		$qStr = "SELECT ppId, purchaseId, productId FROM productpurchases";
+		$qStr = "SELECT ppId, purchaseId, productId, serialNumber FROM productpurchases";
 		//die($qStr);
 
 		//Many people run queries like this. Shows error messages to users. 
@@ -79,7 +81,7 @@ class ProductPurchaseDataAccess extends DataAccess{
 	*/
 	function getById($prodPurchaseId){
 		$cleanProdPurchaseId = $this->cleanDataGoingIntoDB($prodPurchaseId);
-		$qStr = "SELECT ppId, purchaseId, productId FROM productpurchases WHERE ppId = '$cleanProdPurchaseId'";
+		$qStr = "SELECT ppId, purchaseId, productId, serialNumber FROM productpurchases WHERE ppId = '$cleanProdPurchaseId'";
 
 		$result = mysqli_query($this->link, $qStr) or $this->handleError(mysqli_error($this->link));
 		if(mysqli_num_rows($result) == 1){
@@ -99,7 +101,7 @@ class ProductPurchaseDataAccess extends DataAccess{
 	*/
 	function getProductPurchaseByPurchaseId($purchaseId){
         $cleanProdPurchaseId = $this->cleanDataGoingIntoDB($purchaseId);
-		$qStr = "SELECT ppId, purchaseId, productId FROM productpurchases WHERE purchaseId = $cleanProdPurchaseId";
+		$qStr = "SELECT ppId, purchaseId, productId, serialNumber FROM productpurchases WHERE purchaseId = $cleanProdPurchaseId";
 
 		$result = mysqli_query($this->link, $qStr) or $this->handleError(mysqli_error($this->link));
 		$allProdPurchases = [];
@@ -112,7 +114,34 @@ class ProductPurchaseDataAccess extends DataAccess{
 			}
 		}
 		return $allProdPurchases;
-    }
+	}
+	
+	function getProductInfoFromPurchaseId($purchaseId){
+		$cleanPurchaseId = $this->cleanDataGoingIntoDB($purchaseId);
+		$qStr = "SELECT purchaseId, pps.productId, serialNumber, p.productName, p.consoleName
+				FROM productpurchases pps
+				JOIN products p 
+				on p.productId = pps.productId
+				WHERE purchaseId = $cleanPurchaseId";
+
+		$result = mysqli_query($this->link, $qStr) or $this->handleError(mysqli_error($this->link));
+		$allPurchasedProducts = [];
+		if(mysqli_num_rows($result)){
+			while($row = mysqli_fetch_assoc($result)){
+
+				$purchasedProduct = new stdClass;
+					$purchasedProduct->purchaseId = $row['purchaseId'];
+					$purchasedProduct->productId = $row['productId'];
+					$purchasedProduct->serialNumber = $row['serialNumber'];
+					$purchasedProduct->productName = $row['productName'];
+					$purchasedProduct->consoleName = $row['consoleName'];
+			
+				$allPurchasedProducts[] = $purchasedProduct;
+			}
+		}
+
+		return $allPurchasedProducts;
+	}
 
 
     
@@ -123,9 +152,10 @@ class ProductPurchaseDataAccess extends DataAccess{
 	*/
 	function insert($prodPurchase){
 		$cleanProdPurchase = $this->cleanDataGoingIntoDB($prodPurchase);
-		$qStr = "INSERT INTO productpurchases (purchaseId, productId) VALUES (
+		$qStr = "INSERT INTO productpurchases (purchaseId, productId, serialNumber) VALUES (
 			'{$cleanProdPurchase->purchaseId}',
-            '{$cleanProdPurchase->productId}'
+            '{$cleanProdPurchase->productId}',
+			'{$cleanProdPurchase->serialNumber}'
 		)";
 
 		$result = mysqli_query($this->link, $qStr) or $this->handleError(mysqli_error($this->link));
@@ -148,7 +178,8 @@ class ProductPurchaseDataAccess extends DataAccess{
 		$cleanProdPurchase = $this->cleanDataGoingIntoDB($prodPurchase);
 		$qStr = "UPDATE productpurchases SET 
 				purchaseId = '{$cleanProdPurchase->purchaseId}',
-                productId = '{$cleanProdPurchase->productId}'
+                productId = '{$cleanProdPurchase->productId}',
+				productId = '{$cleanProdPurchase->serialNumber}'
                 WHERE ppId = '{$cleanProdPurchase->ppId}'";
 
 		$result = mysqli_query($this->link, $qStr) or $this->handleError(mysqli_error($this->link));

@@ -1,9 +1,9 @@
-order trade ins
+order trade ins/purchases
 reports- pull data, queries
 
-returns/exchages
-delete data??
+returns/exchages - store dummy accounts
+delete data?? - not needed
 
 trade in comments
 
-purchase serial numbers
+purchase serial numbers - DONE

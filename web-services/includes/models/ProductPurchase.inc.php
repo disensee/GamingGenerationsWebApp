@@ -6,12 +6,14 @@ class ProductPurchase extends Model{
     public $ppId;
     public $purchaseId;
     public $productId;
+    public $serialNumber;
 
     //constructor
     public function __construct($args = []){
         $this->ppId = $args['ppId'] ?? 0;
         $this->purchaseId = $args['purchaseId'] ?? 0;
         $this->productId = $args['productId'] ?? 0;
+        $this->serialNumber = $args['serialNumber'] ?? 0;
     }
 
     public function isValid(){

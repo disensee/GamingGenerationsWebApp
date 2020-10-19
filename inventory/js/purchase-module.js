@@ -7,7 +7,7 @@ namespace.PurchaseModule = function(options){
     var callback = options.callback;
     var webServiceAddress = options.webServiceAddress || "https://localhost/GG/web-services/purchases/" //THIS IS REQUIRED!!
 
-    var ppWebServiceAddress = "https://localhost/GG/web-services/purchaseproducts/";
+    var ppWebServiceAddress = "https://localhost/GG/web-services/productpurchases/";
     //var ppWebServiceAddress = "https://www.dylanisensee.com/gg/web-services/tradeinproducts/";
 
     var customer = options.customer; //REQUIRED TO WORK PROPERLY
@@ -137,7 +137,7 @@ namespace.PurchaseModule = function(options){
     }
 
     function generatePurchaseList(purchases){
-        purchaseTableListContainer.innerHTML = `<p style="text-align:right;">${customer.customerFirstName} ${customer.customerLastName} - Trade Ins</p>`;
+        purchaseTableListContainer.innerHTML = `<p style="text-align:right;">${customer.customerFirstName} ${customer.customerLastName} - Purchases</p>`;
         var html = `<tr>
                         <th>Purchase Date</th>
                         <th>Employee</th>
@@ -198,6 +198,8 @@ namespace.PurchaseModule = function(options){
     }
 
     function populateFormFromSelectBox(){
+        txtSerialNumber.value = "";
+
         for(var i = 0; i < purchaseProducts.length; i++){
             if(purchaseProducts[i].productId == selProductList.value){
                 populatePpForm(purchaseProducts[i]);
@@ -233,8 +235,8 @@ namespace.PurchaseModule = function(options){
             leftColumnContainer: document.getElementById("left-column"),
             midColumnContainer : document.getElementById("mid-column"),
             rightColumnContainer: document.getElementById("right-column"),
-            //webServiceAddress: "https://localhost/GG/web-services/purchaseproducts/",
-            webServiceAddress: "https://www.dylanisensee.com/gg/web-services/purchaseproducts/",
+            webServiceAddress: "https://localhost/GG/web-services/productpurchases/",
+            //webServiceAddress: "https://www.dylanisensee.com/gg/web-services/productpurchases/",
             purchase: purchaseToAdd
         });
     }
@@ -247,7 +249,7 @@ namespace.PurchaseModule = function(options){
 		    midColumnContainer : document.getElementById("mid-column"),
 		    rightColumnContainer: document.getElementById("right-column"),
 		    //webServiceAddress: "https://localhost/GG/web-services/customers/"
-		    webServiceAddress: "https://www.dylanisensee.com/gg/web-services/customers/"
+		    //webServiceAddress: "https://www.dylanisensee.com/gg/web-services/customers/"
         });
     }
 

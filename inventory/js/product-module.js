@@ -64,6 +64,7 @@ namespace.ProductModule = function(options){
 
     var selectedProducts = [];
     var tradeInProducts = [];
+    var purchaseProducts = [];
 
     //right column buttons
     var btnAddToList;
@@ -83,6 +84,7 @@ namespace.ProductModule = function(options){
     var rbStoreCredit;
     var rbCash;
     var rbCheck;
+    var rbCredit;
 
     var rbGroup;
 
@@ -205,7 +207,9 @@ namespace.ProductModule = function(options){
                                 <button class="btn btn-outline-primary btn-sm" id="btnRemoveSelected">Remove Selected</button>
                                 <button class="btn btn-outline-danger btn-sm" id="btnClearAll">Clear All</button>
                             </td>
-                        </tr>
+                        </tr>`;
+
+        var rightComlumnTradeInTemplate = `
                         <tr>
                             <td><label for="item-trade-in-credit-value">Item Trade-In Credit Value:</label></td>
                             <td><input type="text" name="item-trade-in-credit-value" id="txtItemTradeInCreditValue" readonly="true"></td>
@@ -243,6 +247,7 @@ namespace.ProductModule = function(options){
                             <input type="number" id="txtCheckNumber" placeholder="Check #" style="width:40%;">
                             <span class="validation vTotalPaid"></span></td>
                         </tr>
+                        <tr>
                             <td></td>
                             <td>
                                 <input type="radio" value ="creditPaid" id="rbStoreCredit" name="tradeInPayment">
@@ -254,6 +259,7 @@ namespace.ProductModule = function(options){
                                 <input type="radio" value ="checkPaid" id="rbCheck" name="tradeInPayment">
                                 <label for="rbCheck">Check</label>
                             </td>
+                        </tr>
                         <tr>
                             <td><label for="txtEmployee">Employee:</label></td>
                             <td><input type="text" id="txtEmployee" placeholder="Employee Initials" style="width:50%;">
@@ -261,18 +267,57 @@ namespace.ProductModule = function(options){
                         </tr>
                         <tr>
                             <td colspan="2">
-                                <button style="margin: 25px auto 10px;; width:98%;"class="btn btn-outline-success btn-sm" id="btnTradeIn">Trade In</button>
-                                <button class="btn btn-outline-success btn-sm" id="btnSale">Sale</button>
+                                <button class="btn btn-outline-success btn-sm transaction-final" id="btnTradeIn">Trade In</button>
                             </td>
                         </tr>
                     </table>
                 
             </div>`;
 
+            var rightColumnPurchaseTemplate = `
+                    <tr>
+                        <td><label for="txtTotalPaid">TOTAL PAID:</label></td>
+                        <td><input type="number" name="trade-in-total-paid" id="txtTotalPaid" style="width:50%;">
+                        <span class="validation vTotalPaid"></span></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <input type="radio" value ="storeCreditReceived" id="rbStoreCredit" name="purchasePayment">
+                            <label for="rbStoreCredit">Store Credit</label>
+
+                            <input type="radio" value ="cashReceived" id="rbCash" name="purchasePayment">
+                            <label for="rbCash">Cash</label>
+
+                            <input type="radio" value ="creditReceived" id="rbCredit" name="purchasePayment">
+                            <label for="rbCredit">Credit</label>
+                        </td>
+                    </td>
+                    <tr>
+                        <td><label for="txtEmployee">Employee:</label></td>
+                        <td><input type="text" id="txtEmployee" placeholder="Employee Initials" style="width:50%;">
+                        <span class="validation vEmployee"></span></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <button class="btn btn-outline-success btn-sm transaction-final" id="btnSale">Sale</button>
+                        </td>
+                    </tr>
+                </table>
+            </div>`;
+
         //inject HTML
         leftColumnContainer.innerHTML = leftColumnContainerTemplate;
         midColumnContainer.innerHTML = midColumnContainerTemplate;
-        rightColumnContainer.innerHTML = rightColumnContainerTemplate;
+
+        if(tradeIn != null){
+            rightColumnContainer.innerHTML = rightColumnContainerTemplate + rightComlumnTradeInTemplate;
+        }
+
+        if(purchase != null){
+            rightColumnContainer.innerHTML = rightColumnContainerTemplate + rightColumnPurchaseTemplate;
+        }
+
         footer = document.querySelector("#footer");
         footer.innerHTML=`Gaming Generations &copy;2020`;
 
@@ -321,13 +366,13 @@ namespace.ProductModule = function(options){
         rbStoreCredit = rightColumnContainer.querySelector("#rbStoreCredit");
         rbCash = rightColumnContainer.querySelector("#rbCash");
         rbCheck = rightColumnContainer.querySelector("#rbCheck");
+        rbCredit = rightColumnContainer.querySelector("#rbCredit");
 
         rbGroup = document.querySelectorAll('input[name="tradeInPayment"]');
 
         txtTotalPaid = rightColumnContainer.querySelector("#txtTotalPaid");
 
-        txtCheckNumber = rightColumnContainer.querySelector("#txtCheckNumber");
-        txtCheckNumber.style.visibility="hidden";
+        
 
         txtEmployee = rightColumnContainer.querySelector("#txtEmployee");
 
@@ -345,19 +390,37 @@ namespace.ProductModule = function(options){
 
         if(tradeIn != null){
             btnTradeIn = rightColumnContainer.querySelector("#btnTradeIn").onclick = tradeInDBInsert;
-            btnSale = rightColumnContainer.querySelector("#btnSale").style.display = "none";
+            txtCheckNumber = rightColumnContainer.querySelector("#txtCheckNumber");
+            txtCheckNumber.style.visibility="hidden";
+
+            btnAddOneToTradeInValue = rightColumnContainer.querySelector("#btnAddOneToTradeInValue");
+            btnAddFiveToTradeInValue = rightColumnContainer.querySelector("#btnAddFiveToTradeInValue");
+            btnSubtractOneFromTradeInValue = rightColumnContainer.querySelector("#btnSubtractOneFromTradeInValue");
+            btnSubtractFiveFromTradeInValue = rightColumnContainer.querySelector("#btnSubtractFiveFromTradeInValue");
+            
+
+            btnAddOneToTradeInValue.addEventListener("click", function(event){
+                addOneToTradeInValue(totalTradeInCreditValue, totalTradeInCashValue);
+            });
+    
+            btnAddFiveToTradeInValue.addEventListener("click", function(event){
+                addFiveToTradeInValue(totalTradeInCreditValue, totalTradeInCashValue);
+            });
+    
+            btnSubtractOneFromTradeInValue.addEventListener("click", function(event){
+                removeOneFromTradeInValue(totalTradeInCreditValue, totalTradeInCashValue);
+            });
+    
+            btnSubtractFiveFromTradeInValue.addEventListener("click", function(event){
+                removeFiveFromTradeInValue(totalTradeInCreditValue, totalTradeInCashValue);
+            });
         }
 
         if(purchase != null){
-            btnSale = rightColumnContainer.querySelector("#btnSale").onclick = saleQuantityUpdate;
-            btnTrade = rightColumnContainer.querySelector("#btnTradeIn").style.display = "none";
+            btnSale = rightColumnContainer.querySelector("#btnSale").onclick = purchaseDbInsert;
         }
 
-        btnAddOneToTradeInValue = rightColumnContainer.querySelector("#btnAddOneToTradeInValue");
-        btnAddFiveToTradeInValue = rightColumnContainer.querySelector("#btnAddFiveToTradeInValue");
-        btnSubtractOneFromTradeInValue = rightColumnContainer.querySelector("#btnSubtractOneFromTradeInValue");
-        btnSubtractFiveFromTradeInValue = rightColumnContainer.querySelector("#btnSubtractFiveFromTradeInValue");
-        
+       
         //event handlers
         productTable.addEventListener("click", selectProductInList);
         selProductList.addEventListener("change", populateProductFormFromSelectBox);
@@ -375,21 +438,7 @@ namespace.ProductModule = function(options){
             }
         });
 
-        btnAddOneToTradeInValue.addEventListener("click", function(event){
-            addOneToTradeInValue(totalTradeInCreditValue, totalTradeInCashValue);
-        });
-
-        btnAddFiveToTradeInValue.addEventListener("click", function(event){
-            addFiveToTradeInValue(totalTradeInCreditValue, totalTradeInCashValue);
-        });
-
-        btnSubtractOneFromTradeInValue.addEventListener("click", function(event){
-            removeOneFromTradeInValue(totalTradeInCreditValue, totalTradeInCashValue);
-        });
-
-        btnSubtractFiveFromTradeInValue.addEventListener("click", function(event){
-            removeFiveFromTradeInValue(totalTradeInCreditValue, totalTradeInCashValue);
-        });
+       
 
         rbGroup.forEach(radio => radio.addEventListener("change", function(event){
             if(event.target.getAttribute("id") == "rbStoreCredit"){
@@ -516,6 +565,16 @@ namespace.ProductModule = function(options){
         return tradeInProduct;
     }
 
+    function createPpFromForm(){
+        var purchaseProduct = {
+            purchaseId: null,
+            productId: txtProductId.value,
+            serialNumber: txtSerialNumber.value
+        };
+
+        return purchaseProduct;
+    }
+
     function getAllProducts(){
         namespace.ajax.send({
             url: prodWebServiceAddress,
@@ -618,7 +677,7 @@ namespace.ProductModule = function(options){
                 headers: {"Content-Type": "application/json", "Accept": "application/json"},
                 requestBody: JSON.stringify(p),
                 callback: function(response){
-                    //console.log(response);
+                    console.log(response);
                 }
             });
             
@@ -637,27 +696,109 @@ namespace.ProductModule = function(options){
         returnToStart();
     }
 
-    function saleQuantityUpdate(){
+    function purchaseDbInsert(){
         if(selectedProducts.length > 0){
-            if(confirm("Are you sure you want to finalize this sale?")){
-                selectedProducts.forEach((p)=>{
-                    p.quantity = p.quantity - 1;
+            if(confirm("Are you sure you want to finalize this purchase?")){
+                
+                    var paymentMethod;
+                    if(rbCash.checked){
+                        paymentMethod = rbCash.value;
+                    }else if(rbStoreCredit.checked){
+                        paymentMethod = rbStoreCredit.value;
+                    }else{
+                        paymentMethod = rbCredit.value;
+                    }
+
+                    
+                    purchase.purchaseEmployee = txtEmployee.value.toUpperCase();
+                    purchase.totalPurchasePrice = parseFloat(txtTotalPaid.value).toFixed(2);
+
+                    if(paymentMethod == "cashReceived"){
+                        purchase.cashReceived = parseFloat(txtTotalPaid.value).toFixed(2);
+                    }else if(paymentMethod == "creditReceived"){
+                        purchase.creditReceived = parseFloat(txtTotalPaid.value).toFixed(2);
+                    }else{
+                        purchase.storeCreditReceived = parseFloat(txtTotalPaid.value).toFixed(2);
+                    }
+
                     namespace.ajax.send({
-                        url: prodWebServiceAddress + p.productId,
-                        method: "PUT",
+                        url: purchaseWebServiceAddress,
+                        method: "POST",
                         headers: {"Content-Type": "application/json", "Accept": "application/json"},
-                        requestBody: JSON.stringify(p),
+                        requestBody: JSON.stringify(purchase),
                         callback: function(response){
-                            //console.log(response);
+                            completedPurchase = JSON.parse(response);
+                            console.log(completedPurchase);
+                            productPurchaseDbInsert();
+                        },
+                        errorCallback: function(response){
+                            alert("PURCHASE ERROR: \n\r" + response);
                         }
                     });
-                    selectedProducts.length = 0;
-                    refreshSelectedProducts();
-                });
+                
             }
         }else{
-            alert("Please add product(s) to the transaction list.")
+            alert("Please add product(s) to the transaction list.");
         }
+    }
+
+    function productPurchaseDbInsert(){
+        purchaseProducts.forEach((pp) =>{
+            pp.purchaseId = completedPurchase.purchaseId;
+            console.log(pp);
+
+            namespace.ajax.send({
+                url: webServiceAddress,
+                method: "POST",
+                headers: {"Content-Type": "application/json", "Accept": "application/json"},
+                requestBody: JSON.stringify(pp),
+                callback: function(response){
+                    clearProductInfoTextBoxes();
+                    console.log(response);
+                    updatePurchaseQuantity();
+                },
+                errorCallback: function(response){
+                    alert("ERROR: " + response);
+                }
+            });
+        });
+    }
+
+    function updatePurchaseQuantity(){
+        var user = getUser();
+        selectedProducts.forEach((p)=>{
+            delete p.serialNumber;
+
+            if(user == "onalaska"){
+                p.onaQuantity--;
+            }else if(user == "eauClaire"){
+                p.ecQuantity--;
+            }else if(user == "stevensPoint"){
+                p.spQuantity--;
+            }else if(user == "sheboygan"){
+                p.shebQuantity--;
+            }
+
+            namespace.ajax.send({
+                url: prodWebServiceAddress + p.productId,
+                method: "PUT",
+                headers: {"Content-Type": "application/json", "Accept": "application/json"},
+                requestBody: JSON.stringify(p),
+                callback: function(response){
+                    console.log(response);
+                }
+            });
+            
+        });
+        selectedProducts.length = 0;
+        refreshSelectedProducts();
+        txtTotalPaid.value="";
+        rbStoreCredit.checked= false;
+        rbCash.checked = false;
+        rbCredit.checked = false;
+        txtEmployee.value="";
+        
+        returnToStart();
     }
 
     function getProductsByConsoleName(evt){
@@ -795,35 +936,61 @@ namespace.ProductModule = function(options){
             var product = createProductFromForm();
             selectedProducts.push(product);
 
-            var tradeInProduct = createTradeInProductFromForm();
-            tradeInProducts.push(tradeInProduct);
+            if(tradeIn != null && purchase == null){
+                var tradeInProduct = createTradeInProductFromForm();
+                tradeInProducts.push(tradeInProduct);
             
-            clearProductInfoTextBoxes();
-            refreshSelectedProducts();
-            calculateTradeInValue(selectedProducts);
-            txtItemTradeInCreditValue.value = "";
-            txtItemTradeInCashValue.value = "";
-            rowSerialNumber.style.display = "none";
+                //clearProductInfoTextBoxes();
+                //refreshSelectedProducts();
+                calculateTradeInValue(selectedProducts);
+                txtItemTradeInCreditValue.value = "";
+                txtItemTradeInCashValue.value = "";
+            }else if(purchase != null && tradeIn == null){
+                var purchaseProduct = createPpFromForm();
+                purchaseProducts.push(purchaseProduct);
+            }   
         }
+        clearProductInfoTextBoxes();
+        refreshSelectedProducts();
+        rowSerialNumber.style.display = "none";
     }
 
     function removeSelectedProduct(productId){
         for(var i = 0; i < selectedProducts.length; i++){
             if(productId == selectedProducts[i].productId){
                 selectedProducts.splice(i, 1);
+                break;
             }
         }
 
         refreshSelectedProducts();
-        calculateTradeInValue(selectedProducts);
-    }
 
+        if(tradeIn != null && purchase == null){
+            calculateTradeInValue(selectedProducts);
+            for(var i = 0; i < tradeInProducts.length; i++){
+                if(productId == tradeInProducts[i].productId){
+                    tradeInProducts.splice(i, 1);
+                    break;
+                }
+            }
+        }else if(purchase != null && tradeIn == null){
+            for(var i = 0; i < purchaseProducts.length; i++){
+                if(productId == purchaseProducts[i].productId){
+                    purchaseProducts.splice(i, 1);
+                    break;
+                }
+            }
+        }
+    }
     function removeSelectedClick(){
         if(selProductList.selectedIndex != -1){
             var id = selProductList.value;
             removeSelectedProduct(id);
-            txtItemTradeInCreditValue.value = "";
-            txtItemTradeInCashValue.value = "";
+
+            if(tradeIn != null && purchase == null){
+                txtItemTradeInCreditValue.value = "";
+                txtItemTradeInCashValue.value = "";
+            }
         }else{
             alert("Please select a product from the pending transaction list.")
         }
@@ -869,13 +1036,16 @@ namespace.ProductModule = function(options){
                     rowSerialNumber.style.display = "none";
                 }
                 populateProductForm(selectedProducts[i]);
-                calculateTradeInValue(selectedProducts);
+
+                if(tradeIn != null && purchase == null){
+                    calculateTradeInValue(selectedProducts);
+                }
             }
         }
     }
 
     function validateTransactionInfo(){
-        var regExp = /^[0-9]{12}$/;
+        //var regExp = /^[0-9]{12}$/;
         rightColumnContainer.querySelector(".vTotalPaid").innerHTML = "";
         rightColumnContainer.querySelector(".vEmployee").innerHTML = "";
 
@@ -1133,7 +1303,7 @@ namespace.ProductModule = function(options){
 		    midColumnContainer : document.getElementById("mid-column"),
 		    rightColumnContainer: document.getElementById("right-column"),
 		    //webServiceAddress: "https://localhost/GG/web-services/customers/"
-		    webServiceAddress: "https://www.dylanisensee.com/gg/web-services/customers/"
+		    //webServiceAddress: "https://www.dylanisensee.com/gg/web-services/customers/"
         });
     }
 
