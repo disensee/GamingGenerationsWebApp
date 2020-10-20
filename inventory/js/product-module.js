@@ -210,101 +210,100 @@ namespace.ProductModule = function(options){
                         </tr>`;
 
         var rightComlumnTradeInTemplate = `
-                        <tr>
-                            <td><label for="item-trade-in-credit-value">Item Trade-In Credit Value:</label></td>
-                            <td><input type="text" name="item-trade-in-credit-value" id="txtItemTradeInCreditValue" readonly="true"></td>
-                        </tr>
-                        <tr>
-                            <td><label for="item-trade-in-cash-value">Item Trade-In Cash Value:</label></td>
-                            <td><input type="text" name="item-trade-in-cash-value" id="txtItemTradeInCashValue" readonly="true"></td>
-                        </tr>
-                        <tr>
-                            <td><label for="trade-in-credit-value">Total Trade-In Credit Value:</label></td>
-                            <td><input type="text" name="trade-in-credit-value" id="txtTradeInCreditValue" readonly="true"></td>
-                        </tr>
-                        <tr>
-                            <td><label for="trade-in-cash-value">Total Trade-In Cash Value:</label></td>
-                            <td><input type="text" name="trade-in-cash-value" id="txtTradeInCashValue" readonly="true"></td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td>
-                                <button class="btn btn-outline-dark btn-sm" id="btnAddOneToTradeInValue">Add $1</button>
-                                <button class="btn btn-outline-dark btn-sm" id="btnSubtractOneFromTradeInValue">Subtract $1</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td>
-                                <button class="btn btn-outline-dark btn-sm" id="btnAddFiveToTradeInValue">Add $5</button>
-                                <button class="btn btn-outline-dark btn-sm" id="btnSubtractFiveFromTradeInValue">Subtract $5</button>
-                            </td>
-                        </tr>
-                        <tr>
-                        <tr>
-                            <td><label for="txtTotalPaid">TOTAL PAID:</label></td>
-                            <td><input type="number" name="trade-in-total-paid" id="txtTotalPaid" style="width:50%;">
-                            <input type="number" id="txtCheckNumber" placeholder="Check #" style="width:40%;">
-                            <span class="validation vTotalPaid"></span></td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td>
-                                <input type="radio" value ="creditPaid" id="rbStoreCredit" name="tradeInPayment">
-                                <label for="rbStoreCredit">Store Credit</label>
-
-                                <input type="radio" value ="cashPaid" id="rbCash" name="tradeInPayment">
-                                <label for="rbCash">Cash</label>
-
-                                <input type="radio" value ="checkPaid" id="rbCheck" name="tradeInPayment">
-                                <label for="rbCheck">Check</label>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><label for="txtEmployee">Employee:</label></td>
-                            <td><input type="text" id="txtEmployee" placeholder="Employee Initials" style="width:50%;">
-                            <span class="validation vEmployee"></span></td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">
-                                <button class="btn btn-outline-success btn-sm transaction-final" id="btnTradeIn">Trade In</button>
-                            </td>
-                        </tr>
-                    </table>
-                
-            </div>`;
-
-            var rightColumnPurchaseTemplate = `
-                    <tr>
-                        <td><label for="txtTotalPaid">TOTAL PAID:</label></td>
-                        <td><input type="number" name="trade-in-total-paid" id="txtTotalPaid" style="width:50%;">
-                        <span class="validation vTotalPaid"></span></td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td>
-                            <input type="radio" value ="storeCreditReceived" id="rbStoreCredit" name="purchasePayment">
-                            <label for="rbStoreCredit">Store Credit</label>
-
-                            <input type="radio" value ="cashReceived" id="rbCash" name="purchasePayment">
-                            <label for="rbCash">Cash</label>
-
-                            <input type="radio" value ="creditReceived" id="rbCredit" name="purchasePayment">
-                            <label for="rbCredit">Credit</label>
-                        </td>
+                <tr>
+                    <td><label for="item-trade-in-credit-value">Item Trade-In Credit Value:</label></td>
+                    <td><input type="text" name="item-trade-in-credit-value" id="txtItemTradeInCreditValue" readonly="true"></td>
+                </tr>
+                <tr>
+                    <td><label for="item-trade-in-cash-value">Item Trade-In Cash Value:</label></td>
+                    <td><input type="text" name="item-trade-in-cash-value" id="txtItemTradeInCashValue" readonly="true"></td>
+                </tr>
+                <tr>
+                    <td><label for="trade-in-credit-value">Total Trade-In Credit Value:</label></td>
+                    <td><input type="text" name="trade-in-credit-value" id="txtTradeInCreditValue" readonly="true"></td>
+                </tr>
+                <tr>
+                    <td><label for="trade-in-cash-value">Total Trade-In Cash Value:</label></td>
+                    <td><input type="text" name="trade-in-cash-value" id="txtTradeInCashValue" readonly="true"></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <button class="btn btn-outline-dark btn-sm" id="btnAddOneToTradeInValue">Add $1</button>
+                        <button class="btn btn-outline-dark btn-sm" id="btnSubtractOneFromTradeInValue">Subtract $1</button>
                     </td>
-                    <tr>
-                        <td><label for="txtEmployee">Employee:</label></td>
-                        <td><input type="text" id="txtEmployee" placeholder="Employee Initials" style="width:50%;">
-                        <span class="validation vEmployee"></span></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">
-                            <button class="btn btn-outline-success btn-sm transaction-final" id="btnSale">Sale</button>
-                        </td>
-                    </tr>
-                </table>
-            </div>`;
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <button class="btn btn-outline-dark btn-sm" id="btnAddFiveToTradeInValue">Add $5</button>
+                        <button class="btn btn-outline-dark btn-sm" id="btnSubtractFiveFromTradeInValue">Subtract $5</button>
+                    </td>
+                </tr>
+                <tr>
+                <tr>
+                    <td><label for="txtTotalPaid">TOTAL PAID:</label></td>
+                    <td><input type="number" name="trade-in-total-paid" id="txtTotalPaid" style="width:50%;">
+                    <input type="number" id="txtCheckNumber" placeholder="Check #" style="width:40%;">
+                    <span class="validation vTotalPaid"></span></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <input type="radio" value ="creditPaid" id="rbStoreCredit" name="tradeInPayment">
+                        <label for="rbStoreCredit">Store Credit</label>
+
+                        <input type="radio" value ="cashPaid" id="rbCash" name="tradeInPayment">
+                        <label for="rbCash">Cash</label>
+
+                        <input type="radio" value ="checkPaid" id="rbCheck" name="tradeInPayment">
+                        <label for="rbCheck">Check</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="txtEmployee">Employee:</label></td>
+                    <td><input type="text" id="txtEmployee" placeholder="Employee Initials" style="width:50%;">
+                    <span class="validation vEmployee"></span></td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <button class="btn btn-outline-success btn-sm transaction-final" id="btnTradeIn">Trade In</button>
+                    </td>
+                </tr>
+            </table>
+        </div>`;
+
+        var rightColumnPurchaseTemplate = `
+                <tr>
+                    <td><label for="txtTotalPaid">TOTAL PAID:</label></td>
+                    <td><input type="number" name="trade-in-total-paid" id="txtTotalPaid" style="width:50%;">
+                    <span class="validation vTotalPaid"></span></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <input type="radio" value ="storeCreditReceived" id="rbStoreCredit" name="purchasePayment">
+                        <label for="rbStoreCredit">Store Credit</label>
+
+                        <input type="radio" value ="cashReceived" id="rbCash" name="purchasePayment">
+                        <label for="rbCash">Cash</label>
+
+                        <input type="radio" value ="creditReceived" id="rbCredit" name="purchasePayment">
+                        <label for="rbCredit">Credit</label>
+                    </td>
+                </td>
+                <tr>
+                    <td><label for="txtEmployee">Employee:</label></td>
+                    <td><input type="text" id="txtEmployee" placeholder="Employee Initials" style="width:50%;">
+                    <span class="validation vEmployee"></span></td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <button class="btn btn-outline-success btn-sm transaction-final" id="btnSale">Sale</button>
+                    </td>
+                </tr>
+            </table>
+        </div>`;
 
         //inject HTML
         leftColumnContainer.innerHTML = leftColumnContainerTemplate;
@@ -699,7 +698,7 @@ namespace.ProductModule = function(options){
     function purchaseDbInsert(){
         if(selectedProducts.length > 0){
             if(confirm("Are you sure you want to finalize this purchase?")){
-                
+                if(validateTransactionInfo()){
                     var paymentMethod;
                     if(rbCash.checked){
                         paymentMethod = rbCash.value;
@@ -735,7 +734,7 @@ namespace.ProductModule = function(options){
                             alert("PURCHASE ERROR: \n\r" + response);
                         }
                     });
-                
+                }
             }
         }else{
             alert("Please add product(s) to the transaction list.");
@@ -1045,15 +1044,23 @@ namespace.ProductModule = function(options){
     }
 
     function validateTransactionInfo(){
-        //var regExp = /^[0-9]{12}$/;
         rightColumnContainer.querySelector(".vTotalPaid").innerHTML = "";
         rightColumnContainer.querySelector(".vEmployee").innerHTML = "";
 
-
-        if(rbStoreCredit.checked == false && rbCash.checked == false && rbCheck.checked == false){
-            alert("Please select a method of payment.");
-            return false;
+        if(tradeIn != null && purchase == null){
+            if(rbStoreCredit.checked == false && rbCash.checked == false && rbCheck.checked == false){
+                alert("Please select a method of payment.");
+                return false;
+            }
         }
+        
+        if(purchase != null && tradeIn == null){
+            if(rbStoreCredit.checked == false && rbCash.checked == false && rbCredit.checked == false){
+                alert("Please select a method of payment.");
+                return false;
+            }
+        }
+
 
         if(txtTotalPaid.value == ""){
             rightColumnContainer.querySelector(".vTotalPaid").innerHTML = "Please enter a total amount";

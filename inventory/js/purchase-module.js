@@ -17,6 +17,7 @@ namespace.PurchaseModule = function(options){
     //mid column vars
     var purchaseTableListContainer;
     var purchaseTable;
+    var purchaseTableRow;
 
     var btnBack;
     var btnNewPurchase;
@@ -28,7 +29,8 @@ namespace.PurchaseModule = function(options){
 
 
     initialize();
-
+    
+    
     function initialize(){
         leftColumnContainer.innerHTML = "";
         midColumnContainer.innerHTML = "";
@@ -73,6 +75,7 @@ namespace.PurchaseModule = function(options){
 
         purchaseTableListContainer = midColumnContainer.querySelector('#mid-table-list');
         purchaseTable = midColumnContainer.querySelector('#mid-table');
+        
 
         btnBack = midColumnContainer.querySelector("#btnBack");
         btnNewPurchase = midColumnContainer.querySelector("#btnNewPurchase");
@@ -139,7 +142,12 @@ namespace.PurchaseModule = function(options){
     function generatePurchaseList(purchases){
         purchaseTableListContainer.innerHTML = `<p style="text-align:right;">${customer.customerFirstName} ${customer.customerLastName} - Purchases</p>`;
         var html = `<tr>
-                        <th>Purchase Date</th>
+                        <th>Purchase Date
+                            <div class="icons">
+                                <i class="fas fa-angle-up"></i>
+                                <i class="fas fa-angle-down"></i>
+                            </div>
+                        </th>
                         <th>Employee</th>
                         <th>Cash Received</th>
                         <th>Credit Received</th>
@@ -194,6 +202,7 @@ namespace.PurchaseModule = function(options){
 
         purchaseTable.innerHTML = html;
         purchaseTableListContainer.appendChild(purchaseTable);
+
         return purchaseTable;
     }
 
@@ -223,7 +232,7 @@ namespace.PurchaseModule = function(options){
         var purchaseToAdd = {
             purchaseId: 0,
             customerId: customer.customerId,
-            purchaseDateTime: new Date(),
+            //purchaseDateTime: new Date(),
             purchaseEmployee: "GG",
             cashReceived: 0.00,
             creditReceived: 0.00,

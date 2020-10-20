@@ -12,6 +12,11 @@ table th{
     font-size: 15px;
 }
 
+table th .fas{
+   padding: 0 7px;
+}
+
+
 /**********************************CLASS SELECTORS*****************************************/
 .column{
     background-color: lightgray;
@@ -48,6 +53,12 @@ table th{
 .mid-button-container{
     margin: 5px 0 0 0;
     text-align: right;
+}
+
+.icons {
+    display: inline;
+    float: right;
+    margin-right: 15px;
 }
 
 .info{

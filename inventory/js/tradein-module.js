@@ -246,7 +246,7 @@ namespace.TradeInModule = function(options){
         var tradeInToAdd = {
             tradeInId: 0,
             customerId: customer.customerId,
-            tradeInDateTime: new Date(),
+            //tradeInDateTime: new Date(),
             tradeInEmployee: "GG",
             cashPaid: 0.00,
             creditPaid: 0.00,
