@@ -457,7 +457,7 @@ namespace.CustomerModule = function(options){
             	midColumnContainer : document.getElementById("mid-column"),
             	rightColumnContainer: document.getElementById("right-column"),
                 //webServiceAddress: "https://localhost/GG/web-services/tradeins/",
-                //webServiceAddress: "https://www.dylanisensee.com/gg/web-services/tradeins/",
+                webServiceAddress: "https://www.dylanisensee.com/gg/web-services/tradeins/",
                 customer: customerForTransaction
             });
     }
@@ -469,11 +469,8 @@ namespace.CustomerModule = function(options){
             	midColumnContainer : document.getElementById("mid-column"),
             	rightColumnContainer: document.getElementById("right-column"),
                 //webServiceAddress: "https://localhost/GG/web-services/purchases/",
-                //webServiceAddress: "https://www.dylanisensee.com/gg/web-services/purchases/",
+                webServiceAddress: "https://www.dylanisensee.com/gg/web-services/purchases/",
                 customer: customerForTransaction
             });
     }
-
-    //return rturn;
-
 };

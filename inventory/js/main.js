@@ -1,29 +1,14 @@
 window.addEventListener("load", function(){
-	var customer;
-	var tim;
+	
+	goToCustomerModule();
 
-	customer = namespace.CustomerModule({
-		leftColumnContainer: document.getElementById("left-column"),
-		midColumnContainer : document.getElementById("mid-column"),
-		rightColumnContainer: document.getElementById("right-column"),
-		//webServiceAddress: "https://localhost/GG/web-services/customers/"
-		//webServiceAddress: "https://www.dylanisensee.com/gg/web-services/customers/"
-	});
+	document.querySelector("#gg-logo").addEventListener("click", goToCustomerModule);
 
 	document.querySelector(".logout").addEventListener("click", function(event){
 		sessionStorage.clear();
 		removeCookie("ggUserName");
 	});
 
-	document.querySelector("#gg-logo").addEventListener("click", function(){
-		namespace.CustomerModule({
-			leftColumnContainer: document.getElementById("left-column"),
-			midColumnContainer : document.getElementById("mid-column"),
-			rightColumnContainer: document.getElementById("right-column"),
-			//webServiceAddress: "https://localhost/GG/web-services/customers/"
-			//webServiceAddress: "https://www.dylanisensee.com/gg/web-services/customers/"
-		});
-	});
 
 	function removeCookie(cookieName){
 		cookieValue = "";
@@ -33,5 +18,16 @@ window.addEventListener("load", function(){
     	var expires = "; expires="+date.toGMTString();
     	document.cookie = cookieName+"="+JSON.stringify(cookieValue)+expires+"; path=/";
 	}
+
+	function goToCustomerModule(){
+		namespace.CustomerModule({
+			leftColumnContainer: document.getElementById("left-column"),
+			midColumnContainer : document.getElementById("mid-column"),
+			rightColumnContainer: document.getElementById("right-column"),
+			//webServiceAddress: "https://localhost/GG/web-services/customers/"
+			webServiceAddress: "https://www.dylanisensee.com/gg/web-services/customers/"
+		});
+	}
 	
 });
+

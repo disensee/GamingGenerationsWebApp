@@ -7,8 +7,8 @@ namespace.TradeInModule = function(options){
     var callback = options.callback;
     var webServiceAddress = options.webServiceAddress || "https://localhost/GG/web-services/tradeins/" //THIS IS REQUIRED!!
 
-    var tipWebServiceAddress = "https://localhost/GG/web-services/tradeinproducts/";
-    //var tipWebServiceAddress = "https://www.dylanisensee.com/gg/web-services/tradeinproducts/";
+    //var tipWebServiceAddress = "https://localhost/GG/web-services/tradeinproducts/";
+    var tipWebServiceAddress = "https://www.dylanisensee.com/gg/web-services/tradeinproducts/";
 
     var customer = options.customer; //REQUIRED TO WORK PROPERLY
 
@@ -342,8 +342,8 @@ namespace.TradeInModule = function(options){
             leftColumnContainer: document.getElementById("left-column"),
             midColumnContainer : document.getElementById("mid-column"),
             rightColumnContainer: document.getElementById("right-column"),
-            webServiceAddress: "https://localhost/GG/web-services/tradeinproducts/",
-            //webServiceAddress: "https://www.dylanisensee.com/gg/web-services/tradeinproducts/",
+            //webServiceAddress: "https://localhost/GG/web-services/tradeinproducts/",
+            webServiceAddress: "https://www.dylanisensee.com/gg/web-services/tradeinproducts/",
             tradeIn: tradeInToAdd
         });
     }
@@ -355,8 +355,8 @@ namespace.TradeInModule = function(options){
             leftColumnContainer: document.getElementById("left-column"),
 		    midColumnContainer : document.getElementById("mid-column"),
 		    rightColumnContainer: document.getElementById("right-column"),
-		    webServiceAddress: "https://localhost/GG/web-services/customers/"
-		    //webServiceAddress: "https://www.dylanisensee.com/gg/web-services/customers/"
+		    //webServiceAddress: "https://localhost/GG/web-services/customers/"
+		    webServiceAddress: "https://www.dylanisensee.com/gg/web-services/customers/"
         });
     }
 
