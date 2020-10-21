@@ -1,4 +1,4 @@
-order trade ins/purchases
+order trade ins/purchases - DONE
 reports- pull data, queries
 
 returns/exchages - store dummy accounts

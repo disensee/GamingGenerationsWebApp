@@ -26,6 +26,10 @@ namespace.ProductModule = function(options){
     var completedTradeIn;
     var productTableListContainer;
     
+
+    var selectedProducts = [];
+    var tradeInProducts = [];
+    var purchaseProducts = [];
     //left column search vars
     var consoleSelectBox;
     var txtSearchProduct;
@@ -62,9 +66,7 @@ namespace.ProductModule = function(options){
     var txtCheckNumber;
     var txtEmployee;
 
-    var selectedProducts = [];
-    var tradeInProducts = [];
-    var purchaseProducts = [];
+    var taComments;
 
     //right column buttons
     var btnAddToList;
@@ -197,7 +199,7 @@ namespace.ProductModule = function(options){
                         </tr>
                         <tr>
                             <td colspan="2">
-                                <select id="selProductList" size=15 name="item-list" style="width:500px; height:200px;">
+                                <select id="selProductList" size=15 name="item-list" style="width:100%; height:200px;">
                                 </select>
                             </td>
                         </tr>
@@ -264,6 +266,14 @@ namespace.ProductModule = function(options){
                     <td><label for="txtEmployee">Employee:</label></td>
                     <td><input type="text" id="txtEmployee" placeholder="Employee Initials" style="width:50%;">
                     <span class="validation vEmployee"></span></td>
+                </tr>
+                <tr>
+                    <td><label for="taComments">Comments:</label></td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <textarea id="taComments" style="width:100%; height:100px;"></textarea>
+                    </td>
                 </tr>
                 <tr>
                     <td colspan="2">
@@ -357,22 +367,12 @@ namespace.ProductModule = function(options){
 
         selProductList = rightColumnContainer.querySelector("#selProductList");
 
-        txtTradeInCreditValue = rightColumnContainer.querySelector("#txtTradeInCreditValue");
-        txtTradeInCashValue = rightColumnContainer.querySelector("#txtTradeInCashValue");
-        txtItemTradeInCreditValue = rightColumnContainer.querySelector("#txtItemTradeInCreditValue");
-        txtItemTradeInCashValue = rightColumnContainer.querySelector("#txtItemTradeInCashValue");
-
         rbStoreCredit = rightColumnContainer.querySelector("#rbStoreCredit");
         rbCash = rightColumnContainer.querySelector("#rbCash");
-        rbCheck = rightColumnContainer.querySelector("#rbCheck");
-        rbCredit = rightColumnContainer.querySelector("#rbCredit");
-
+       
         rbGroup = document.querySelectorAll('input[name="tradeInPayment"]');
 
         txtTotalPaid = rightColumnContainer.querySelector("#txtTotalPaid");
-
-        
-
         txtEmployee = rightColumnContainer.querySelector("#txtEmployee");
 
         //right column buttons
@@ -387,8 +387,13 @@ namespace.ProductModule = function(options){
             calculateTradeInValue(selectedProducts);
         };
 
-        if(tradeIn != null){
-            btnTradeIn = rightColumnContainer.querySelector("#btnTradeIn").onclick = tradeInDBInsert;
+        if(tradeIn != null && purchase == null){
+
+            txtTradeInCreditValue = rightColumnContainer.querySelector("#txtTradeInCreditValue");
+            txtTradeInCashValue = rightColumnContainer.querySelector("#txtTradeInCashValue");
+            txtItemTradeInCreditValue = rightColumnContainer.querySelector("#txtItemTradeInCreditValue");
+            txtItemTradeInCashValue = rightColumnContainer.querySelector("#txtItemTradeInCashValue");
+           
             txtCheckNumber = rightColumnContainer.querySelector("#txtCheckNumber");
             txtCheckNumber.style.visibility="hidden";
 
@@ -396,26 +401,34 @@ namespace.ProductModule = function(options){
             btnAddFiveToTradeInValue = rightColumnContainer.querySelector("#btnAddFiveToTradeInValue");
             btnSubtractOneFromTradeInValue = rightColumnContainer.querySelector("#btnSubtractOneFromTradeInValue");
             btnSubtractFiveFromTradeInValue = rightColumnContainer.querySelector("#btnSubtractFiveFromTradeInValue");
+
+            rbCheck = rightColumnContainer.querySelector("#rbCheck");
+
+            taComments = rightColumnContainer.querySelector('#taComments');
             
 
-            btnAddOneToTradeInValue.addEventListener("click", function(event){
+            btnAddOneToTradeInValue.addEventListener("click", function(){
                 addOneToTradeInValue(totalTradeInCreditValue, totalTradeInCashValue);
             });
     
-            btnAddFiveToTradeInValue.addEventListener("click", function(event){
+            btnAddFiveToTradeInValue.addEventListener("click", function(){
                 addFiveToTradeInValue(totalTradeInCreditValue, totalTradeInCashValue);
             });
     
-            btnSubtractOneFromTradeInValue.addEventListener("click", function(event){
+            btnSubtractOneFromTradeInValue.addEventListener("click", function(){
                 removeOneFromTradeInValue(totalTradeInCreditValue, totalTradeInCashValue);
             });
     
-            btnSubtractFiveFromTradeInValue.addEventListener("click", function(event){
+            btnSubtractFiveFromTradeInValue.addEventListener("click", function(){
                 removeFiveFromTradeInValue(totalTradeInCreditValue, totalTradeInCashValue);
             });
+
+            btnTradeIn = rightColumnContainer.querySelector("#btnTradeIn").onclick = tradeInDBInsert;
         }
 
         if(purchase != null){
+            rbCredit = rightColumnContainer.querySelector("#rbCredit");
+
             btnSale = rightColumnContainer.querySelector("#btnSale").onclick = purchaseDbInsert;
         }
 
@@ -602,6 +615,7 @@ namespace.ProductModule = function(options){
                     
                     tradeIn.tradeInEmployee = txtEmployee.value.toUpperCase();
                     tradeIn.totalPaid = parseFloat(txtTotalPaid.value).toFixed(2);
+                    tradeIn.comments = taComments.value;
 
                     if(paymentMethod == "cashPaid"){
                         tradeIn.cashPaid = parseFloat(txtTotalPaid.value).toFixed(2);

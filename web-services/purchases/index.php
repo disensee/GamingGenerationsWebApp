@@ -54,6 +54,30 @@ switch($method){
         echo($json);
         die();
       }
+    }else if(preg_match('/^customerascending([0-9]*\/?)$/', $url_path, $matches)){ 
+      $customerId = $matches[1];
+      $purchase = $da->getPurchaseByCustomerIdAscending($customerId);
+      if($purchase == false){
+        header('HTTP/1.1 404 Not Found', true, 404);
+        die();
+      }else{
+        $json = json_encode($purchase);
+        header("Content-Type: application/json");
+        echo($json);
+        die();
+      }
+    }else if(preg_match('/^customerdescending([0-9]*\/?)$/', $url_path, $matches)){ 
+      $customerId = $matches[1];
+      $purchase = $da->getPurchaseByCustomerIdDescending($customerId);
+      if($purchase == false){
+        header('HTTP/1.1 404 Not Found', true, 404);
+        die();
+      }else{
+        $json = json_encode($purchase);
+        header("Content-Type: application/json");
+        echo($json);
+        die();
+      }
     }else{
       header('HTTP/1.1 400 - Invalid Request', true, 400);
       die();

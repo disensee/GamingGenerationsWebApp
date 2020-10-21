@@ -81,8 +81,7 @@ class PurchaseDataAccess extends DataAccess{
 		}
 		return $allPurchases;
 	}
-	
-    
+	    
     /**
 	* Gets a purchase from the database by its id
 	* @param {number} 	 The id of the purchase to get from a row in the database
@@ -110,7 +109,6 @@ class PurchaseDataAccess extends DataAccess{
 	*/
 
 	function getPurchaseByCustomerId($customerId){
-		//$cda = new CustomerDataAccess(get_link());
         $cleanCustomerId = $this->cleanDataGoingIntoDB($customerId);
 		$qStr = "SELECT purchaseId, customerId, purchaseDateTime, purchaseEmployee, cashReceived, creditReceived, storeCreditReceived, totalPurchasePrice FROM purchases WHERE customerId = '$cleanCustomerId'";
 
@@ -119,10 +117,42 @@ class PurchaseDataAccess extends DataAccess{
 		if(mysqli_num_rows($result)){
 			while($row = mysqli_fetch_assoc($result)){
 				$cleanRow = $this->cleanDataComingFromDB($row);
-				//$customer = $cda->getById($cleanCustomerId);
 				$purchase = new Purchase($cleanRow);
 
-				//$allPurchasesByCustomer[] = $customer;
+				$allPurchasesByCustomer[] = $purchase;
+			}
+		}
+		return $allPurchasesByCustomer;
+	}
+	
+	function getPurchaseByCustomerIdAscending($customerId){
+        $cleanCustomerId = $this->cleanDataGoingIntoDB($customerId);
+		$qStr = "SELECT purchaseId, customerId, purchaseDateTime, purchaseEmployee, cashReceived, creditReceived, storeCreditReceived, totalPurchasePrice FROM purchases WHERE customerId = '$cleanCustomerId' ORDER BY purchaseDateTime ASC";
+
+		$result = mysqli_query($this->link, $qStr) or $this->handleError(mysqli_error($this->link));
+		$allPurchasesByCustomer = [];
+		if(mysqli_num_rows($result)){
+			while($row = mysqli_fetch_assoc($result)){
+				$cleanRow = $this->cleanDataComingFromDB($row);
+				$purchase = new Purchase($cleanRow);
+
+				$allPurchasesByCustomer[] = $purchase;
+			}
+		}
+		return $allPurchasesByCustomer;
+	}
+	
+	function getPurchaseByCustomerIdDescending($customerId){
+        $cleanCustomerId = $this->cleanDataGoingIntoDB($customerId);
+		$qStr = "SELECT purchaseId, customerId, purchaseDateTime, purchaseEmployee, cashReceived, creditReceived, storeCreditReceived, totalPurchasePrice FROM purchases WHERE customerId = '$cleanCustomerId' ORDER BY purchaseDateTime DESC";
+
+		$result = mysqli_query($this->link, $qStr) or $this->handleError(mysqli_error($this->link));
+		$allPurchasesByCustomer = [];
+		if(mysqli_num_rows($result)){
+			while($row = mysqli_fetch_assoc($result)){
+				$cleanRow = $this->cleanDataComingFromDB($row);
+				$purchase = new Purchase($cleanRow);
+
 				$allPurchasesByCustomer[] = $purchase;
 			}
 		}

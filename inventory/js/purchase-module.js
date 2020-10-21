@@ -19,6 +19,9 @@ namespace.PurchaseModule = function(options){
     var purchaseTable;
     var purchaseTableRow;
 
+    var ascendArrow;
+    var descendArrow;
+
     var btnBack;
     var btnNewPurchase;
 
@@ -84,7 +87,7 @@ namespace.PurchaseModule = function(options){
         selProductList = rightColumnContainer.querySelector("#selProductList");
 
         //eventHandlers
-        purchaseTable.addEventListener("click", populateProdsByPurchase);
+        //purchaseTable.addEventListener("click", populateProdsByPurchase);
         selProductList.addEventListener("change", populateFormFromSelectBox);
         btnNewPurchase.addEventListener("click", createNewPurchase);
         btnBack.addEventListener("click", backToCustomerModule);
@@ -97,6 +100,44 @@ namespace.PurchaseModule = function(options){
         if(customerId != 0){
             namespace.ajax.send({
                 url: webServiceAddress + "customer" + customerId,
+                method: "GET",
+                headers: {"Content-Type": "application/json", "Accept": "application/json"},
+                callback: function(response){
+                    var purchases = JSON.parse(response);
+                    generatePurchaseList(purchases);
+                },
+                errorCallback: function(){
+                    purchaseTableListContainer.innerHTML += `<p style="text-align:right;">Customer does not have any purchases.</p>`
+                }
+            });
+        }else{
+            alert("ERROR: Customer object is undefined. Please refresh and chooose a customer.");
+        }
+    }
+
+    function sortPurchasesAscending(customerId){
+        if(customerId != 0){
+            namespace.ajax.send({
+                url: webServiceAddress + "customerascending" + customerId,
+                method: "GET",
+                headers: {"Content-Type": "application/json", "Accept": "application/json"},
+                callback: function(response){
+                    var purchases = JSON.parse(response);
+                    generatePurchaseList(purchases);
+                },
+                errorCallback: function(){
+                    purchaseTableListContainer.innerHTML += `<p style="text-align:right;">Customer does not have any purchases.</p>`
+                }
+            });
+        }else{
+            alert("ERROR: Customer object is undefined. Please refresh and chooose a customer.");
+        }
+    }
+
+    function sortPurchasesDescending(customerId){
+        if(customerId != 0){
+            namespace.ajax.send({
+                url: webServiceAddress + "customerdescending" + customerId,
                 method: "GET",
                 headers: {"Content-Type": "application/json", "Accept": "application/json"},
                 callback: function(response){
@@ -144,8 +185,8 @@ namespace.PurchaseModule = function(options){
         var html = `<tr>
                         <th>Purchase Date
                             <div class="icons">
-                                <i class="fas fa-angle-up"></i>
-                                <i class="fas fa-angle-down"></i>
+                                <i class="fas fa-angle-up ascend"></i>
+                                <i class="fas fa-angle-down descend"></i>
                             </div>
                         </th>
                         <th>Employee</th>
@@ -203,6 +244,18 @@ namespace.PurchaseModule = function(options){
         purchaseTable.innerHTML = html;
         purchaseTableListContainer.appendChild(purchaseTable);
 
+        purchaseTableRow = midColumnContainer.querySelectorAll('.mid-table-row');
+        ascendArrow = midColumnContainer.querySelector('.ascend');
+        descendArrow = midColumnContainer.querySelector('.descend');
+        
+        ascendArrow.addEventListener('click', function(){sortPurchasesAscending(customer.customerId)});
+        descendArrow.addEventListener('click', function(){sortPurchasesDescending(customer.customerId)});
+
+
+        for(const row of purchaseTableRow) {
+            row.addEventListener('click', populateProdsByPurchase);
+        }
+
         return purchaseTable;
     }
 
@@ -244,7 +297,7 @@ namespace.PurchaseModule = function(options){
             leftColumnContainer: document.getElementById("left-column"),
             midColumnContainer : document.getElementById("mid-column"),
             rightColumnContainer: document.getElementById("right-column"),
-            webServiceAddress: "https://localhost/GG/web-services/productpurchases/",
+            //webServiceAddress: "https://localhost/GG/web-services/productpurchases/",
             //webServiceAddress: "https://www.dylanisensee.com/gg/web-services/productpurchases/",
             purchase: purchaseToAdd
         });

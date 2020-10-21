@@ -12,16 +12,8 @@ class TradeIn extends Model{
     public $checkPaid;
     public $checkNumber;
     public $totalPaid;
+    public $comments;
 
-    //set datetime
-    public function createDateTimeNow(){
-        $tz_object = new DateTimeZone('America/Chicago');
-        //default timezone is central time
-
-        $dateTime = new DateTime();
-        $dateTime->setTimezone($tz_object);
-        return $dateTime->format('Y-m-d H:i:s');
-    }
 
     //Constructor
     public function __construct($args = []){
@@ -34,6 +26,8 @@ class TradeIn extends Model{
         $this->checkPaid = $args['checkPaid'] ?? 0.00;
         $this->checkNumber = $args['checkNumber'] ?? "";
         $this->totalPaid = $args['totalPaid'] ?? ($this->creditPaid+$this->cashPaid+$this->checkPaid);
+        $this->comments = $args['comments'] ?? null;
+
     }
 
     public function isValid(){

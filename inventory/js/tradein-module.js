@@ -18,6 +18,11 @@ namespace.TradeInModule = function(options){
     var tradeInTableListContainer;
     var tradeInTable;
 
+    var tradeInTableRow;
+
+    var ascendArrow;
+    var descendArrow;
+
     var btnBack;
     var btnNewTradeIn;
 
@@ -28,7 +33,7 @@ namespace.TradeInModule = function(options){
     var txtCreditValue;
 
     var selProductList;
-
+    var taComments;
 
     initialize();
 
@@ -76,6 +81,15 @@ namespace.TradeInModule = function(options){
                                 </select>
                             </td>
                         </tr>
+                        <tr>
+                            <td><label for="taComments">Comments:</label></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <textarea id="taComments" readonly="true" style="width:100%; height:100px;">
+                                </textarea>
+                            </td>
+                        </tr>
                     </table>
                 </form>
             </div>`;
@@ -96,9 +110,9 @@ namespace.TradeInModule = function(options){
         txtCashValue = rightColumnContainer.querySelector("#txtCashValue");
         txtCreditValue = rightColumnContainer.querySelector("#txtCreditValue");
         selProductList = rightColumnContainer.querySelector("#selProductList");
+        taComments = rightColumnContainer.querySelector('#taComments');
 
         //eventHandlers
-        tradeInTable.addEventListener("click", populateProdsByTradeIn);
         selProductList.addEventListener("change", populateFormFromSelectBox);
         btnNewTradeIn.addEventListener("click", createNewTradeIn);
         btnBack.addEventListener("click", backToCustomerModule);
@@ -111,6 +125,44 @@ namespace.TradeInModule = function(options){
         if(customerId != 0){
             namespace.ajax.send({
                 url: webServiceAddress + "customer" + customerId,
+                method: "GET",
+                headers: {"Content-Type": "application/json", "Accept": "application/json"},
+                callback: function(response){
+                    var tradeIns = JSON.parse(response);
+                    generateTradeInList(tradeIns);
+                },
+                errorCallback: function(){
+                    tradeInTableListContainer.innerHTML += `<p style="text-align:right;">Customer does not have any trade-ins.</p>`
+                }
+            });
+        }else{
+            alert("ERROR: Customer object is undefined. Please refresh and chooose a customer.");
+        }
+    }
+
+    function sortTradeInsAscending(customerId){
+        if(customerId != 0){
+            namespace.ajax.send({
+                url: webServiceAddress + "customerascending" + customerId,
+                method: "GET",
+                headers: {"Content-Type": "application/json", "Accept": "application/json"},
+                callback: function(response){
+                    var tradeIns = JSON.parse(response);
+                    generateTradeInList(tradeIns);
+                },
+                errorCallback: function(){
+                    tradeInTableListContainer.innerHTML += `<p style="text-align:right;">Customer does not have any trade-ins.</p>`
+                }
+            });
+        }else{
+            alert("ERROR: Customer object is undefined. Please refresh and chooose a customer.");
+        }
+    }
+
+    function sortTradeInsDescending(customerId){
+        if(customerId != 0){
+            namespace.ajax.send({
+                url: webServiceAddress + "customerdescending" + customerId,
                 method: "GET",
                 headers: {"Content-Type": "application/json", "Accept": "application/json"},
                 callback: function(response){
@@ -144,7 +196,7 @@ namespace.TradeInModule = function(options){
                     for(var x = 0; x<tips.length; x++){
                         tradeInProducts.push(tips[x]);
                     }
-
+                    getTradeInComments(selectedTradeInId);
                     populateSelBoxProds();
                 }
             });
@@ -153,10 +205,27 @@ namespace.TradeInModule = function(options){
         }
     }
 
+    function getTradeInComments(tradeInId){
+        namespace.ajax.send({
+            url: webServiceAddress + tradeInId,
+            method: "GET",
+            headers: {"Content-Type": "application/json", "Accept": "application/json"},
+            callback: function(response){
+                var tradeIn = JSON.parse(response);
+                taComments.value = tradeIn.comments;
+            }
+        });
+    }
+
     function generateTradeInList(tradeIns){
         tradeInTableListContainer.innerHTML = `<p style="text-align:right;">${customer.customerFirstName} ${customer.customerLastName} - Trade Ins</p>`;
         var html = `<tr>
-                        <th>Trade In Date</th>
+                        <th>Trade In Date
+                            <div class="icons">
+                                <i class="fas fa-angle-up ascend"></i>
+                                <i class="fas fa-angle-down descend"></i>
+                            </div>
+                        </th>
                         <th>Employee</th>
                         <th>Cash Paid</th>
                         <th>Credit Paid</th>
@@ -211,6 +280,20 @@ namespace.TradeInModule = function(options){
 
         tradeInTable.innerHTML = html;
         tradeInTableListContainer.appendChild(tradeInTable);
+
+        tradeInTableRow = midColumnContainer.querySelectorAll('.mid-table-row');
+
+        ascendArrow = midColumnContainer.querySelector('.ascend');
+        descendArrow = midColumnContainer.querySelector('.descend');
+
+        for(const row of tradeInTableRow) {
+            row.addEventListener('click', populateProdsByTradeIn);
+        }
+
+        ascendArrow.addEventListener('click', function(){sortTradeInsAscending(customer.customerId)});
+        descendArrow.addEventListener('click', function(){sortTradeInsDescending(customer.customerId)});
+
+
         return tradeInTable;
     }
 
@@ -242,7 +325,7 @@ namespace.TradeInModule = function(options){
             alert("Customer ID number is not stored. Please edit customer information in order to proceed.");
             return false;
         }
-        //var newTradeIn;
+
         var tradeInToAdd = {
             tradeInId: 0,
             customerId: customer.customerId,
