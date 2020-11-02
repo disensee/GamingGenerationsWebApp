@@ -187,7 +187,9 @@ namespace.CustomerModule = function(options){
                 },
                 errorCallback: function(responseStatus, responseText){
                     if(responseStatus == 404){
-                        alert(responseText);
+                        alert("Customer not found. Please try again or add customer.");
+                    }else{
+                        alert(responseStatus, responseText);
                     }
                 }
             });

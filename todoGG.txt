@@ -4,6 +4,11 @@ reports- pull data, queries
 returns/exchages - store dummy accounts
 delete data?? - not needed
 
-trade in comments
+trade in comments -- DONE
 
 purchase serial numbers - DONE
+
+
+manager log in -- see trade ins by date
+
+admin -- talk to jake -- total amounts vs what was paid out -- in admin section
