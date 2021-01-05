@@ -234,8 +234,8 @@ namespace.CustomerModule = function(options){
                 callback: function(response){
                     var customer = JSON.parse(response);
                     populateCustomerForm(customer);
-                    alert("Customer has been added!");
                     getCustomerByCustomerId(customer.customerId);
+                    alert("Customer has been added!");
                 }
             });
         }else{
@@ -458,8 +458,8 @@ namespace.CustomerModule = function(options){
             	leftColumnContainer: document.getElementById("left-column"),
             	midColumnContainer : document.getElementById("mid-column"),
             	rightColumnContainer: document.getElementById("right-column"),
-                //webServiceAddress: "https://localhost/GG/web-services/tradeins/",
-                webServiceAddress: "https://www.dylanisensee.com/gg/web-services/tradeins/",
+                webServiceAddress: "https://localhost/GG/web-services/tradeins/",
+                //webServiceAddress: "https://www.dylanisensee.com/gg/web-services/tradeins/",
                 customer: customerForTransaction
             });
     }
@@ -470,8 +470,8 @@ namespace.CustomerModule = function(options){
             	leftColumnContainer: document.getElementById("left-column"),
             	midColumnContainer : document.getElementById("mid-column"),
             	rightColumnContainer: document.getElementById("right-column"),
-                //webServiceAddress: "https://localhost/GG/web-services/purchases/",
-                webServiceAddress: "https://www.dylanisensee.com/gg/web-services/purchases/",
+                webServiceAddress: "https://localhost/GG/web-services/purchases/",
+                //webServiceAddress: "https://www.dylanisensee.com/gg/web-services/purchases/",
                 customer: customerForTransaction
             });
     }

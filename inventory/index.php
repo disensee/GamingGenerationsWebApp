@@ -28,6 +28,7 @@ require("authentication-check.inc.php");
     <title>Gaming Generations | Inventory</title>
 </head>
 <body>
+    <input type="hidden" id="store_user" value="<?=$_COOKIE['ggUserName']?>"/>
     <div id="header">
         <img id="gg-logo" src=images/gg-logo.jpg>
         <a class="logout" href="login.php">Log Out</a>

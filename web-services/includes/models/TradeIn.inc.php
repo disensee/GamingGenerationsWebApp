@@ -13,6 +13,7 @@ class TradeIn extends Model{
     public $checkNumber;
     public $totalPaid;
     public $comments;
+    public $location;
 
 
     //Constructor
@@ -26,7 +27,8 @@ class TradeIn extends Model{
         $this->checkPaid = $args['checkPaid'] ?? 0.00;
         $this->checkNumber = $args['checkNumber'] ?? "";
         $this->totalPaid = $args['totalPaid'] ?? ($this->creditPaid+$this->cashPaid+$this->checkPaid);
-        $this->comments = $args['comments'] ?? null;
+        $this->comments = $args['comments'] ?? "";
+        $this->location = $args['location'] ?? "";
 
     }
 

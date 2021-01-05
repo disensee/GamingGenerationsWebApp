@@ -7,8 +7,8 @@ namespace.PurchaseModule = function(options){
     var callback = options.callback;
     var webServiceAddress = options.webServiceAddress || "https://localhost/GG/web-services/purchases/" //THIS IS REQUIRED!!
 
-    //var ppWebServiceAddress = "https://localhost/GG/web-services/productpurchases/";
-    var ppWebServiceAddress = "https://www.dylanisensee.com/gg/web-services/tradeinproducts/";
+    var ppWebServiceAddress = "https://localhost/GG/web-services/productpurchases/";
+    //var ppWebServiceAddress = "https://www.dylanisensee.com/gg/web-services/tradeinproducts/";
 
     var customer = options.customer; //REQUIRED TO WORK PROPERLY
 
@@ -297,8 +297,8 @@ namespace.PurchaseModule = function(options){
             leftColumnContainer: document.getElementById("left-column"),
             midColumnContainer : document.getElementById("mid-column"),
             rightColumnContainer: document.getElementById("right-column"),
-            //webServiceAddress: "https://localhost/GG/web-services/productpurchases/",
-            webServiceAddress: "https://www.dylanisensee.com/gg/web-services/productpurchases/",
+            webServiceAddress: "https://localhost/GG/web-services/productpurchases/",
+            //webServiceAddress: "https://www.dylanisensee.com/gg/web-services/productpurchases/",
             purchase: purchaseToAdd
         });
     }
@@ -310,8 +310,8 @@ namespace.PurchaseModule = function(options){
             leftColumnContainer: document.getElementById("left-column"),
 		    midColumnContainer : document.getElementById("mid-column"),
 		    rightColumnContainer: document.getElementById("right-column"),
-		    //webServiceAddress: "https://localhost/GG/web-services/customers/"
-		    webServiceAddress: "https://www.dylanisensee.com/gg/web-services/customers/"
+		    webServiceAddress: "https://localhost/GG/web-services/customers/"
+		    //webServiceAddress: "https://www.dylanisensee.com/gg/web-services/customers/"
         });
     }
 
