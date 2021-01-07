@@ -1,6 +1,8 @@
 window.addEventListener("load", function(){
-	
-	goToCustomerModule();
+	var user = document.getElementById('store_user').value;
+	if(user != 'manager'){
+		goToCustomerModule();
+	}
 
 	document.querySelector("#gg-logo").addEventListener("click", goToCustomerModule);
 

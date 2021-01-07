@@ -89,6 +89,12 @@ table th .fas{
     width:98%;
 }
 
+.refresh {
+    text-align: right;
+    margin-top: 15px;
+    width: 100%;
+}
+
 /*************************************ID SELECTORS*****************************************/
 #header>*{
     /* Select level 1 children */

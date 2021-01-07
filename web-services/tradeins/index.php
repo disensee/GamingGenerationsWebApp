@@ -78,6 +78,23 @@ switch($method){
         echo($json);
         die();
       }
+    }else if(preg_match('/^([A-z]*)\/((20)\d\d[-](0[1-9]|1[012])[-](0[1-9]|[12][0-9]|3[01]))\/((20)\d\d[-](0[1-9]|1[012])[-](0[1-9]|[12][0-9]|3[01]))$/', $url_path, $matches)){
+
+      $location = $matches[1];
+      $startDate = $matches[2];
+      $endDate = $matches[6];
+
+      $tradeIns = $da->getTradeInsByLocationAndDate($location, $startDate, $endDate);
+      if($tradeIns == false){
+        header('HTTP/1.1 404 Not Found', true, 404);
+        die();
+      }else{
+        $json = json_encode($tradeIns);
+        header("Content-Type: application/json");
+        echo($json);
+        die();
+      }
+
     }else{
       header('HTTP/1.1 400 - Invalid Request', true, 400);
       die();

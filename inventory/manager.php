@@ -28,20 +28,28 @@
     <div id="content-pane">
         <div id="left-column" class="column left"></div>
         <div id ="mid-column" class ="column mid">
-            <form>
-                <input type="button" class="btn btn-outline-primary store_btn" id="btn_ona" value="Onalaska">    
-                <input type="button" class="btn btn-outline-primary store_btn" id="btn_sp" value="Stevens Point">    
-                <input type="button" class="btn btn-outline-primary store_btn" id="btn_ec" value="Eau Claire">    
-                <input type="button" class="btn btn-outline-primary store_btn" id="btn_sheb" value="Sheboygan"> 
+            <div class="d-flex justify-content-center">
+                <div class='btn-group center'>
+                    <input type="button" class="btn btn-outline-primary store_btn" id="btn_ona" value="Onalaska">    
+                    <input type="button" class="btn btn-outline-primary store_btn" id="btn_sp" value="Stevens Point">    
+                    <input type="button" class="btn btn-outline-primary store_btn" id="btn_ec" value="Eau Claire">    
+                    <input type="button" class="btn btn-outline-primary store_btn" id="btn_sheb" value="Sheboygan"> 
+                </div>
+            </div>
 
+            <div class='validation' id='v_selstore'></div>
+
+            <div class="form-group">
                 <label for="start_date">Start Date:</label>
-                <input id="start_date" type="date" required>
+                <input id="start_date" class="form-control" type="date" required />
 
                 <label for="end_date">End Date:</label>
-                <input id="end_date" type="date" required>
+                <input id="end_date" class="form-control" type="date" required />
+            </div>
+            
+            <div class = validation id='v_date'></div>
 
-                <input id="btnSubmit" class="btn btn-outline-success" type="submit" value="Submit">
-            </form>
+            <input id="btn_submit"class="btn btn-outline-success form-control" type="button" value="Submit">
         </div>
         <div id="right-column" class="column right"></div>   
     </div>
@@ -50,24 +58,48 @@
     <div id="footer">
         Gaming Generations &copy;2020
     </div>
-
+    <script src="js/ajax.js"></script>
+    <script src="js/main.js"></script>
     <script>
         var leftColumn = document.getElementById('left-column');
         var midColumn = document.getElementById('mid-column');
         var rightColumn = document.getElementById('right-column');
 
-        var selectedStore="";
         var user = document.getElementById('store_user').value;
+
+        var selectedStore;
+        var vStore = document.getElementById('v_selstore');
+
+        var sDate = document.getElementById('start_date');
+        var eDate = document.getElementById('end_date');
+        var vDate = document.getElementById('v_date');
+
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth()+1; //January is 0!
+        var yyyy = today.getFullYear();
+        if(dd<10){
+                dd='0'+dd
+            } 
+            if(mm<10){
+                mm='0'+mm
+            } 
+
+        today = yyyy+'-'+mm+'-'+dd;
+        sDate.setAttribute("max", today);
+        eDate.setAttribute("max", today);
+
+        var btnSubmit = document.getElementById('btn_submit'); 
 
         leftColumn.style.display = 'none';
         rightColumn.style.display = 'none';
-        midColumn.style.width = '90%';
+        midColumn.style.width = '50%';
         midColumn.style.margin = 'auto';
     
         var storeBtns = document.querySelectorAll('.store_btn');
         storeBtns.forEach((button) => {
             button.addEventListener('click', function(evt){
-                selectedStore = button.value.toLowerCase();
+                selectedStore = button.value.replace(/\s/g, '').toLowerCase();
                 if(evt.target.classList.contains('btn-outline-primary')){
                     storeBtns.forEach((btn) => {
                         btn.classList.remove('btn-primary');
@@ -79,15 +111,50 @@
                 console.log(selectedStore);
             });
 
-            //namespace.TradeInModule({
-                // leftColumnContainer: document.getElementById("left-column"),
-                // midColumnContainer : document.getElementById("mid-column"),
-                // rightColumnContainer: document.getElementById("right-column"),
-                // webServiceAddress: "https://localhost/GG/web-services/tradeins/",
-                // //webServiceAddress: "https://www.dylanisensee.com/gg/web-services/tradeins/",
-                // customer: user
-            //});
+            btnSubmit.removeEventListener('click', function(){});
+            btnSubmit.addEventListener('click', function(){
+                if(validateFilters()){
+                    namespace.TradeInModule({
+                        leftColumnContainer: document.getElementById("left-column"),
+                        midColumnContainer : document.getElementById("mid-column"),
+                        rightColumnContainer: document.getElementById("right-column"),
+                        webServiceAddress: "https://localhost/GG/web-services/tradeins/",
+                        //webServiceAddress: "https://www.dylanisensee.com/gg/web-services/tradeins/",
+                        customer: user,
+                        selectedStore: selectedStore,
+                        sDate: sDate.value,
+                        eDate: eDate.value
+                    });
+                }
+            });
         });
+
+        function validateFilters(){
+            vStore.innerHTML = '';
+            vDate.innerHTML = '';
+
+            if(!selectedStore){
+                vStore.innerHTML = "Please select a store";
+                return false;
+            }
+
+            if(!sDate.checkValidity()){
+                sDate.reportValidity();
+                return false;
+            }
+
+            if(!eDate.checkValidity()){
+                eDate.reportValidity();
+                return false;
+            }
+
+            if(sDate.value > eDate.value){
+                vDate.innerHTML = 'End date must be the same date or occur after the selected start date';
+                return false;
+            }
+
+            return true;
+        }
     </script>
 
     <script src="js/tradein-module.js"></script>

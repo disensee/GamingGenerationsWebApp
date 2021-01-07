@@ -151,7 +151,7 @@ class TradeInDataAccess extends DataAccess{
 	
 	function getTradeInByCustomerIdDescending($customerId){
         $cleanCustomerId = $this->cleanDataGoingIntoDB($customerId);
-		$qStr = "SELECT tradeInId, customerId, tradeInDateTime, tradeInEmployee, cashPaid, creditPaid, checkPaid, checkNumber, totalPaid, comments, location FROM tradeins WHERE customerId = '$cleanCustomerId' ORDER BY tradeInDateTime DESC ";
+		$qStr = "SELECT tradeInId, customerId, tradeInDateTime, tradeInEmployee, cashPaid, creditPaid, checkPaid, checkNumber, totalPaid, comments, location FROM tradeins WHERE customerId = '$cleanCustomerId' ORDER BY tradeInDateTime DESC";
 
 		$result = mysqli_query($this->link, $qStr) or $this->handleError(mysqli_error($this->link));
 		$allTradeInsByCustomer = [];
@@ -164,7 +164,28 @@ class TradeInDataAccess extends DataAccess{
 			}
 		}
 		return $allTradeInsByCustomer;
-    }
+	}
+	
+	function getTradeInsByLocationAndDate($location, $startDate, $endDate){
+		$cleanLocation = $this->cleanDataGoingIntoDB($location);
+		$cleanStartDate = $this->cleanDataGoingIntoDB($startDate);
+		$cleanEndDate = $this->cleanDataGoingIntoDB($endDate);
+
+		$qStr = "SELECT tradeInId, customerId, tradeInDateTime, tradeInEmployee, cashPaid, creditPaid, checkPaid, checkNumber, totalPaid, comments, location FROM tradeins WHERE location = '$location' AND tradeInDateTime BETWEEN '$startDate 00:00:00' AND '$endDate 23:59:59' ORDER BY tradeInDateTime ASC";
+		
+		$result = mysqli_query($this->link, $qStr) or $this->handleError(mysqli_error($this->link));
+		$allTisByLocAndDate = [];
+		if(mysqli_num_rows($result)){
+			while($row = mysqli_fetch_assoc($result)){
+				$cleanRow = $this->cleanDataComingFromDB($row);
+				$tradeIn = new TradeIn($cleanRow);
+
+				$allTisByLocAndDate[] = $tradeIn;
+			}
+		}
+
+		return $allTisByLocAndDate;
+	}
 
 
     

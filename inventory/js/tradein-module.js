@@ -11,8 +11,14 @@ namespace.TradeInModule = function(options){
     //var tipWebServiceAddress = "https://www.dylanisensee.com/gg/web-services/tradeinproducts/";
 
     var customer = options.customer; //REQUIRED TO WORK PROPERLY
-
     var user = document.getElementById('store_user').value;
+
+    if(customer === user){
+        var selectedStore = options.selectedStore;
+        var sDate = options.sDate;
+        var eDate = options.eDate;
+    }
+
     var tradeInProducts = [];
     
     //mid column vars
@@ -47,15 +53,30 @@ namespace.TradeInModule = function(options){
         midColumnContainer.style.width = '61%';
         rightColumnContainer.style.display = 'block';
 
-        var midColumnContainerTemplate =`
+        
+            
+        if(customer === user){
+            var midColumnContainerTemplate =`
             <div id="mid-table-list">
                 <table id="mid-table">
                 </table>
             </div>
+            
+            <div class="refresh">
+                <button class="btn btn-outline-primary btn=sm" id="btnBackMan">Back</button>
+            </div>`;
+        }else {
+            var midColumnContainerTemplate =`
+            <div id="mid-table-list">
+                <table id="mid-table">
+                </table>
+            </div>
+            
             <div class="mid-button-container">
                 <button class="btn btn-outline-primary btn=sm" id="btnBack">Back To Customers</button>
                 <button class="btn btn-outline-primary btn=sm" id="btnNewTradeIn">New Trade In</button>
             </div>`;
+        }
 
         var rightColumnContainerTemplate=`
             <div class="info">
@@ -115,15 +136,22 @@ namespace.TradeInModule = function(options){
         taComments = rightColumnContainer.querySelector('#taComments');
 
         //eventHandlers
-        selProductList.addEventListener("change", populateFormFromSelectBox);
-        btnNewTradeIn.addEventListener("click", createNewTradeIn);
-        btnBack.addEventListener("click", backToCustomerModule);
+        if(user != customer){
+            selProductList.addEventListener("change", populateFormFromSelectBox);
+            btnNewTradeIn.addEventListener("click", createNewTradeIn);
+            btnBack.addEventListener("click", backToCustomerModule);
+        }else {
+            document.getElementById('btnBackMan').addEventListener('click', function(){
+                location.reload();
+            });
+        }
 
         //get customer trade ins if store account is logged in
         if(customer.customerId){
             getTradeInsByCustomerId(customer.customerId);
         }else if(customer === user){
-            console.log("it works");
+            midColumnContainer.style.margin = '';
+            getTradeInsByDate(selectedStore, sDate, eDate);
         }
     }
 
@@ -143,6 +171,27 @@ namespace.TradeInModule = function(options){
             });
         }else{
             alert("ERROR: Customer object is undefined. Please refresh and chooose a customer.");
+        }
+    }
+
+    function getTradeInsByDate(location, startDate, endDate){
+        if(location && startDate && endDate){
+            //console.log (`STORE: ${location} SDATE: ${startDate} EDATE: ${endDate}`);
+            //console.log(location); 
+            namespace.ajax.send({
+                url: webServiceAddress + `${location}/${startDate}/${endDate}`,
+                method: "GET",
+                headers: {"Content-Type": "application/json", "Accept": "application/json"},
+                callback: function(response){
+                    var tradeIns = JSON.parse(response);
+                    generateTradeInList(tradeIns);
+                },
+                errorCallback: function(){
+
+                }
+            });
+        }else {
+            alert("ERROR: There has been an error in getting the specified trade ins. Please contact your system administrator");
         }
     }
 
@@ -224,8 +273,22 @@ namespace.TradeInModule = function(options){
     }
 
     function generateTradeInList(tradeIns){
-        tradeInTableListContainer.innerHTML = `<p style="text-align:right;">${customer.customerFirstName} ${customer.customerLastName} - Trade Ins</p>`;
-        var html = `<tr>
+        var html;
+        if(user === customer){
+            var html = 
+                    `<tr>
+                        <th>Trade In Date</th>
+                        <th>Employee</th>
+                        <th>Cash Paid</th>
+                        <th>Credit Paid</th>
+                        <th>Check Paid</th>
+                        <th>Total Paid</th>
+                    </tr>`;
+        }else{
+            tradeInTableListContainer.innerHTML = `<p style="text-align:right;">${customer.customerFirstName} ${customer.customerLastName} - Trade Ins</p>`;
+
+            var html = 
+                    `<tr>
                         <th>Trade In Date
                             <div class="icons">
                                 <i class="fas fa-angle-up ascend"></i>
@@ -237,7 +300,10 @@ namespace.TradeInModule = function(options){
                         <th>Credit Paid</th>
                         <th>Check Paid</th>
                         <th>Total Paid</th>
-                    </tr>`;
+                     </tr>`;
+        }
+
+       
         if(Array.isArray(tradeIns)){
             for(var x = 0; x < tradeIns.length; x++){
                 html+= `<tr class="mid-table-row" tradeInId="${tradeIns[x].tradeInId}">
@@ -289,16 +355,18 @@ namespace.TradeInModule = function(options){
 
         tradeInTableRow = midColumnContainer.querySelectorAll('.mid-table-row');
 
-        ascendArrow = midColumnContainer.querySelector('.ascend');
-        descendArrow = midColumnContainer.querySelector('.descend');
+        if(user != customer){
+            ascendArrow = midColumnContainer.querySelector('.ascend');
+            descendArrow = midColumnContainer.querySelector('.descend');
 
+            ascendArrow.addEventListener('click', function(){sortTradeInsAscending(customer.customerId)});
+            
+            descendArrow.addEventListener('click', function(){sortTradeInsDescending(customer.customerId)});
+        }
+        
         for(const row of tradeInTableRow) {
             row.addEventListener('click', populateProdsByTradeIn);
         }
-
-        ascendArrow.addEventListener('click', function(){sortTradeInsAscending(customer.customerId)});
-        descendArrow.addEventListener('click', function(){sortTradeInsDescending(customer.customerId)});
-
 
         return tradeInTable;
     }
@@ -327,7 +395,7 @@ namespace.TradeInModule = function(options){
     }
 
     function createNewTradeIn(){
-        if(customer.customerIdNumber == ""){
+        if(customer.customerId == ""){
             alert("Customer ID number is not stored. Please edit customer information in order to proceed.");
             return false;
         }
