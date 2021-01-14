@@ -137,7 +137,6 @@ namespace.TradeInModule = function(options){
 
         //eventHandlers
         if(user != customer){
-            selProductList.addEventListener("change", populateFormFromSelectBox);
             btnNewTradeIn.addEventListener("click", createNewTradeIn);
             btnBack.addEventListener("click", backToCustomerModule);
         }else {
@@ -145,6 +144,8 @@ namespace.TradeInModule = function(options){
                 location.reload();
             });
         }
+
+        selProductList.addEventListener("change", populateFormFromSelectBox);
 
         //get customer trade ins if store account is logged in
         if(customer.customerId){
@@ -395,7 +396,7 @@ namespace.TradeInModule = function(options){
     }
 
     function createNewTradeIn(){
-        if(customer.customerId == ""){
+        if(customer.customerIdNumber == ""){
             alert("Customer ID number is not stored. Please edit customer information in order to proceed.");
             return false;
         }

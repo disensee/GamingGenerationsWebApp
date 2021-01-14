@@ -10,6 +10,7 @@ namespace.PurchaseModule = function(options){
     var ppWebServiceAddress = "https://localhost/GG/web-services/productpurchases/";
     //var ppWebServiceAddress = "https://www.dylanisensee.com/gg/web-services/tradeinproducts/";
 
+    var user = document.getElementById('store_user').value;
     var customer = options.customer; //REQUIRED TO WORK PROPERLY
 
     var purchaseProducts = [];
@@ -290,7 +291,8 @@ namespace.PurchaseModule = function(options){
             cashReceived: 0.00,
             creditReceived: 0.00,
             storeCreditReceived: 0.00,
-            totalPurchasePrice: 0.00
+            totalPurchasePrice: 0.00,
+            location: user
         };
 
         namespace.ProductModule({

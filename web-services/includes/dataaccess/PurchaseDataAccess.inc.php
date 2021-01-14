@@ -28,6 +28,7 @@ class PurchaseDataAccess extends DataAccess{
 			$cleanPurchase->creditReceived = mysqli_real_escape_string($this->link, $purchase->creditReceived);
 			$cleanPurchase->storeCreditReceived = mysqli_real_escape_string($this->link, $purchase->storeCreditReceived);
 			$cleanPurchase->totalPurchasePrice = mysqli_real_escape_string($this->link, $purchase->totalPurchasePrice);
+			$cleanPurchase->location= mysqli_real_escape_string($this->link, $purchase->location);
             
 			return $cleanPurchase;
 		}else{
@@ -51,6 +52,7 @@ class PurchaseDataAccess extends DataAccess{
         $cleanRow['creditReceived'] = htmlentities($row['creditReceived']);
         $cleanRow['storeCreditReceived'] = htmlentities($row['storeCreditReceived']);
 		$cleanRow['totalPurchasePrice'] = htmlentities($row['totalPurchasePrice']);
+		$cleanRow['location'] = htmlentities($row['location']);
 
 		return $cleanRow;
     }
@@ -63,7 +65,7 @@ class PurchaseDataAccess extends DataAccess{
 	* @return {array}		Returns an array of purchase objects
 	*/
 	function getAll($args = []){
-		$qStr = "SELECT purchaseId, customerId, purchaseDateTime, purchaseEmployee, cashReceived, creditReceived, storeCreditReceived, totalPurchasePrice FROM purchases";
+		$qStr = "SELECT purchaseId, customerId, purchaseDateTime, purchaseEmployee, cashReceived, creditReceived, storeCreditReceived, totalPurchasePrice, location FROM purchases";
 		//die($qStr);
 
 		//Many people run queries like this. Shows error messages to users. 
@@ -89,7 +91,7 @@ class PurchaseDataAccess extends DataAccess{
 	*/
 	function getById($purchaseId){
 		$cleanPurchaseId = $this->cleanDataGoingIntoDB($purchaseId);
-		$qStr = "SELECT purchaseId, customerId, purchaseDateTime, purchaseEmployee, cashReceived, creditReceived, storeCreditReceived, totalPurchasePrice FROM purchases WHERE purchaseId = '$cleanPurchaseId'";
+		$qStr = "SELECT purchaseId, customerId, purchaseDateTime, purchaseEmployee, cashReceived, creditReceived, storeCreditReceived, totalPurchasePrice, location FROM purchases WHERE purchaseId = '$cleanPurchaseId'";
 
 		$result = mysqli_query($this->link, $qStr) or $this->handleError(mysqli_error($this->link));
 		if(mysqli_num_rows($result) == 1){
@@ -110,7 +112,7 @@ class PurchaseDataAccess extends DataAccess{
 
 	function getPurchaseByCustomerId($customerId){
         $cleanCustomerId = $this->cleanDataGoingIntoDB($customerId);
-		$qStr = "SELECT purchaseId, customerId, purchaseDateTime, purchaseEmployee, cashReceived, creditReceived, storeCreditReceived, totalPurchasePrice FROM purchases WHERE customerId = '$cleanCustomerId'";
+		$qStr = "SELECT purchaseId, customerId, purchaseDateTime, purchaseEmployee, cashReceived, creditReceived, storeCreditReceived, totalPurchasePrice, location FROM purchases WHERE customerId = '$cleanCustomerId'";
 
 		$result = mysqli_query($this->link, $qStr) or $this->handleError(mysqli_error($this->link));
 		$allPurchasesByCustomer = [];
@@ -127,7 +129,7 @@ class PurchaseDataAccess extends DataAccess{
 	
 	function getPurchaseByCustomerIdAscending($customerId){
         $cleanCustomerId = $this->cleanDataGoingIntoDB($customerId);
-		$qStr = "SELECT purchaseId, customerId, purchaseDateTime, purchaseEmployee, cashReceived, creditReceived, storeCreditReceived, totalPurchasePrice FROM purchases WHERE customerId = '$cleanCustomerId' ORDER BY purchaseDateTime ASC";
+		$qStr = "SELECT purchaseId, customerId, purchaseDateTime, purchaseEmployee, cashReceived, creditReceived, storeCreditReceived, totalPurchasePrice, location FROM purchases WHERE customerId = '$cleanCustomerId' ORDER BY purchaseDateTime ASC";
 
 		$result = mysqli_query($this->link, $qStr) or $this->handleError(mysqli_error($this->link));
 		$allPurchasesByCustomer = [];
@@ -144,7 +146,7 @@ class PurchaseDataAccess extends DataAccess{
 	
 	function getPurchaseByCustomerIdDescending($customerId){
         $cleanCustomerId = $this->cleanDataGoingIntoDB($customerId);
-		$qStr = "SELECT purchaseId, customerId, purchaseDateTime, purchaseEmployee, cashReceived, creditReceived, storeCreditReceived, totalPurchasePrice FROM purchases WHERE customerId = '$cleanCustomerId' ORDER BY purchaseDateTime DESC";
+		$qStr = "SELECT purchaseId, customerId, purchaseDateTime, purchaseEmployee, cashReceived, creditReceived, storeCreditReceived, totalPurchasePrice, location FROM purchases WHERE customerId = '$cleanCustomerId' ORDER BY purchaseDateTime DESC";
 
 		$result = mysqli_query($this->link, $qStr) or $this->handleError(mysqli_error($this->link));
 		$allPurchasesByCustomer = [];
@@ -168,14 +170,15 @@ class PurchaseDataAccess extends DataAccess{
 	*/
 	function insert($purchase){
 		$cleanPurchase = $this->cleanDataGoingIntoDB($purchase);
-		$qStr = "INSERT INTO purchases (customerId, purchaseDateTime, purchaseEmployee, cashReceived, creditReceived, storeCreditReceived, totalPurchasePrice) VALUES (
+		$qStr = "INSERT INTO purchases (customerId, purchaseDateTime, purchaseEmployee, cashReceived, creditReceived, storeCreditReceived, totalPurchasePrice, location) VALUES (
 			'{$cleanPurchase->customerId}',
             '{$cleanPurchase->purchaseDateTime}',
             '{$cleanPurchase->purchaseEmployee}',
             '{$cleanPurchase->cashReceived}',
             '{$cleanPurchase->creditReceived}',
             '{$cleanPurchase->storeCreditReceived}',
-            '{$cleanPurchase->totalPurchasePrice}'
+            '{$cleanPurchase->totalPurchasePrice}',
+            '{$cleanPurchase->location}'
 		)";
 
 		$result = mysqli_query($this->link, $qStr) or $this->handleError(mysqli_error($this->link));
@@ -204,7 +207,8 @@ class PurchaseDataAccess extends DataAccess{
 				cashReceived = '{$cleanPurchase->cashReceived}',
 				creditReceived = '{$cleanPurchase->creditReceived}',
 				storeCreditReceived = '{$cleanPurchase->storeCreditReceived}',
-				totalPurchasePrice = '{$cleanPurchase->totalPurchasePrice}'
+				totalPurchasePrice = '{$cleanPurchase->totalPurchasePrice}',
+				location = '{$cleanPurchase->location}'
                 WHERE purchaseId = '{$cleanPurchase->purchaseId}'";
 
 		$result = mysqli_query($this->link, $qStr) or $this->handleError(mysqli_error($this->link));

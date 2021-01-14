@@ -11,6 +11,7 @@ class Purchase extends Model{
     public $creditReceived;
     public $storeCreditReceived;
     public $totalPurchasePrice;
+    public $location;
 
     //Constructor
     public function __construct($args = []){
@@ -22,6 +23,7 @@ class Purchase extends Model{
         $this->creditReceived = $args['creditReceived'] ?? 0.00;
         $this->storeCreditReceived = $args['storeCreditReceived'] ?? 0.00;
         $this->totalPurchasePrice = $args['totalPurchasePrice'] ?? ($this->cashReceived+$this->creditReceived+$this->storeCreditReceived);
+        $this->location = $args['location'] ?? "";
     }
 
     public function isValid(){

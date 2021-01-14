@@ -104,7 +104,7 @@ namespace.ProductModule = function(options){
 
     function initialize(){
         console.log("TRADE IN: " + tradeIn);
-        console.log("PURCHASE: " + purchase);
+        console.log("PURCHASE: " + JSON.stringify(purchase));
 
         leftColumnContainer.style.display = "block";
         leftColumnContainer.innerHTML = "";
