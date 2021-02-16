@@ -78,46 +78,50 @@ namespace.TradeInModule = function(options){
             </div>`;
         }
 
-        var rightColumnContainerTemplate=`
-            <div class="info">
-                <form>
-                    <table class="info-pane" style="width:95%">
-                        <tr>
-                            <td><label for="txtSerialNumber">Serial Number:</label></td>
-                            <td><input type="text" name="txtSerialNumber" id="txtSerialNumber" placeholder="Serial Number"></td>
-                        </tr>
-                        <tr>
-                            <td><label for="txtRetailPrice">Retail Price:</label></td>
-                            <td><input type="text" name="txtRetailPrice" id="txtRetailPrice" placeholder="Retail Price"></td>
-                        </tr>
-                        <tr>
-                            <td><label for="txtcashValue">Cash Value:</label></td>
-                            <td><input type="text" name="txtCashValue" id="txtCashValue" placeholder="Cash Value"></td>
-                        </tr>
-                        <tr>
-                            <td><label for="txtCreditValue">Credit Value:</label></td>
-                            <td><input type="text" name="txtCreditValue" id="txtCreditValue" placeholder="Credit Value"></td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">
-                                <select id="selProductList" size=15 name="item-list" style="width:100%; height:200px;">
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><label for="taComments">Comments:</label></td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">
-                                <textarea id="taComments" readonly="true" style="width:100%; height:100px;">
-                                </textarea>
-                            </td>
-                        </tr>
-                    </table>
-                </form>
-            </div>`;
+        var rightColumnContainerTemplate=`<div class="info"><form><table class="info-pane" style="width:95%">`;
 
-        console.log(customer);
+        if(customer === user){
+            rightColumnContainerTemplate += `<tr>
+                <td><label for="txtCustomerName">Customer</label></td>
+                <td><input type="text" name="txtCustomerName" id="txtCustomerName" placeholder="Customer"></td>
+            </tr>`;
+        }
+
+        rightColumnContainerTemplate += `<tr>
+            <td><label for="txtSerialNumber">Serial Number:</label></td>
+            <td><input type="text" name="txtSerialNumber" id="txtSerialNumber" placeholder="Serial Number"></td>
+        </tr>
+        <tr>
+            <td><label for="txtRetailPrice">Retail Price:</label></td>
+            <td><input type="text" name="txtRetailPrice" id="txtRetailPrice" placeholder="Retail Price"></td>
+        </tr>
+        <tr>
+            <td><label for="txtCashValue">Cash Value:</label></td>
+            <td><input type="text" name="txtCashValue" id="txtCashValue" placeholder="Cash Value"></td>
+        </tr>
+        <tr>
+            <td><label for="txtCreditValue">Credit Value:</label></td>
+            <td><input type="text" name="txtCreditValue" id="txtCreditValue" placeholder="Credit Value"></td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <select id="selProductList" size=15 name="item-list" style="width:100%; height:200px;">
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td><label for="taComments">Comments:</label></td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <textarea id="taComments" readonly="true" style="width:100%; height:100px;">
+                </textarea>
+            </td>
+        </tr>
+        </table>
+        </form>
+        </div>`;
+
         //mid column vars
         midColumnContainer.innerHTML = midColumnContainerTemplate;
         rightColumnContainer.innerHTML = rightColumnContainerTemplate;
@@ -150,7 +154,7 @@ namespace.TradeInModule = function(options){
         //get customer trade ins if store account is logged in
         if(customer.customerId){
             getTradeInsByCustomerId(customer.customerId);
-        }else if(customer === user){
+        }else if(customer === user){ //get trade ins by date if manager is logged in
             midColumnContainer.style.margin = '';
             getTradeInsByDate(selectedStore, sDate, eDate);
         }
@@ -177,8 +181,6 @@ namespace.TradeInModule = function(options){
 
     function getTradeInsByDate(location, startDate, endDate){
         if(location && startDate && endDate){
-            //console.log (`STORE: ${location} SDATE: ${startDate} EDATE: ${endDate}`);
-            //console.log(location); 
             namespace.ajax.send({
                 url: webServiceAddress + `${location}/${startDate}/${endDate}`,
                 method: "GET",
@@ -188,7 +190,7 @@ namespace.TradeInModule = function(options){
                     generateTradeInList(tradeIns);
                 },
                 errorCallback: function(){
-
+                    console.log("There has been error!");
                 }
             });
         }else {
@@ -240,6 +242,7 @@ namespace.TradeInModule = function(options){
         var target = evt.target;
         if(target.classList.contains("mid-table-cell")){
             var selectedTradeInId = target.closest("tr").getAttribute("tradeInId");
+            var selectedTiCustomer = target.closest("tr").getAttribute("customerId");
         }
         var tips=[];
         if(selectedTradeInId != 0){
@@ -252,8 +255,12 @@ namespace.TradeInModule = function(options){
                     for(var x = 0; x<tips.length; x++){
                         tradeInProducts.push(tips[x]);
                     }
+                    
                     getTradeInComments(selectedTradeInId);
                     populateSelBoxProds();
+                    if(customer === user){
+                        getCustomerName(selectedTiCustomer);
+                    }
                 }
             });
         }else{
@@ -307,7 +314,7 @@ namespace.TradeInModule = function(options){
        
         if(Array.isArray(tradeIns)){
             for(var x = 0; x < tradeIns.length; x++){
-                html+= `<tr class="mid-table-row" tradeInId="${tradeIns[x].tradeInId}">
+                html+= `<tr class="mid-table-row" tradeInId="${tradeIns[x].tradeInId}"customerId="${tradeIns[x].customerId}">
                             <td class="mid-table-cell">
                                 ${tradeIns[x].tradeInDateTime}
                             </td>
@@ -329,7 +336,7 @@ namespace.TradeInModule = function(options){
                         </tr>`;
             }
         }else{ 
-            html+= `<tr class="mid-table-row" tradeInId="${tradeIns.tradeInId}">
+            html+= `<tr class="mid-table-row" tradeInId="${tradeIns.tradeInId}" customerId="${tradeIns[x].customerId}">
                         <td class="mid-table-cell">
                             ${tradeIns.tradeInDateTime}
                         </td>
@@ -393,6 +400,23 @@ namespace.TradeInModule = function(options){
         tradeInProducts.forEach((p)=>{
             selProductList.innerHTML += `<option value="${p.productId}">${p.consoleName} - ${p.productName}</option>`
         });
+    }
+
+    function getCustomerName(customerId){
+        var webServiceAddress = "https://localhost/GG/web-services/customers/";
+        //var webServiceAddress = "https://www.dylanisensee.com/gg/web-services/customers/";
+
+        namespace.ajax.send({
+            url: webServiceAddress + customerId,
+            method: "GET",
+            headers: {"Content-Type": "application/json", "Accept": "application/json"},
+            callback: function(response){
+                var returnedCustomer = JSON.parse(response);
+                cName = `${returnedCustomer.customerFirstName} ${returnedCustomer.customerLastName}`;
+                rightColumnContainer.querySelector('#txtCustomerName').value = cName;
+            }
+        });
+        
     }
 
     function createNewTradeIn(){
