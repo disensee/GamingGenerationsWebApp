@@ -20,8 +20,8 @@ namespace.ProductModule = function(options){
     // var prodWebServiceAddress= "https://www.dylanisensee.com/gg/web-services/products/";
     
     var consoleArr = ["NES", "Super Nintendo", "Nintendo 64", "Gamecube", "Wii", "Wii U", "Nintendo Switch", "GameBoy", "GameBoy Color", "GameBoy Advance", 
-    "Nintendo DS", "Nintendo 3DS", "Playstation", "Playstation 2", "Playstation 3", "Playstation 4", "PSP", "Playstation Vita", 
-    "Xbox", "Xbox 360", "Xbox One", "Sega Genesis", "Sega Saturn", "Sega Dreamcast", "Sega Game Gear", "Atari 2600", "Atari 400", "Atari 5200", "Atari 7800", "Atari Lynx", "Atari ST" ];
+    "Nintendo DS", "Nintendo 3DS", "Playstation", "Playstation 2", "Playstation 3", "Playstation 4", "Playstation 5", "PSP", "Playstation Vita", 
+    "Xbox", "Xbox 360", "Xbox One", "Xbox Series X", "Sega Genesis", "Sega Saturn", "Sega Dreamcast", "Sega Game Gear", "Atari 2600", "Atari 400", "Atari 5200", "Atari 7800", "Atari Lynx", "Atari ST" ];
     
     var completedTradeIn;
     var productTableListContainer;
@@ -1188,7 +1188,7 @@ namespace.ProductModule = function(options){
                     }
                 }
                 
-                if(p.consoleName.toLowerCase() == "xbox one" || p.consoleName.toLowerCase() == "playstation 4" || p.consoleName.toLowerCase() == "wii u"
+                if(p.consoleName.toLowerCase() == "playstation 5" || p.consoleName.toLowerCase() == "xbox series x" || p.consoleName.toLowerCase() == "xbox one" || p.consoleName.toLowerCase() == "playstation 4" || p.consoleName.toLowerCase() == "wii u"
                 || p.consoleName.toLowerCase() == "nintendo switch" || p.consoleName.toLowerCase() == "nintendo 3ds"){
                     totalTradeInCreditValue += Math.floor(p.loosePrice * 0.5);
                     totalTradeInCashValue += Math.floor(p.loosePrice * 0.3);
