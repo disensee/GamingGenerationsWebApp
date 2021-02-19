@@ -189,7 +189,7 @@ namespace.CustomerModule = function(options){
                     if(responseStatus == 404){
                         alert("Customer not found. Please try again or add customer.");
                     }else{
-                        alert(responseStatus, responseText);
+                        alert("Customer not found. Please try again or add customer.");
                     }
                 }
             });
