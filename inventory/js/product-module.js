@@ -534,7 +534,7 @@ namespace.ProductModule = function(options){
         txtItem.value = product.productName;
         txtLoosePrice.value = Math.floor(product.loosePrice).toFixed(2);
         txtCibPrice.value = Math.floor(product.cibPrice).toFixed(2);
-        txtGsTradeValue.value = Math.floor(product.gamestopTradeValue).toFixed(2);
+        //txtGsTradeValue.value = Math.floor(product.gamestopTradeValue).toFixed(2);
         txtGsPrice.value = Math.floor(product.gamestopPrice).toFixed(2);
         txtOnaQuantity.value = product.onaQuantity;
         txtEcQuantity.value = product.ecQuantity;
@@ -550,7 +550,7 @@ namespace.ProductModule = function(options){
             consoleName: txtConsole.value,
             loosePrice: txtLoosePrice.value,
             cibPrice: txtCibPrice.value,
-            gamestopTradeValue: txtGsTradeValue.value,
+            //gamestopTradeValue: txtGsTradeValue.value,
             gamestopPrice: txtGsPrice.value,
             upc: txtUpc.value,
             onaQuantity: txtOnaQuantity.value,
@@ -1131,11 +1131,11 @@ namespace.ProductModule = function(options){
             var systemInName = p.productName.toLowerCase().includes("system");
             if(!consoleInName && !systemInName){ 
                 //GAME PRICING
-                if(p.consoleName.toLowerCase() == "nes" || p.consoleName.toLowerCase() == "super nintendo" || p.consoleName.toLowerCase() == "nintendo 64"
-                  || p.consoleName.toLowerCase() == "sega saturn" || p.consoleName.toLowerCase().includes("atari")){
-                    totalTradeInCreditValue += Math.floor(p.loosePrice * 0.4);
+                if(p.consoleName.toLowerCase() == "gamecube" || p.consoleName.toLowerCase() == "nes" || p.consoleName.toLowerCase() == "super nintendo" || p.consoleName.toLowerCase() == "nintendo 64"
+                  || p.consoleName.toLowerCase() == "sega saturn" || p.consoleName.toLowerCase().includes("atari") || p.consoleName.toLowerCase() == "sega dreamcast"){
+                    totalTradeInCreditValue += Math.floor(p.loosePrice * 0.45);
                     totalTradeInCashValue += Math.floor(p.loosePrice * 0.3);
-                    productCreditValue = Math.floor(p.loosePrice * 0.4);
+                    productCreditValue = Math.floor(p.loosePrice * 0.45);
                     productCashValue = Math.floor(p.loosePrice * 0.3);
 
                     if(productCreditValue < 1){
@@ -1143,12 +1143,12 @@ namespace.ProductModule = function(options){
                         productCashValue = 0.1;
                     }
 
-                    if(Math.floor(p.loosePrice * 4) < 1){
+                    if(Math.floor(p.loosePrice * 0.45) < 1){
                         totalTradeInCreditValue += 0.1;
                     }
 
                     if(selProductList.value == p.productId){
-                        itemTradeInCreditValue = Math.floor(p.loosePrice * 0.4);
+                        itemTradeInCreditValue = Math.floor(p.loosePrice * 0.45);
                         itemTradeInCashValue = Math.floor(p.loosePrice * 0.3);
 
                         if(itemTradeInCreditValue < 1){
@@ -1157,12 +1157,11 @@ namespace.ProductModule = function(options){
                     }
                 }
                 
-                if(p.consoleName.toLowerCase() == "gamecube" || p.consoleName.toLowerCase() == "playstation" || p.consoleName.toLowerCase() == "playstation 2" 
-                || p.consoleName.toLowerCase() == "playstation 3" || p.consoleName.toLowerCase() == "psp" || p.consoleName.toLowerCase() == "playstation vita"
-                || p.consoleName.toLowerCase() == "gameboy" || p.consoleName.toLowerCase() == "gameboy advance" || p.consoleName.toLowerCase() == "gameboy color"
-                || p.consoleName.toLowerCase() == "sega game gear" || p.consoleName.toLowerCase() == "sega genesis" || p.consoleName.toLowerCase() == "xbox"
-                || p.consoleName.toLowerCase() == "xbox 360" || p.consoleName.toLowerCase() == "nintendo ds" || p.consoleName.toLowerCase() == "sega dreamcast"
-                || p.consoleName.toLowerCase() == "wii"){
+                if(p.consoleName.toLowerCase() == "playstation" || p.consoleName.toLowerCase() == "playstation 2" 
+                || p.consoleName.toLowerCase() == "playstation 3" || p.consoleName.toLowerCase() == "psp" || p.consoleName.toLowerCase() == "gameboy" 
+                || p.consoleName.toLowerCase() == "gameboy advance" || p.consoleName.toLowerCase() == "gameboy color"
+                || p.consoleName.toLowerCase() == "sega game gear" || p.consoleName.toLowerCase() == "xbox"
+                || p.consoleName.toLowerCase() == "xbox 360"){
                     totalTradeInCreditValue += Math.floor(p.loosePrice * 0.25);
                     totalTradeInCashValue += Math.floor(p.loosePrice * 0.1);
                     productCreditValue = Math.floor(p.loosePrice * 0.25);
@@ -1187,9 +1186,36 @@ namespace.ProductModule = function(options){
                         
                     }
                 }
+
+                if(p.consoleName.toLowerCase() == "playstation vita" || p.consoleName.toLowerCase() == "sega genesis" || p.consoleName.toLowerCase() == "wii"
+                || p.consoleName.toLowerCase() == "nintendo ds" || p.consoleName.toLowerCase() == "xbox one" || p.consoleName.toLowerCase() == "playstation 4" 
+                || p.consoleName.toLowerCase() == "wii u" || p.consoleName.toLowerCase() == "nintendo 3ds"){
+                    totalTradeInCreditValue += Math.floor(p.loosePrice * 0.4);
+                    totalTradeInCashValue += Math.floor(p.loosePrice * 0.25);
+                    productCreditValue = Math.floor(p.loosePrice * 0.4);
+                    productCashValue = Math.floor(p.loosePrice * 0.25);
+
+                    if(productCreditValue < 1){
+                        productCreditValue = 0.10;
+                        productCashValue = 0.1;
+                    }
+
+                    if(Math.floor(p.loosePrice * 0.4) < 1){
+                        totalTradeInCreditValue += 0.1;
+                    }
+
+                    if(selProductList.value == p.productId){
+                        itemTradeInCreditValue = Math.floor(p.loosePrice * 0.4);
+                        itemTradeInCashValue = Math.floor(p.loosePrice * 0.25);
+
+                        if(itemTradeInCreditValue < 1){
+                            itemTradeInCreditValue = 0.1;
+                        }
+                        
+                    }
+                }
                 
-                if(p.consoleName.toLowerCase() == "playstation 5" || p.consoleName.toLowerCase() == "xbox series x" || p.consoleName.toLowerCase() == "xbox one" || p.consoleName.toLowerCase() == "playstation 4" || p.consoleName.toLowerCase() == "wii u"
-                || p.consoleName.toLowerCase() == "nintendo switch" || p.consoleName.toLowerCase() == "nintendo 3ds"){
+                if(p.consoleName.toLowerCase() == "nintendo switch" || p.consoleName.toLowerCase() == "playstation 5" || p.consoleName.toLowerCase() == "xbox series x"){
                     totalTradeInCreditValue += Math.floor(p.loosePrice * 0.5);
                     totalTradeInCashValue += Math.floor(p.loosePrice * 0.3);
                     productCreditValue = Math.floor(p.loosePrice * 0.5);
@@ -1219,7 +1245,7 @@ namespace.ProductModule = function(options){
                 }
             }else if(p.productName.toLowerCase().includes("console") || p.productName.toLowerCase().includes("system")){
                 //SYSTEM PRICING
-                if(p.consoleName.toLowerCase() == "nes" || p.consoleName.toLowerCase() == "super nintendo" || p.consoleName.toLowerCase() == "nintendo 64"
+                if(p.conseoleName.toLowerCase() == "playstation 5" || p.consoleName.toLowerCase() == "xbox series x" || p.consoleName.toLowerCase() == "nes" || p.consoleName.toLowerCase() == "super nintendo" || p.consoleName.toLowerCase() == "nintendo 64"
                   || p.consoleName.toLowerCase() == "sega saturn" || p.consoleName.toLowerCase().includes("atari") || p.consoleName.toLowerCase() == "xbox one"
                   || p.consoleName.toLowerCase() == "playstation 4" || p.consoleName.toLowerCase() == "wii u" || p.consoleName.toLowerCase() == "nintendo switch"
                   || p.consoleName.toLowerCase() == "nintendo 3ds" ){
@@ -1245,10 +1271,10 @@ namespace.ProductModule = function(options){
                 || p.consoleName.toLowerCase() == "sega game gear" || p.consoleName.toLowerCase() == "sega genesis" || p.consoleName.toLowerCase() == "xbox"
                 || p.consoleName.toLowerCase() == "xbox 360" || p.consoleName.toLowerCase() == "nintendo ds" || p.consoleName.toLowerCase() == "sega dreamcast"
                 || p.consoleName.toLowerCase() == "wii"){
-                    totalTradeInCreditValue += Math.floor(p.loosePrice * 0.3);
-                    totalTradeInCashValue += Math.floor(p.loosePrice * 0.2);
-                    productCreditValue = Math.floor(p.loosePrice * 0.3);
-                    productCashValue = Math.floor(p.loosePrice * 0.2);
+                    totalTradeInCreditValue += Math.floor(p.loosePrice * 0.4);
+                    totalTradeInCashValue += Math.floor(p.loosePrice * 0.3);
+                    productCreditValue = Math.floor(p.loosePrice * 0.4);
+                    productCashValue = Math.floor(p.loosePrice * 0.3);
 
                     if(productCreditValue < 1){
                         productCreditValue = 0.10;
@@ -1256,8 +1282,8 @@ namespace.ProductModule = function(options){
                     }
 
                     if(selProductList.value == p.productId){
-                        itemTradeInCreditValue = Math.floor(p.loosePrice * 0.3);
-                        itemTradeInCashValue = Math.floor(p.loosePrice * 0.2);
+                        itemTradeInCreditValue = Math.floor(p.loosePrice * 0.4);
+                        itemTradeInCashValue = Math.floor(p.loosePrice * 0.3);
                     }
                 }
             }else{

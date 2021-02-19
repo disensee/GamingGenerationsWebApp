@@ -9,7 +9,7 @@ class Product extends Model{
     public $loosePrice;
     public $cibPrice;
     public $gamestopPrice;
-    public $gamestopTradeValue;
+    //public $gamestopTradeValue;
     public $upc;
     public $onaQuantity;
     public $ecQuantity;
@@ -24,7 +24,7 @@ class Product extends Model{
         $this->loosePrice = $args['loosePrice'] ?? 0;
         $this->cibPrice = $args['cibPrice'] ?? 0;
         $this->gamestopPrice = $args['gamestopPrice'] ?? 0;
-        $this->gamestopTradeValue = $args['gamestopTradeValue'] ?? 0;
+        //$this->gamestopTradeValue = $args['gamestopTradeValue'] ?? 0;
         $this->upc = $args['upc'] ?? "000000000000";
         $this->onaQuantity = $args['onaQuantity'] ?? 0;
         $this->ecQuantity = $args['ecQuantity'] ?? 0;
@@ -60,9 +60,9 @@ class Product extends Model{
             return false;
         }
         //gamestopTradeValue must not be empty and must be a number
-        if(empty($this->gamestopTradeValue) || !is_numeric($this->gamestopTradeValue)){
-            return false;
-        }
+        // if(empty($this->gamestopTradeValue) || !is_numeric($this->gamestopTradeValue)){
+        //     return false;
+        // }
         
         if(!empty($this->upc)){
         //upc must be 12 digits
