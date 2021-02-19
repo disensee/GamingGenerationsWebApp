@@ -9,6 +9,8 @@ trade in comments -- DONE
 purchase serial numbers - DONE
 
 
-manager log in -- see trade ins by date
+manager log in -- see trade ins by date - DONE
 
-admin -- talk to jake -- total amounts vs what was paid out -- in admin section
+admin -- talk to jake -- total amounts vs what was paid out -- in admin section - DONE
+
+add percentage button to trade ins
