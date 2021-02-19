@@ -163,10 +163,6 @@ namespace.ProductModule = function(options){
                             <td><input type="text" name="citPrice" id="txtCibPrice" placeholder="CIB Price" readonly="true"></td>
                         </tr>
                         <tr>
-                            <td><label for="gsTradeValue">Gamestop Trade Value:</label></td>
-                            <td><input type="text" name="gsTradeValue" id="txtGsTradeValue" placeholder="Gamestop Value" readonly="true"></td>
-                        </tr>
-                        <tr>
                             <td><label for="gsPrice">Gamestop Price:</label></td>
                             <td><input type="text" name="gsPrice" id="txtGsPrice" placeholder="Gamestop Price" readonly="true"></td>
                         </tr>
