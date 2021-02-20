@@ -50,7 +50,7 @@ namespace.ProductModule = function(options){
     var txtItem;
     var txtLoosePrice;
     var txtCibPrice;
-    var txtGsTradeValue;
+    //var txtGsTradeValue;
     var txtGsPrice;
     var txtOnaQuantity;
     var txtEcQuantity;
@@ -350,7 +350,7 @@ namespace.ProductModule = function(options){
         txtItem = rightColumnContainer.querySelector("#txtItem");
         txtLoosePrice = rightColumnContainer.querySelector("#txtLoosePrice");
         txtCibPrice = rightColumnContainer.querySelector("#txtCibPrice");
-        txtGsTradeValue = rightColumnContainer.querySelector("#txtGsTradeValue");
+        //txtGsTradeValue = rightColumnContainer.querySelector("#txtGsTradeValue");
         txtGsPrice = rightColumnContainer.querySelector("#txtGsPrice");
         txtOnaQuantity = rightColumnContainer.querySelector("#txtOnaQuantity");
         txtEcQuantity = rightColumnContainer.querySelector("#txtEcQuantity");
@@ -921,7 +921,7 @@ namespace.ProductModule = function(options){
         txtItem.value="";
         txtLoosePrice.value="";
         txtCibPrice.value="";
-        txtGsTradeValue.value="";
+        //txtGsTradeValue.value="";
         txtGsPrice.value="";
         txtOnaQuantity.value="";
         txtEcQuantity.value="";
@@ -1241,7 +1241,7 @@ namespace.ProductModule = function(options){
                 }
             }else if(p.productName.toLowerCase().includes("console") || p.productName.toLowerCase().includes("system")){
                 //SYSTEM PRICING
-                if(p.conseoleName.toLowerCase() == "playstation 5" || p.consoleName.toLowerCase() == "xbox series x" || p.consoleName.toLowerCase() == "nes" || p.consoleName.toLowerCase() == "super nintendo" || p.consoleName.toLowerCase() == "nintendo 64"
+                if(p.consoleName.toLowerCase() == "playstation 5" || p.consoleName.toLowerCase() == "xbox series x" || p.consoleName.toLowerCase() == "nes" || p.consoleName.toLowerCase() == "super nintendo" || p.consoleName.toLowerCase() == "nintendo 64"
                   || p.consoleName.toLowerCase() == "sega saturn" || p.consoleName.toLowerCase().includes("atari") || p.consoleName.toLowerCase() == "xbox one"
                   || p.consoleName.toLowerCase() == "playstation 4" || p.consoleName.toLowerCase() == "wii u" || p.consoleName.toLowerCase() == "nintendo switch"
                   || p.consoleName.toLowerCase() == "nintendo 3ds" ){
