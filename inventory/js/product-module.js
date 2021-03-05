@@ -13,13 +13,13 @@ namespace.ProductModule = function(options){
         alert("ERROR: Please logout and log back in. If error persists, please contact system administrator");
     }
 
-    var purchaseWebServiceAddress = "https://localhost/GG/web-services/purchases/";
-    var tiWebServiceAddress = "https://localhost/GG/web-services/tradeins/";
-    var prodWebServiceAddress= "https://localhost/GG/web-services/products/";
+    //var purchaseWebServiceAddress = "https://localhost/GG/web-services/purchases/";
+    //var tiWebServiceAddress = "https://localhost/GG/web-services/tradeins/";
+    //var prodWebServiceAddress= "https://localhost/GG/web-services/products/";
     
-    // var purchaseWebServiceAddress= "https://www.dylanisensee.com/gg/web-services/purchases/";
-    // var tiWebServiceAddress = "https://www.dylanisensee.com/gg/web-services/tradeins/";
-    // var prodWebServiceAddress= "https://www.dylanisensee.com/gg/web-services/products/";
+    var purchaseWebServiceAddress= "https://www.dylanisensee.com/gg/web-services/purchases/";
+    var tiWebServiceAddress = "https://www.dylanisensee.com/gg/web-services/tradeins/";
+    var prodWebServiceAddress= "https://www.dylanisensee.com/gg/web-services/products/";
 
     //All Consoles
     var consoleArr = ["NES", "Super Nintendo", "Nintendo 64", "Gamecube", "Wii", "Wii U", "Nintendo Switch", "GameBoy", "GameBoy Color", "GameBoy Advance", 

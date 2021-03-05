@@ -55,11 +55,14 @@
     </div>
     
     
-    <div id="footer">
-        Gaming Generations &copy;2020
-    </div>
+    <div id="footer"></div>
+
     <script src="js/ajax.js"></script>
     <script src="js/main.js"></script>
+    <script>
+        var currentYear = new Date().getFullYear();
+        document.getElementById('footer').innerHTML = `Gaming Generations &copy;${currentYear}`;
+    </script>
     <script>
         var leftColumn = document.getElementById('left-column');
         var midColumn = document.getElementById('mid-column');
@@ -118,8 +121,8 @@
                         leftColumnContainer: document.getElementById("left-column"),
                         midColumnContainer : document.getElementById("mid-column"),
                         rightColumnContainer: document.getElementById("right-column"),
-                        webServiceAddress: "https://localhost/GG/web-services/tradeins/",
-                        //webServiceAddress: "https://www.dylanisensee.com/gg/web-services/tradeins/",
+                        //webServiceAddress: "https://localhost/GG/web-services/tradeins/",
+                        webServiceAddress: "https://www.dylanisensee.com/gg/web-services/tradeins/",
                         customer: user,
                         selectedStore: selectedStore,
                         sDate: sDate.value,
