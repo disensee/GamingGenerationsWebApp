@@ -61,7 +61,7 @@
     <script src="js/main.js"></script>
     <script>
         var currentYear = new Date().getFullYear();
-        document.getElementById('footer').innerHTML = `Gaming Generations &copy;${currentYear}`;
+        document.getElementById('footer').innerHTML = `Dylan Isensee &copy;${currentYear}`;
     </script>
     <script>
         var leftColumn = document.getElementById('left-column');

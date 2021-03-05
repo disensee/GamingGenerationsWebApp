@@ -44,7 +44,7 @@ require("authentication-check.inc.php");
 
     <script>
         var currentYear = new Date().getFullYear();
-        document.querySelector('#footer').innerHTML = `Gaming Generations &copy; ${currentYear}`;
+        document.querySelector('#footer').innerHTML = `Dylan Isensee &copy; ${currentYear}`;
     </script>
     <script src="js/customer-module.js"></script>
     <script src="js/tradein-module.js"></script>
