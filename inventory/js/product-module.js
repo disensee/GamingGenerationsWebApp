@@ -1387,11 +1387,10 @@ namespace.ProductModule = function(options){
 
         if(rbStoreCredit.checked){
             txtTradeInCreditValue.value = totalValue * 1.25;
+            btnAddPromoCredit.disabled = true;
         }else{
             alert("Trade in promos can only be applied to store credit payouts.");
         }
-        
-        btnAddPromoCredit.disabled = true;
     }
 
     function getUser(){
