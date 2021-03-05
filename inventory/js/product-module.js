@@ -7,21 +7,33 @@ namespace.ProductModule = function(options){
     var callback = options.callback;
     var webServiceAddress = options.webServiceAddress;// || "https://localhost/GG/web-services/tradeinproducts/"; //THIS IS REQUIRED!!
     
-    //Trade in or purchase have to have a value. Need to account for this. 
     var tradeIn = options.tradeIn || null;
     var purchase = options.purchase || null;
+    if (tradeIn === null && purchase === null){
+        alert("ERROR: Please logout and log back in. If error persists, please contact system administrator");
+    }
 
-    // var purchaseWebServiceAddress = "https://localhost/GG/web-services/purchases/";
-    // var tiWebServiceAddress = "https://localhost/GG/web-services/tradeins/";
-    // var prodWebServiceAddress= "https://localhost/GG/web-services/products/";
+    var purchaseWebServiceAddress = "https://localhost/GG/web-services/purchases/";
+    var tiWebServiceAddress = "https://localhost/GG/web-services/tradeins/";
+    var prodWebServiceAddress= "https://localhost/GG/web-services/products/";
     
-    var purchaseWebServiceAddress= "https://www.dylanisensee.com/gg/web-services/purchases/";
-    var tiWebServiceAddress = "https://www.dylanisensee.com/gg/web-services/tradeins/";
-    var prodWebServiceAddress= "https://www.dylanisensee.com/gg/web-services/products/";
-    
+    // var purchaseWebServiceAddress= "https://www.dylanisensee.com/gg/web-services/purchases/";
+    // var tiWebServiceAddress = "https://www.dylanisensee.com/gg/web-services/tradeins/";
+    // var prodWebServiceAddress= "https://www.dylanisensee.com/gg/web-services/products/";
+
+    //All Consoles
     var consoleArr = ["NES", "Super Nintendo", "Nintendo 64", "Gamecube", "Wii", "Wii U", "Nintendo Switch", "GameBoy", "GameBoy Color", "GameBoy Advance", 
     "Nintendo DS", "Nintendo 3DS", "Playstation", "Playstation 2", "Playstation 3", "Playstation 4", "Playstation 5", "PSP", "Playstation Vita", 
     "Xbox", "Xbox 360", "Xbox One", "Xbox Series X", "Sega Genesis", "Sega Saturn", "Sega Dreamcast", "Sega Game Gear", "Atari 2600", "Atari 400", "Atari 5200", "Atari 7800", "Atari Lynx", "Atari ST" ];
+
+    //These arrays are used to determine game trade in pricing in the function below
+    var retroConsoles = ["nes", "super nintendo", "nintendo 64", "gamecube", "sega saturn", "sega dreamcast"];
+    
+    var vintageConsoles = ["playstation","playstation 2", "playstation 3", "psp", "gameboy", "gameboy color" ,"gameboy advance", "sega game gear", "xbox", "xbox 360"];
+    
+    var modernConsoles = ["playstation vita", "sega genesis", "wii", "nintendo ds", "xbox one", "playstation 4", "wii u", "nintendo 3ds"];
+
+    var currentConsoles = ["nintendo switch", "playstation 5", "xbox series x"];
     
     var completedTradeIn;
     var productTableListContainer;
@@ -76,6 +88,7 @@ namespace.ProductModule = function(options){
     var btnClearAll;
     var btnTradeIn;
     var btnSale;
+    var btnAddPromoCredit;
 
     var btnAddOneToTradeInValue;
     var btnAddFiveToTradeInValue;
@@ -89,6 +102,10 @@ namespace.ProductModule = function(options){
     var rbCredit;
 
     var rbGroup;
+
+    //right column cib checkbox
+    var chkCibContainer;
+    var chkCib;
 
     //running total variables
     var totalTradeInCreditValue = 0;
@@ -187,10 +204,18 @@ namespace.ProductModule = function(options){
                             <td><input type="text" id="txtSerialNumber" placeholder="Serial Number"></td>
                         </tr>
                         <tr>
-                            <td></td>
+                            <td></td> 
                             <td>
-                                <button class="btn btn-outline-primary btn-sm" id="btnAddToList">Add</button>
-                                <button class="btn btn-outline-primary btn-sm" id="btnClearForm">Clear Form</button>
+                                <button class="btn btn-outline-primary btn-sm" id="btnAddToList">
+                                    Add
+                                </button>
+                                <button class="btn btn-outline-primary btn-sm" id="btnClearForm">
+                                    Clear Form
+                                </button>
+                                <div id="cib-chkbox-container">
+                                    <label for="chk-cib" style="margin-left: 25px;">CIB:</label>
+                                    <input type="checkbox" id="chk-cib" />
+                                </div>
                             </td>
                         </tr>
                         <tr>
@@ -239,7 +264,6 @@ namespace.ProductModule = function(options){
                     </td>
                 </tr>
                 <tr>
-                <tr>
                     <td><label for="txtTotalPaid">TOTAL PAID:</label></td>
                     <td><input type="number" name="trade-in-total-paid" id="txtTotalPaid" style="width:50%;">
                     <input type="number" id="txtCheckNumber" placeholder="Check #" style="width:40%;">
@@ -275,6 +299,13 @@ namespace.ProductModule = function(options){
                     <td colspan="2">
                         <button class="btn btn-outline-success btn-sm transaction-final" id="btnTradeIn">Trade In</button>
                     </td>
+                </tr>
+                <tr>
+                <td colspan="2">
+                    <button class = "btn btn-outline-dark btn-sm transaction-final" id="btnAddPromo">
+                        ADD TRADE IN PROMO CREDIT
+                    </button>
+            </td>
                 </tr>
             </table>
         </div>`;
@@ -323,9 +354,6 @@ namespace.ProductModule = function(options){
             rightColumnContainer.innerHTML = rightColumnContainerTemplate + rightColumnPurchaseTemplate;
         }
 
-        footer = document.querySelector("#footer");
-        footer.innerHTML=`Gaming Generations &copy;2020`;
-
         productTableListContainer = document.getElementById("mid-table-list");
 
         //search by product name
@@ -350,7 +378,6 @@ namespace.ProductModule = function(options){
         txtItem = rightColumnContainer.querySelector("#txtItem");
         txtLoosePrice = rightColumnContainer.querySelector("#txtLoosePrice");
         txtCibPrice = rightColumnContainer.querySelector("#txtCibPrice");
-        //txtGsTradeValue = rightColumnContainer.querySelector("#txtGsTradeValue");
         txtGsPrice = rightColumnContainer.querySelector("#txtGsPrice");
         txtOnaQuantity = rightColumnContainer.querySelector("#txtOnaQuantity");
         txtEcQuantity = rightColumnContainer.querySelector("#txtEcQuantity");
@@ -362,11 +389,16 @@ namespace.ProductModule = function(options){
         rowSerialNumber.style.display = "none";
 
         selProductList = rightColumnContainer.querySelector("#selProductList");
+        selProductListOption = rightColumnContainer.querySelector('#selProductList option');
 
         rbStoreCredit = rightColumnContainer.querySelector("#rbStoreCredit");
         rbCash = rightColumnContainer.querySelector("#rbCash");
        
         rbGroup = document.querySelectorAll('input[name="tradeInPayment"]');
+
+        chkCibContainer = document.querySelector("#cib-chkbox-container");
+        chkCib = document.querySelector("#chk-cib");
+        chkCibContainer.style.display = "none";
 
         txtTotalPaid = rightColumnContainer.querySelector("#txtTotalPaid");
         txtEmployee = rightColumnContainer.querySelector("#txtEmployee");
@@ -420,6 +452,11 @@ namespace.ProductModule = function(options){
             });
 
             btnTradeIn = rightColumnContainer.querySelector("#btnTradeIn").onclick = tradeInDBInsert;
+
+            btnAddPromoCredit = rightColumnContainer.querySelector("#btnAddPromo");
+            btnAddPromoCredit.addEventListener("click", function(){
+                addTradeInPromoCredit();
+            });
         }
 
         if(purchase != null){
@@ -524,19 +561,25 @@ namespace.ProductModule = function(options){
     }
 
     function populateProductForm(product){
+        clearProductInfoTextBoxes();
         txtProductId.value = product.productId;
         txtUpc.value = product.upc;
         txtConsole.value = product.consoleName;
         txtItem.value = product.productName;
         txtLoosePrice.value = Math.floor(product.loosePrice).toFixed(2);
         txtCibPrice.value = Math.floor(product.cibPrice).toFixed(2);
-        //txtGsTradeValue.value = Math.floor(product.gamestopTradeValue).toFixed(2);
         txtGsPrice.value = Math.floor(product.gamestopPrice).toFixed(2);
         txtOnaQuantity.value = product.onaQuantity;
         txtEcQuantity.value = product.ecQuantity;
         txtSpQuantity.value = product.spQuantity;
         txtShebQuantity.value = product.shebQuantity;
         txtSerialNumber.value = product.serialNumber || "";
+        if(retroConsoles.includes(product.consoleName.toLowerCase())){
+            chkCibContainer.style.display = 'inline-block';
+            if(product.isCib){
+                chkCib.checked = true;
+            }
+        }
     }
 
     function createProductFromForm(){
@@ -546,14 +589,14 @@ namespace.ProductModule = function(options){
             consoleName: txtConsole.value,
             loosePrice: txtLoosePrice.value,
             cibPrice: txtCibPrice.value,
-            //gamestopTradeValue: txtGsTradeValue.value,
             gamestopPrice: txtGsPrice.value,
             upc: txtUpc.value,
             onaQuantity: txtOnaQuantity.value,
             ecQuantity: txtEcQuantity.value,
             spQuantity: txtSpQuantity.value,
             shebQuantity: txtShebQuantity.value,
-            serialNumber: txtSerialNumber.value
+            serialNumber: txtSerialNumber.value,
+            isCib: chkCib.checked
         };
 
         return product;
@@ -921,13 +964,17 @@ namespace.ProductModule = function(options){
         txtItem.value="";
         txtLoosePrice.value="";
         txtCibPrice.value="";
-        //txtGsTradeValue.value="";
         txtGsPrice.value="";
         txtOnaQuantity.value="";
         txtEcQuantity.value="";
         txtSpQuantity.value="";
         txtShebQuantity.value="";
-
+        if(chkCibContainer.style.display === 'inline-block'){
+            chkCibContainer.style.display = 'none';
+            if(chkCib.checked){
+                chkCib.checked = false;
+            }
+        }
     }
 
     function refreshSelectedProducts(){
@@ -1001,6 +1048,8 @@ namespace.ProductModule = function(options){
         }else{
             alert("Please select a product from the pending transaction list.")
         }
+
+        clearProductInfoTextBoxes();
     }
 
     function validateSearchProductName(){
@@ -1033,7 +1082,7 @@ namespace.ProductModule = function(options){
 
     function populateProductFormFromSelectBox(){
         for(var i = 0; i < selectedProducts.length; i++){
-            if(selectedProducts[i].productId == selProductList.value){
+            if(i == selProductList.selectedIndex){
                 var consoleInName = selectedProducts[i].productName.toLowerCase().includes("console");
                 var systemInName = selectedProducts[i].productName.toLowerCase().includes("system");
                 
@@ -1127,78 +1176,92 @@ namespace.ProductModule = function(options){
             var systemInName = p.productName.toLowerCase().includes("system");
             if(!consoleInName && !systemInName){ 
                 //GAME PRICING
-                if(p.consoleName.toLowerCase() == "gamecube" || p.consoleName.toLowerCase() == "nes" || p.consoleName.toLowerCase() == "super nintendo" || p.consoleName.toLowerCase() == "nintendo 64"
-                  || p.consoleName.toLowerCase() == "sega saturn" || p.consoleName.toLowerCase().includes("atari") || p.consoleName.toLowerCase() == "sega dreamcast"){
-                    totalTradeInCreditValue += Math.floor(p.loosePrice * 0.45);
-                    totalTradeInCashValue += Math.floor(p.loosePrice * 0.3);
-                    productCreditValue = Math.floor(p.loosePrice * 0.45);
-                    productCashValue = Math.floor(p.loosePrice * 0.3);
+                //RETRO CONSOLE ARRAY: "nes", "super nintendo", "nintendo 64", "gamecube",
+                // "sega saturn", "sega dreamcast"
+                if(retroConsoles.includes(p.consoleName.toLowerCase()) || p.consoleName.toLowerCase().includes("atari")){
+                    if(p.isCib === true){
+                        totalTradeInCreditValue += p.cibPrice * 0.45;
+                        totalTradeInCashValue += p.cibPrice * 0.3;
+                        productCreditValue = p.cibPrice * 0.45;
+                        productCashValue = p.cibPrice * 0.3;
+                    }else{
+                        totalTradeInCreditValue += p.loosePrice * 0.45;
+                        totalTradeInCashValue += p.loosePrice * 0.3;
+                        productCreditValue = p.loosePrice * 0.45;
+                        productCashValue = p.loosePrice * 0.3;
+                    }
 
                     if(productCreditValue < 1){
                         productCreditValue = 0.10;
-                        productCashValue = 0.1;
-                    }
-
-                    if(Math.floor(p.loosePrice * 0.45) < 1){
+                        productCashValue = 0.01;
                         totalTradeInCreditValue += 0.1;
                     }
 
+                    //if(p.loosePrice * 0.45 < 1){
+                        // totalTradeInCreditValue += 0.1;
+                    //}
+
                     if(selProductList.value == p.productId){
-                        itemTradeInCreditValue = Math.floor(p.loosePrice * 0.45);
-                        itemTradeInCashValue = Math.floor(p.loosePrice * 0.3);
+                        if(p.isCib === true){
+                            itemTradeInCreditValue = p.cibPrice * 0.45;
+                            itemTradeInCashValue = p.cibPrice * 0.3;
+                        }else{
+                            itemTradeInCreditValue = p.loosePrice * 0.45;
+                            itemTradeInCashValue = p.loosePrice * 0.3;
+                        }
 
                         if(itemTradeInCreditValue < 1){
                             itemTradeInCreditValue = 0.1;
+                            itemTradeInCashValue = 0.01;
                         }
                     }
                 }
                 
-                if(p.consoleName.toLowerCase() == "playstation" || p.consoleName.toLowerCase() == "playstation 2" 
-                || p.consoleName.toLowerCase() == "playstation 3" || p.consoleName.toLowerCase() == "psp" || p.consoleName.toLowerCase() == "gameboy" 
-                || p.consoleName.toLowerCase() == "gameboy advance" || p.consoleName.toLowerCase() == "gameboy color"
-                || p.consoleName.toLowerCase() == "sega game gear" || p.consoleName.toLowerCase() == "xbox"
-                || p.consoleName.toLowerCase() == "xbox 360"){
-                    totalTradeInCreditValue += Math.floor(p.loosePrice * 0.25);
-                    totalTradeInCashValue += Math.floor(p.loosePrice * 0.1);
-                    productCreditValue = Math.floor(p.loosePrice * 0.25);
-                    productCashValue = Math.floor(p.loosePrice * 0.1);
+                //VINTAGE CONSOLE ARRAY: "playstation","playstation 2", "playstation 3", "psp", "gameboy", gameboy color" ,"gameboy advance", "sega game gear", "xbox", "xbox 360"
+                if(vintageConsoles.includes(p.consoleName.toLowerCase())){
+                    totalTradeInCreditValue += p.loosePrice * 0.25;
+                    totalTradeInCashValue += p.loosePrice * 0.1;
+                    productCreditValue = p.loosePrice * 0.25;
+                    productCashValue = p.loosePrice * 0.1;
 
                     if(productCreditValue < 1){
                         productCreditValue = 0.10;
                         productCashValue = 0.1;
-                    }
-
-                    if(Math.floor(p.loosePrice * 0.25) < 1){
                         totalTradeInCreditValue += 0.1;
                     }
 
+                    // if(Math.floor(p.loosePrice * 0.25) < 1){
+                    //     totalTradeInCreditValue += 0.1;
+                    // }
+
                     if(selProductList.value == p.productId){
-                        itemTradeInCreditValue = Math.floor(p.loosePrice * 0.25);
-                        itemTradeInCashValue = Math.floor(p.loosePrice * 0.1);
+                        itemTradeInCreditValue = p.loosePrice * 0.25;
+                        itemTradeInCashValue = p.loosePrice * 0.1;
 
                         if(itemTradeInCreditValue < 1){
                             itemTradeInCreditValue = 0.1;
-                        }
-                        
+                            itemTradeInCashValue = 0.01;
+                        }    
                     }
                 }
 
-                if(p.consoleName.toLowerCase() == "playstation vita" || p.consoleName.toLowerCase() == "sega genesis" || p.consoleName.toLowerCase() == "wii"
-                || p.consoleName.toLowerCase() == "nintendo ds" || p.consoleName.toLowerCase() == "xbox one" || p.consoleName.toLowerCase() == "playstation 4" 
-                || p.consoleName.toLowerCase() == "wii u" || p.consoleName.toLowerCase() == "nintendo 3ds"){
-                    totalTradeInCreditValue += Math.floor(p.loosePrice * 0.4);
-                    totalTradeInCashValue += Math.floor(p.loosePrice * 0.25);
-                    productCreditValue = Math.floor(p.loosePrice * 0.4);
-                    productCashValue = Math.floor(p.loosePrice * 0.25);
+                //MODERN CONSOLE ARRAY: "playstation vita", "sega genesis", "wii", "nintendo ds", 
+                //"xbox one", "playstation 4", "wii u", "nintendo 3ds"
+                if(modernConsoles.includes(p.consoleName.toLowerCase())){
+                    totalTradeInCreditValue += p.loosePrice * 0.4;
+                    totalTradeInCashValue += p.loosePrice * 0.25;
+                    productCreditValue = p.loosePrice * 0.4;
+                    productCashValue = p.loosePrice * 0.25;
 
                     if(productCreditValue < 1){
                         productCreditValue = 0.10;
                         productCashValue = 0.1;
-                    }
-
-                    if(Math.floor(p.loosePrice * 0.4) < 1){
                         totalTradeInCreditValue += 0.1;
                     }
+
+                    // if(Math.floor(p.loosePrice * 0.4) < 1){
+                    //     totalTradeInCreditValue += 0.1;
+                    // }
 
                     if(selProductList.value == p.productId){
                         itemTradeInCreditValue = Math.floor(p.loosePrice * 0.4);
@@ -1206,25 +1269,29 @@ namespace.ProductModule = function(options){
 
                         if(itemTradeInCreditValue < 1){
                             itemTradeInCreditValue = 0.1;
+                            itemTradeInCashValue = 0.01;
                         }
                         
                     }
                 }
-                
-                if(p.consoleName.toLowerCase() == "nintendo switch" || p.consoleName.toLowerCase() == "playstation 5" || p.consoleName.toLowerCase() == "xbox series x"){
-                    totalTradeInCreditValue += Math.floor(p.loosePrice * 0.5);
-                    totalTradeInCashValue += Math.floor(p.loosePrice * 0.3);
-                    productCreditValue = Math.floor(p.loosePrice * 0.5);
-                    productCashValue = Math.floor(p.loosePrice * 0.3);
+
+
+                //"nintendo switch", "playstation 5", "xbox series x"
+                if(currentConsoles.includes(p.consoleName.toLowerCase())){
+                    totalTradeInCreditValue += p.loosePrice * 0.5;
+                    totalTradeInCashValue += p.loosePrice * 0.3;
+                    productCreditValue = p.loosePrice * 0.5;
+                    productCashValue = p.loosePrice * 0.3;
 
                     if(productCreditValue < 1){
                         productCreditValue = 0.10;
                         productCashValue = 0.1;
-                    }
-                    
-                    if(Math.floor(p.loosePrice * 0.5) < 1){
                         totalTradeInCreditValue += 0.1;
                     }
+                    
+                    // if(Math.floor(p.loosePrice * 0.5) < 1){
+                    //     totalTradeInCreditValue += 0.1;
+                    // }
 
                     if(selProductList.value == p.productId){
                         itemTradeInCreditValue = Math.floor(p.loosePrice * 0.5);
@@ -1245,10 +1312,10 @@ namespace.ProductModule = function(options){
                   || p.consoleName.toLowerCase() == "sega saturn" || p.consoleName.toLowerCase().includes("atari") || p.consoleName.toLowerCase() == "xbox one"
                   || p.consoleName.toLowerCase() == "playstation 4" || p.consoleName.toLowerCase() == "wii u" || p.consoleName.toLowerCase() == "nintendo switch"
                   || p.consoleName.toLowerCase() == "nintendo 3ds" ){
-                    totalTradeInCreditValue += Math.floor(p.loosePrice * 0.5);
-                    totalTradeInCashValue += Math.floor(p.loosePrice * 0.4);
-                    productCreditValue = Math.floor(p.loosePrice * 0.5);
-                    productCashValue = Math.floor(p.loosePrice * 0.4);
+                    totalTradeInCreditValue += p.loosePrice * 0.5;
+                    totalTradeInCashValue += p.loosePrice * 0.4;
+                    productCreditValue = p.loosePrice * 0.5;
+                    productCashValue = p.loosePrice * 0.4;
 
                     if(productCreditValue < 1){
                         productCreditValue = 0.10;
@@ -1256,8 +1323,8 @@ namespace.ProductModule = function(options){
                     }
 
                     if(selProductList.value == p.productId){
-                        itemTradeInCreditValue = Math.floor(p.loosePrice * 0.5);
-                        itemTradeInCashValue = Math.floor(p.loosePrice * 0.4);
+                        itemTradeInCreditValue = p.loosePrice * 0.5;
+                        itemTradeInCashValue = p.loosePrice * 0.4;
                     }
                 }
 
@@ -1267,10 +1334,10 @@ namespace.ProductModule = function(options){
                 || p.consoleName.toLowerCase() == "sega game gear" || p.consoleName.toLowerCase() == "sega genesis" || p.consoleName.toLowerCase() == "xbox"
                 || p.consoleName.toLowerCase() == "xbox 360" || p.consoleName.toLowerCase() == "nintendo ds" || p.consoleName.toLowerCase() == "sega dreamcast"
                 || p.consoleName.toLowerCase() == "wii"){
-                    totalTradeInCreditValue += Math.floor(p.loosePrice * 0.4);
-                    totalTradeInCashValue += Math.floor(p.loosePrice * 0.3);
-                    productCreditValue = Math.floor(p.loosePrice * 0.4);
-                    productCashValue = Math.floor(p.loosePrice * 0.3);
+                    totalTradeInCreditValue += p.loosePrice * 0.4;
+                    totalTradeInCashValue += p.loosePrice * 0.3;
+                    productCreditValue = p.loosePrice * 0.4;
+                    productCashValue = p.loosePrice * 0.3;
 
                     if(productCreditValue < 1){
                         productCreditValue = 0.10;
@@ -1278,15 +1345,15 @@ namespace.ProductModule = function(options){
                     }
 
                     if(selProductList.value == p.productId){
-                        itemTradeInCreditValue = Math.floor(p.loosePrice * 0.4);
-                        itemTradeInCashValue = Math.floor(p.loosePrice * 0.3);
+                        itemTradeInCreditValue = p.loosePrice * 0.4;
+                        itemTradeInCashValue = p.loosePrice * 0.3;
                     }
                 }
             }else{
-                totalTradeInCreditValue += Math.floor(p.loosePrice * 0.4);
-                totalTradeInCashValue += Math.floor(p.loosePrice * 0.3);
-                productCreditValue = Math.floor(p.loosePrice * 0.4);
-                productCashValue = Math.floor(p.loosePrice * 0.3);
+                totalTradeInCreditValue += p.loosePrice * 0.4;
+                totalTradeInCashValue += p.loosePrice * 0.3;
+                productCreditValue = p.loosePrice * 0.4;
+                productCashValue = p.loosePrice * 0.3;
 
                 if(productCreditValue < 1){
                     productCreditValue = 0.10;
@@ -1294,14 +1361,14 @@ namespace.ProductModule = function(options){
                 }
 
                 if(selProductList.value == p.productId){
-                    itemTradeInCreditValue = Math.floor(p.loosePrice * 0.4);
-                    itemTradeInCashValue = Math.floor(p.loosePrice * 0.3);
+                    itemTradeInCreditValue = p.loosePrice * 0.4;
+                    itemTradeInCashValue = p.loosePrice * 0.3;
                 }
             }
         });
 
-        txtTradeInCreditValue.value = totalTradeInCreditValue.toFixed(2);
-        txtTradeInCashValue.value = totalTradeInCashValue.toFixed(2);
+        txtTradeInCreditValue.value = Math.floor(totalTradeInCreditValue).toFixed(2);
+        txtTradeInCashValue.value = Math.floor(totalTradeInCashValue).toFixed(2);
         txtItemTradeInCreditValue.value = itemTradeInCreditValue.toFixed(2);
         txtItemTradeInCashValue.value = itemTradeInCashValue.toFixed(2);
 
@@ -1309,6 +1376,22 @@ namespace.ProductModule = function(options){
         returnValues[1] = productCashValue;
 
         return returnValues;
+    }
+
+    function addTradeInPromoCredit(){
+        if(txtTradeInCreditValue.value != "" && txtTradeInCreditValue.value > 0){
+            var totalValue = txtTradeInCreditValue.value;
+        }else{
+            alert("Total trade in value is not greater than 0");
+        }
+
+        if(rbStoreCredit.checked){
+            txtTradeInCreditValue.value = totalValue * 1.25;
+        }else{
+            alert("Trade in promos can only be applied to store credit payouts.");
+        }
+        
+        btnAddPromoCredit.disabled = true;
     }
 
     function getUser(){
@@ -1347,6 +1430,4 @@ namespace.ProductModule = function(options){
 		    webServiceAddress: "https://www.dylanisensee.com/gg/web-services/customers/"
         });
     }
-
-
 }

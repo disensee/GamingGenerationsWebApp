@@ -21,6 +21,7 @@ require("authentication-check.inc.php");
 
     <script src="js/main.js"></script>
     <script src="js/ajax.js"></script>
+    
 
     
     <meta charset="UTF-8">
@@ -29,20 +30,22 @@ require("authentication-check.inc.php");
 </head>
 <body>
     <input type="hidden" id="store_user" value="<?=$_COOKIE['ggUserName']?>"/>
-    <div id="header">
+    <header id="header">
         <img id="gg-logo" src=images/gg-logo.jpg>
         <a class="logout" href="login.php">Log Out</a>
         <p>Gaming Generations Inventory</p>
-    </div>
+    </header>
     <div id="content-pane">
         <div id="left-column" class="column left"></div>
         <div id ="mid-column" class ="column mid"></div>
         <div id="right-column" class="column right"></div>
     </div>
-    <div id="footer">
-        Gaming Generations &copy;2020
-    </div>
+    <footer id="footer"></footer>
 
+    <script>
+        var currentYear = new Date().getFullYear();
+        document.querySelector('#footer').innerHTML = `Gaming Generations &copy; ${currentYear}`;
+    </script>
     <script src="js/customer-module.js"></script>
     <script src="js/tradein-module.js"></script>
     <script src="js/purchase-module.js"></script>

@@ -13,4 +13,12 @@ manager log in -- see trade ins by date - DONE
 
 admin -- talk to jake -- total amounts vs what was paid out -- in admin section - DONE
 
-add percentage button to trade ins
+
+customer id number character limit(?) -- DONE
+CIB pricing for retro games -- DONE
+add 25% percentage button to trade ins
+add to comments that product was complete in box
+add product to list when scanned
+full search without console
+button to clear selection
+duplicate customers - phone numbers 
