@@ -13,13 +13,13 @@ namespace.ProductModule = function(options){
         alert("ERROR: Please logout and log back in. If error persists, please contact system administrator");
     }
 
-    //var purchaseWebServiceAddress = "https://localhost/GG/web-services/purchases/";
-    //var tiWebServiceAddress = "https://localhost/GG/web-services/tradeins/";
-    //var prodWebServiceAddress= "https://localhost/GG/web-services/products/";
+    var purchaseWebServiceAddress = "https://localhost/GG/web-services/purchases/";
+    var tiWebServiceAddress = "https://localhost/GG/web-services/tradeins/";
+    var prodWebServiceAddress= "https://localhost/GG/web-services/products/";
     
-    var purchaseWebServiceAddress= "https://www.dylanisensee.com/gg/web-services/purchases/";
-    var tiWebServiceAddress = "https://www.dylanisensee.com/gg/web-services/tradeins/";
-    var prodWebServiceAddress= "https://www.dylanisensee.com/gg/web-services/products/";
+    // var purchaseWebServiceAddress= "https://www.dylanisensee.com/gg/web-services/purchases/";
+    // var tiWebServiceAddress = "https://www.dylanisensee.com/gg/web-services/tradeins/";
+    // var prodWebServiceAddress= "https://www.dylanisensee.com/gg/web-services/products/";
 
     //All Consoles
     var consoleArr = ["NES", "Super Nintendo", "Nintendo 64", "Gamecube", "Wii", "Wii U", "Nintendo Switch", "GameBoy", "GameBoy Color", "GameBoy Advance", 
@@ -1171,7 +1171,9 @@ namespace.ProductModule = function(options){
         totalTradeInCashValue = 0;
         itemTradeInCreditValue = 0;
         itemTradeInCashValue = 0;
-        products.forEach((p)=>{
+        //products.forEach((p)=>
+        for(var i = 0; i < products.length; i++){
+            var p = products[i];
             var consoleInName = p.productName.toLowerCase().includes("console");
             var systemInName = p.productName.toLowerCase().includes("system");
             if(!consoleInName && !systemInName){ 
@@ -1197,11 +1199,7 @@ namespace.ProductModule = function(options){
                         totalTradeInCreditValue += 0.1;
                     }
 
-                    //if(p.loosePrice * 0.45 < 1){
-                        // totalTradeInCreditValue += 0.1;
-                    //}
-
-                    if(selProductList.value == p.productId){
+                    if(selProductList.selectedIndex == i){
                         if(p.isCib === true){
                             itemTradeInCreditValue = p.cibPrice * 0.45;
                             itemTradeInCashValue = p.cibPrice * 0.3;
@@ -1365,7 +1363,7 @@ namespace.ProductModule = function(options){
                     itemTradeInCashValue = p.loosePrice * 0.3;
                 }
             }
-        });
+        };//);
 
         txtTradeInCreditValue.value = Math.floor(totalTradeInCreditValue).toFixed(2);
         txtTradeInCashValue.value = Math.floor(totalTradeInCashValue).toFixed(2);

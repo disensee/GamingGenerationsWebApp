@@ -15,8 +15,8 @@ admin -- talk to jake -- total amounts vs what was paid out -- in admin section 
 
 
 customer id number character limit(?) -- DONE
-CIB pricing for retro games -- DONE
-add 25% percentage button to trade ins
+CIB pricing for retro games -- DONE - bugged -- BUG FIXED
+add 25% percentage button to trade ins -- DONE
 add to comments that product was complete in box
 add product to list when scanned
 full search without console
