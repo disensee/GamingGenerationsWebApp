@@ -93,6 +93,10 @@ table th .fas{
     width: 100%;
 }
 
+.search-sub-cont {
+    margin-bottom: 15px;
+}
+
 /*************************************ID SELECTORS*****************************************/
 #header>*{
     /* Select level 1 children */
@@ -145,7 +149,6 @@ table th .fas{
     border-radius: 5px;
     border-style: solid;
     border-width: 1px;
-    line-height: 2;
     padding: 10px;
 }
 

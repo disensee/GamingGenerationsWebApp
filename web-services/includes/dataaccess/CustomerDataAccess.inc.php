@@ -99,14 +99,36 @@ class CustomerDataAccess extends DataAccess{
 
     /**
 	* Gets a customer from the database by its customer name
-	* @param {string} 	 The name of the customer to get from a row in the database
-	* @param {string} 	 The name of the console the customer is for
+	* @param {string} 	 The first name of the customer to get from a row in the database
+	* @param {string} 	 The last name of the customer to get from a row in the database
 	* @return {customer} Returns an instance of a customer model object
 	*/
 	function getByCustomerName($customerFirstName, $customerLastName){
 		$cleanCustomerFirstName = $this->cleanDataGoingIntoDB($customerFirstName);
         $cleanCustomerLastName = $this->cleanDataGoingIntoDB($customerLastName);
 		$qStr = "SELECT customerId, customerFirstName, customerLastName, customerIdNumber, customerEmail, customerPhone FROM customers WHERE customerFirstName LIKE '$cleanCustomerFirstName' OR customerLastName LIKE '%$cleanCustomerLastName%'";
+
+		$result = mysqli_query($this->link, $qStr) or $this->handleError(mysqli_error($this->link));
+		$allCustomers = [];
+		if(mysqli_num_rows($result)){
+			while($row = mysqli_fetch_assoc($result)){
+				$cleanRow = $this->cleanDataComingFromDB($row);
+				$customer = new Customer($cleanRow);
+
+				$allCustomers[] = $customer;
+			}
+		}
+		return $allCustomers;
+    }
+
+	 /**
+	* Gets a customer from the database by its customer phone number
+	* @param {string} 	 The phone number of the customer to get from a row in the database
+	* @return {customer} Returns an instance of a customer model object
+	*/
+	function getByCustomerPhone($customerPhone){
+        $cleanCustomerPhone = $this->cleanDataGoingIntoDB($customerPhone);
+		$qStr = "SELECT customerId, customerFirstName, customerLastName, customerIdNumber, customerEmail, customerPhone FROM customers WHERE customerPhone LIKE '$cleanCustomerPhone'";
 
 		$result = mysqli_query($this->link, $qStr) or $this->handleError(mysqli_error($this->link));
 		$allCustomers = [];

@@ -52,6 +52,20 @@ switch($method){
             echo($json);
             die();
         }
+    }else if(preg_match("/^([0-9]){10}$/", $url_path, $matches)){
+      $customerPhone = $matches[0];
+      $customer = $da->getByCustomerPhone($customerPhone);
+
+      if($customer == false){
+        header('HTTP/1.1 404 Not Found', true, 404);
+        die();
+      }else{
+        $json = json_encode($customer);
+        header("Content-Type: application/json");
+        echo($json);
+        die();
+      }
+
     }else if(preg_match('/^([0-9]*\/?)$/', $url_path, $matches)){ 
       $customerId = $matches[1];
       $customer = $da->getById($customerId);

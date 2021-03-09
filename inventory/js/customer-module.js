@@ -11,7 +11,11 @@ namespace.CustomerModule = function(options){
     var txtSearchCustomer;
     var btnSearchByCustomerName;
 
+    var txtSearchCustomerPhone;
+    var btnSearchByCustomerPhone;
+
     var vSearch;
+    var vSearchPhone;
 
     //mid column data vars
     var customerTableListContainer;
@@ -49,10 +53,18 @@ namespace.CustomerModule = function(options){
 
         var leftColumnContainerTemplate = `
             <div id="search-container">
-                <p>Search for customer:</p>
-                <span class="validation" id="vSearch" style="display: block;"></span>
-                <input type="text" id="txtSearchCustomer" placeholder="Enter customer name"><br>
-                <button class="btn btn-outline-primary btn-sm" id="btnSearchByCustomerName">Search</button><br>
+                <div class="search-sub-cont">
+                    <p>Search by Name:</p>
+                    <span class="validation" id="vSearch" style="display: block;"></span>
+                    <input type="text" id="txtSearchCustomer" placeholder="Enter customer name"><br>
+                    <button class="btn btn-outline-primary btn-sm" id="btnSearchByCustomerName">Search</button><br>
+                </div>
+                <div class="search-sub-cont">
+                    <p>Search by Phone:</p>
+                    <span class="validation" id="vSearchPhone" style="display: block;"></span>
+                    <input type="text" id="txtSearchCustomerPhone" placeholder="Enter customer phone"><br>
+                    <button class="btn btn-outline-primary btn-sm" id="btnSearchByCustomerPhone">Search</button><br>
+                </div>
             </div>`;
 
         var midColumnContainerTemplate =`
@@ -123,7 +135,11 @@ namespace.CustomerModule = function(options){
         txtSearchCustomer = leftColumnContainer.querySelector('#txtSearchCustomer');
         btnSearchByCustomerName = leftColumnContainer.querySelector('#btnSearchByCustomerName').onclick = searchByCustomerName;
 
+        txtSearchCustomerPhone = leftColumnContainer.querySelector('#txtSearchCustomerPhone');
+        btnSearchByCustomerPhone  = leftColumnContainer.querySelector('#btnSearchByCustomerPhone').onclick = searchByCustomerPhone;
+
         vSearch = leftColumnContainer.querySelector('#vSearch');
+        vSearchPhone = leftColumnContainer.querySelector('#vSearchPhone');
 
         //mid column vars
         customerTableListContainer = midColumnContainer.querySelector('#mid-table-list');
@@ -173,7 +189,7 @@ namespace.CustomerModule = function(options){
     }
 
     function searchByCustomerName(customerName){
-        if(validateSearchBox()){
+        if(validateSearchBoxName()){
             vSearch.innerHTML = '';
             customerName = txtSearchCustomer.value;
 
@@ -195,6 +211,34 @@ namespace.CustomerModule = function(options){
             });
 
             txtSearchCustomer.value = "";
+        }else{
+            return false;
+        }
+    }
+
+    function searchByCustomerPhone(customerPhone){
+        if(validateSearchBoxPhone()){
+            vSearchPhone.innerHTML = '';
+            customerPhone = txtSearchCustomerPhone.value;
+
+            namespace.ajax.send({
+                url: webServiceAddress + customerPhone,
+                method: "GET",
+                headers: {"Content-Type": "application/json", "Accept": "application/json"},
+                callback: function(response){
+                    var customers = JSON.parse(response);
+                    generateCustomerList(customers);
+                },
+                errorCallback: function(responseStatus, responseText){
+                    if(responseStatus == 404){
+                        alert("Customer not found. Please try again or add customer.");
+                    }else{
+                        alert("Customer not found. Please try again or add customer.");
+                    }
+                }
+            });
+
+            txtSearchCustomerPhone.value = "";
         }else{
             return false;
         }
@@ -369,10 +413,27 @@ namespace.CustomerModule = function(options){
         return customer;
     }
 
-    function validateSearchBox(){
+    function validateSearchBoxName(){
         if(txtSearchCustomer.value == ''){
             vSearch.innerHTML = "Please enter a customer name."
             return false;
+        }
+
+        return true;
+    }
+
+    function validateSearchBoxPhone(){
+        if(txtSearchCustomerPhone.value == ''){
+            vSearchPhone.innerHTML = "Please enter customer phone number";
+
+            return false;
+        }
+
+        if(txtSearchCustomerPhone.value != ''){
+            if(!validatePhone(txtSearchCustomerPhone.value)){
+                vSearchPhone.innerHTML = "Please enter a valid phone number. Do not include spaces or symbols."
+                return false;
+            }
         }
 
         return true;
