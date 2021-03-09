@@ -105,6 +105,10 @@ table th .fas{
     font-size: 85%;
 }
 
+.wide-btn {
+    width: 98%;
+}
+
 /*************************************ID SELECTORS*****************************************/
 #header>*{
     /* Select level 1 children */
@@ -162,6 +166,7 @@ table th .fas{
 
 #consoleSelectBox{
     margin-left: 5px;
+    width: 95%;
 }
 
 #list-container{

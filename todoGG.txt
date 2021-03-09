@@ -20,5 +20,5 @@ add 25% percentage button to trade ins -- DONE
 add to comments that product was complete in box -- DONE
 add product to list when scanned -- DONE
 full search without console
-button to clear selection
+button to clear selection --DONE
 duplicate customers - phone numbers -- DONE
