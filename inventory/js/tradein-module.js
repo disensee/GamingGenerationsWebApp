@@ -42,7 +42,7 @@ namespace.TradeInModule = function(options){
     var txtRetailPrice;
     var txtCashValue;
     var txtCreditValue;
-
+    var chkCib;
     var selProductList;
     var taComments;
 
@@ -93,19 +93,23 @@ namespace.TradeInModule = function(options){
 
         rightColumnContainerTemplate += `<tr>
             <td><label for="txtSerialNumber">Serial Number:</label></td>
-            <td><input type="text" name="txtSerialNumber" id="txtSerialNumber" placeholder="Serial Number"></td>
+            <td><input type="text" name="txtSerialNumber" id="txtSerialNumber" placeholder="Serial Number" readonly="true"></td>
         </tr>
         <tr>
             <td><label for="txtRetailPrice">Retail Price:</label></td>
-            <td><input type="text" name="txtRetailPrice" id="txtRetailPrice" placeholder="Retail Price"></td>
+            <td><input type="text" name="txtRetailPrice" id="txtRetailPrice" placeholder="Retail Price" readonly="true"></td>
         </tr>
         <tr>
             <td><label for="txtCashValue">Cash Value:</label></td>
-            <td><input type="text" name="txtCashValue" id="txtCashValue" placeholder="Cash Value"></td>
+            <td><input type="text" name="txtCashValue" id="txtCashValue" placeholder="Cash Value" readonly="true"></td>
         </tr>
         <tr>
             <td><label for="txtCreditValue">Credit Value:</label></td>
-            <td><input type="text" name="txtCreditValue" id="txtCreditValue" placeholder="Credit Value"></td>
+            <td><input type="text" name="txtCreditValue" id="txtCreditValue" placeholder="Credit Value" readonly="true"></td>
+        </tr>
+        <tr>
+            <td><label for="chk-cib">CIB:</label></td>
+            <td><input type="checkbox" id="chk-cib" onclick="return false" /></td>
         </tr>
         <tr>
             <td colspan="2">
@@ -140,6 +144,8 @@ namespace.TradeInModule = function(options){
         txtRetailPrice = rightColumnContainer.querySelector("#txtRetailPrice");
         txtCashValue = rightColumnContainer.querySelector("#txtCashValue");
         txtCreditValue = rightColumnContainer.querySelector("#txtCreditValue");
+        chkCib = rightColumnContainer.querySelector("#chk-cib");
+
         selProductList = rightColumnContainer.querySelector("#selProductList");
         taComments = rightColumnContainer.querySelector('#taComments');
 
@@ -385,7 +391,7 @@ namespace.TradeInModule = function(options){
 
     function populateFormFromSelectBox(){
         for(var i = 0; i < tradeInProducts.length; i++){
-            if(tradeInProducts[i].productId == selProductList.value){
+            if(i == selProductList.selectedIndex){
                 populateTipForm(tradeInProducts[i]);
             }
         }
@@ -396,6 +402,12 @@ namespace.TradeInModule = function(options){
         txtRetailPrice.value = tradeInProduct.retailPrice;
         txtCashValue.value = tradeInProduct.cashValue;
         txtCreditValue.value = tradeInProduct.creditValue;
+        console.log(tradeInProduct.isCib);
+        if(tradeInProduct.isCib == 1){
+            chkCib.checked = true;
+        }else {
+            chkCib.checked = false;
+        }
     }
 
     function populateSelBoxProds(){

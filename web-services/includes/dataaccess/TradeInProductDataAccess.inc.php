@@ -26,6 +26,7 @@ class TradeInProductDataAccess extends DataAccess{
 			$cleanTradeInProd->retailPrice = mysqli_real_escape_string($this->link, $tradeInProd->retailPrice);
 			$cleanTradeInProd->cashValue = mysqli_real_escape_string($this->link, $tradeInProd->cashValue);
 			$cleanTradeInProd->creditValue = mysqli_real_escape_string($this->link, $tradeInProd->creditValue);
+			$cleanTradeInProd->isCib = mysqli_real_escape_string($this->link, $tradeInProd->isCib);
             
 			return $cleanTradeInProd;
 		}else{
@@ -48,6 +49,7 @@ class TradeInProductDataAccess extends DataAccess{
 		$cleanRow['retailPrice'] = htmlentities($row['retailPrice']);
 		$cleanRow['cashValue'] = htmlentities($row['cashValue']);
 		$cleanRow['creditValue'] = htmlentities($row['creditValue']);
+		$cleanRow['isCib'] = htmlentities($row['isCib']);
 
 		return $cleanRow;
     }
@@ -60,7 +62,7 @@ class TradeInProductDataAccess extends DataAccess{
 	* @return {array}		Returns an array of trade in objects
 	*/
 	function getAll($args = []){
-		$qStr = "SELECT tpId, tradeInId, productId, serialNumber, retailPrice, cashValue, creditValue FROM tradeinproducts";
+		$qStr = "SELECT tpId, tradeInId, productId, serialNumber, retailPrice, cashValue, creditValue, isCib FROM tradeinproducts";
 		//die($qStr);
 
 		//Many people run queries like this. Shows error messages to users. 
@@ -87,7 +89,7 @@ class TradeInProductDataAccess extends DataAccess{
 	*/
 	function getById($tradeInProdId){
 		$cleanTradeInProdId = $this->cleanDataGoingIntoDB($tradeInProdId);
-		$qStr = "SELECT tpId, tradeInId, productId, serialNumber, retailPrice, cashValue, creditValue FROM tradeinproducts WHERE tpId = '$cleanTradeInProdId'";
+		$qStr = "SELECT tpId, tradeInId, productId, serialNumber, retailPrice, cashValue, creditValue, isCib FROM tradeinproducts WHERE tpId = '$cleanTradeInProdId'";
 
 		$result = mysqli_query($this->link, $qStr) or $this->handleError(mysqli_error($this->link));
 		if(mysqli_num_rows($result) == 1){
@@ -107,7 +109,7 @@ class TradeInProductDataAccess extends DataAccess{
 	*/
 	function getTradeInProductByTradeInId($tradeInId){
         $cleanTradeInProdId = $this->cleanDataGoingIntoDB($tradeInId);
-		$qStr = "SELECT tpId, tradeInId, productId, serialNumber, retailPrice, cashValue, creditValue FROM tradeinproducts WHERE tradeInId = $cleanTradeInProdId";
+		$qStr = "SELECT tpId, tradeInId, productId, serialNumber, retailPrice, cashValue, creditValue, isCib FROM tradeinproducts WHERE tradeInId = $cleanTradeInProdId";
 
 		$result = mysqli_query($this->link, $qStr) or $this->handleError(mysqli_error($this->link));
 		$allTradeInProducts = [];
@@ -124,7 +126,7 @@ class TradeInProductDataAccess extends DataAccess{
 	
 	function getProductInfoFromTradeInId($tradeInId){
 		$cleanTradeInId = $this->cleanDataGoingIntoDB($tradeInId);
-		$qStr = "SELECT tradeInId, tips.productId, serialNumber, retailPrice, cashValue, creditValue, p.productName, p.consoleName
+		$qStr = "SELECT tradeInId, tips.productId, serialNumber, retailPrice, cashValue, creditValue, isCib, p.productName, p.consoleName
 				FROM tradeinproducts tips
 				JOIN products p 
 				on p.productId = tips.productId
@@ -142,6 +144,7 @@ class TradeInProductDataAccess extends DataAccess{
 					$tradedInProduct->serialNumber = $row['serialNumber'];
 					$tradedInProduct->retailPrice = $row['retailPrice'];
 					$tradedInProduct->cashValue = $row['cashValue'];
+					$tradedInProduct->isCib = $row['isCib'];
 					$tradedInProduct->creditValue = $row['creditValue'];
 					$tradedInProduct->productName = $row['productName'];
 					$tradedInProduct->consoleName = $row['consoleName'];
@@ -162,13 +165,14 @@ class TradeInProductDataAccess extends DataAccess{
 	*/
 	function insert($tradeInProd){
 		$cleanTradeInProd = $this->cleanDataGoingIntoDB($tradeInProd);
-		$qStr = "INSERT INTO tradeinproducts (tradeInId, productId, serialNumber, retailPrice, cashValue, creditValue) VALUES (
+		$qStr = "INSERT INTO tradeinproducts (tradeInId, productId, serialNumber, retailPrice, cashValue, creditValue, isCib) VALUES (
 			'{$cleanTradeInProd->tradeInId}',
             '{$cleanTradeInProd->productId}',
             '{$cleanTradeInProd->serialNumber}',
             '{$cleanTradeInProd->retailPrice}',
             '{$cleanTradeInProd->cashValue}',
-            '{$cleanTradeInProd->creditValue}'
+            '{$cleanTradeInProd->creditValue}',
+            '{$cleanTradeInProd->isCib}'
 
 		)";
 
@@ -194,9 +198,10 @@ class TradeInProductDataAccess extends DataAccess{
 				tradeInId = '{$cleanTradeInProd->tradeInId}',
                 productId = '{$cleanTradeInProd->productId}',
                 serialNumber = '{$cleanTradeInProd->serialNumber}',
-                serialNumber = '{$cleanTradeInProd->retailPrice}',
-                serialNumber = '{$cleanTradeInProd->cashValue}',
-                serialNumber = '{$cleanTradeInProd->creditValue}'
+                retailPrice = '{$cleanTradeInProd->retailPrice}',
+                cashValue = '{$cleanTradeInProd->cashValue}',
+                creditValue = '{$cleanTradeInProd->creditValue}',
+				isCib = '{$cleanTradeInProd->isCib}'
                 WHERE tpId = '{$cleanTradeInProd->tpId}'";
 
 		$result = mysqli_query($this->link, $qStr) or $this->handleError(mysqli_error($this->link));

@@ -610,7 +610,8 @@ namespace.ProductModule = function(options){
             retailPrice: txtLoosePrice.value,
             cashValue: values[1],
             creditValue: values[0],
-            serialNumber: txtSerialNumber.value 
+            serialNumber: txtSerialNumber.value,
+            isCib: chkCib.checked 
         };
 
         return tradeInProduct;
@@ -689,7 +690,7 @@ namespace.ProductModule = function(options){
     function tradeInProductDBInsert(){
          tradeInProducts.forEach((tip) =>{
             tip.tradeInId = completedTradeIn.tradeInId;
-            console.log(tip);
+            //console.log(tip);
 
             namespace.ajax.send({
                 url: webServiceAddress,
@@ -1423,8 +1424,8 @@ namespace.ProductModule = function(options){
             leftColumnContainer: document.getElementById("left-column"),
 		    midColumnContainer : document.getElementById("mid-column"),
 		    rightColumnContainer: document.getElementById("right-column"),
-		    //webServiceAddress: "https://localhost/GG/web-services/customers/"
-		    webServiceAddress: "https://www.dylanisensee.com/gg/web-services/customers/"
+		    webServiceAddress: "https://localhost/GG/web-services/customers/"
+		    //webServiceAddress: "https://www.dylanisensee.com/gg/web-services/customers/"
         });
     }
 }

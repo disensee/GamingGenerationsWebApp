@@ -10,6 +10,7 @@ class TradeInProduct extends Model{
     public $retailPrice;
     public $cashValue;
     public $creditValue;
+    public $isCib;
 
     //constructor
     public function __construct($args = []){
@@ -20,6 +21,7 @@ class TradeInProduct extends Model{
         $this->retailPrice = $args['retailPrice'] ?? "";
         $this->cashValue = $args['cashValue'] ?? "";
         $this->creditValue = $args['creditValue'] ?? "";
+        $this->isCib = $args['isCib'] ?? false;
     }
 
     public function isValid(){
