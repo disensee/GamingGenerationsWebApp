@@ -48,6 +48,7 @@ namespace.ProductModule = function(options){
     var btnSearchByProdName;
     var txtSearchUpc;
     var btnSearchByUpc;
+    var btnClearResults;
 
     //left column link list
     var consoleList;
@@ -129,15 +130,20 @@ namespace.ProductModule = function(options){
         rightColumnContainer.innerHTML = "";
 
         var leftColumnContainerTemplate = `
-            <div id="search-container">
-                <p>Search for item:</p>
-                <p>Search by name:</p>` + 
-                createConsoleSelectBox(consoleArr) + 
-               `<input type="text" id="txtSearchProduct" placeholder="Enter product name"><br>
-                <button class="btn btn-outline-primary btn-sm" id="btnSearchByProdName">Search</button><br>
-                <p>Searby by UPC:</p>
-                <input type="text" id="txtSearchUpc" placeholder="Enter UPC">
-                <button class="btn btn-outline-primary btn-sm" id="btnSearchByUpc">Search</button>
+            <div id="search-container" class="product-search-cont">
+                <div class="search-sub-cont">
+                    <p>Search for item:</p>
+                    <p class="small-txt">Search by name:</p>` + 
+                    createConsoleSelectBox(consoleArr) + 
+                    `<input type="text" id="txtSearchProduct" placeholder="Enter product name"><br>
+                    <button class="btn btn-outline-primary btn-sm" id="btnSearchByProdName">Search</button><br>
+                </div>
+                <div class="search-sub-cont">
+                    <p class="small-txt">Searby by UPC:</p>
+                    <input type="text" id="txtSearchUpc" placeholder="Enter UPC">
+                    <button class="btn btn-outline-primary btn-sm" id="btnSearchByUpc">Search</button>
+                </div>
+                <button id="btn-clear" class="btn btn-outline-primary btn-sm wide-btn">CLEAR SEARCH RESULTS</button>
             </div>
             <div id="list-container">
                 <p>Filter:</p>` +
@@ -364,6 +370,11 @@ namespace.ProductModule = function(options){
         //search by upc
         txtSearchUpc = leftColumnContainer.querySelector("#txtSearchUpc");
         btnSearchByUpc = leftColumnContainer.querySelector("#btnSearchByUpc").onclick = searchByUpc;
+
+        //clear search results
+        btnClearResults = leftColumnContainer.querySelector("#btn-clear").onclick = function(){
+            midColumnContainer.innerHTML = midColumnContainerTemplate;
+        }
 
         //console link list
         consoleList = leftColumnContainer.querySelector("#consoleList").onclick = getProductsByConsoleName;

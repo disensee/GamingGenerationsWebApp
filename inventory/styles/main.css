@@ -97,6 +97,14 @@ table th .fas{
     margin-bottom: 15px;
 }
 
+.product-search-cont {
+    line-height: 2;
+}
+
+.small-txt{
+    font-size: 85%;
+}
+
 /*************************************ID SELECTORS*****************************************/
 #header>*{
     /* Select level 1 children */
