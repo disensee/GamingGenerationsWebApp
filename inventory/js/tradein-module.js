@@ -402,7 +402,6 @@ namespace.TradeInModule = function(options){
         txtRetailPrice.value = tradeInProduct.retailPrice;
         txtCashValue.value = tradeInProduct.cashValue;
         txtCreditValue.value = tradeInProduct.creditValue;
-        console.log(tradeInProduct.isCib);
         if(tradeInProduct.isCib == 1){
             chkCib.checked = true;
         }else {

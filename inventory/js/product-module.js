@@ -895,6 +895,12 @@ namespace.ProductModule = function(options){
                 //console.log(response);
                 var product = JSON.parse(response);
                 generateProductList(product);
+                populateProductForm(product);
+                addProductForTransaction();
+            },
+            errorCallback:function(err){
+                console.log(err);
+                alert("Error: Product not found");
             }
         });
     }
