@@ -138,7 +138,12 @@ class ProductDataAccess extends DataAccess{
 	function getByProductName($consoleName, $productName){
 		$cleanProductName = $this->cleanDataGoingIntoDB($productName);
 		$cleanConsoleName = $this->cleanDataGoingIntoDB($consoleName);
-		$qStr = "SELECT productId, consoleName, productName, loosePrice, cibPrice, gamestopPrice, upc, onaQuantity, ecQuantity, spQuantity, shebQuantity FROM products WHERE consoleName = '$cleanConsoleName' AND productName LIKE '%$cleanProductName%'";
+
+		if($cleanConsoleName === 'notselected'){
+			$qStr = "SELECT productId, consoleName, productName, loosePrice, cibPrice, gamestopPrice, upc, onaQuantity, ecQuantity, spQuantity, shebQuantity FROM products WHERE productName LIKE '%$cleanProductName%'";
+		}else{
+			$qStr = "SELECT productId, consoleName, productName, loosePrice, cibPrice, gamestopPrice, upc, onaQuantity, ecQuantity, spQuantity, shebQuantity FROM products WHERE consoleName = '$cleanConsoleName' AND productName LIKE '%$cleanProductName%'";
+		}
 
 		$result = mysqli_query($this->link, $qStr) or $this->handleError(mysqli_error($this->link));
 		$allproducts = [];

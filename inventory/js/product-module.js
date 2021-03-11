@@ -940,8 +940,8 @@ namespace.ProductModule = function(options){
         selectBox.setAttribute("id", "consoleSelectBox");
         var opt0 = document.createElement("option");
         
-        opt0.value = "-1";
-        opt0.text = "Select console:"
+        opt0.value = "notselected";
+        opt0.text = "Select console: (Optional)"
         selectBox.add(opt0, null);
         
         
@@ -1071,11 +1071,6 @@ namespace.ProductModule = function(options){
     }
 
     function validateSearchProductName(){
-        if(consoleSelectBox.value == -1){
-            alert("Please select a console.");
-            return false;
-        }
-
         if(txtSearchProduct.value == ""){
             alert("Please enter a product.");
             return false;
