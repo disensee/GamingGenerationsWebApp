@@ -38,7 +38,6 @@ table th .fas{
     position: -webkit-sticky; /*Safari*/
     position: sticky;
     max-height: 850px;
-    /* scrollbar-width: 15px; */
     top: 5px;
     width: 45%;
 }
@@ -212,6 +211,20 @@ table th .fas{
     border-width: 1px;
     padding: 10px;
 }
+
+#right-column::-webkit-scrollbar {
+    width: 10px;
+}
+
+#right-column::-webkit-scrollbar-track {
+    background: darkgray;        /* color of the tracking area */
+}
+
+#right-column::-webkit-scrollbar-thumb {
+    background-color: #FFF;    /* color of the scroll thumb */
+    border-radius: 20px;       /* roundness of the scroll thumb */
+    border: 3px solid darkgray;  /* creates padding around scroll thumb */
+  }
 
 
 #footer{
